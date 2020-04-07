@@ -1,0 +1,98 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8"/>
+    <title>Trip Service</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/wingcss/0.1.8/wing.min.css"/>
+    <!-- Load AngularJS -->
+    <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular.min.js"></script>
+    <script type="text/javascript">
+      var app = angular.module("tripsmgr", []);
+
+      //Controller Part
+      app.controller("tripsmgrController", function ($scope, $http) {
+
+        //Initialize page with default data which is blank in this example
+        $scope.trips = [];
+
+        $scope.form = {
+          registry: "",
+          rate: ""
+        };
+
+        //Now load the data from server
+        _refreshPageData();
+
+        //HTTP POST methods for add fruits
+        $scope.add = function () {
+          var data = { "registryNumber": $scope.form.registry, "mileageRate": $scope.form.rate };
+
+          $http({
+            method: "POST",
+            url: '/cars',
+            data: angular.toJson(data),
+            headers: {
+              'Content-Type': 'application/json'
+            }
+          }).then(_success, _error);
+        };
+
+        /* Private Methods */
+        //HTTP GET- get all fruits collection
+        function _refreshPageData() {
+          $http({
+            method: 'GET',
+            url: '/cars'
+          }).then(function successCallback(response) {
+            $scope.cars = response.data;
+          }, function errorCallback(response) {
+            console.log(response.statusText);
+          });
+        }
+
+        function _success(response) {
+          _refreshPageData();
+          _clearForm();
+        }
+
+        function _error(response) {
+          alert(response.data.message || response.statusText);
+        }
+
+        //Clear the form
+        function _clearForm() {
+          $scope.form.registry = "";
+          $scope.form.rate = "";
+        }
+      });
+    </script>
+</head>
+<body ng-app="FruitManagement" ng-controller="FruitManagementController">
+
+<div class="container">
+    <h1>REST Service - Car</h1>
+
+    <h3>Add a fruit</h3>
+    <form ng-submit="add()">
+        <div class="row">
+            <div class="col-6"><input type="text" placeholder="Registry Number" ng-model="form.registry" size="60"/></div>
+        </div>
+        <div class="row">
+            <div class="col-6"><input type="text" placeholder="Mileage Rate" ng-model="form.rate" size="60"/></div>
+        </div>
+        <input type="submit" value="Save"/>
+    </form>
+
+    <h3>Fruit List</h3>
+    <div class="row">
+        <div class="col-4">Registry Number</div>
+        <div class="col-8">Mileage Rate</div>
+    </div>
+    <div class="row" ng-repeat="car in cars">
+        <div class="col-4">{{ car.registryNumber }}</div>
+        <div class="col-8">{{ car.mileageRate }}</div>
+    </div>
+</div>
+
+</body>
+</html>

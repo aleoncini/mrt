@@ -1,0 +1,98 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8"/>
+    <title>Location Service</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/wingcss/0.1.8/wing.min.css"/>
+    <!-- Load AngularJS -->
+    <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular.min.js"></script>
+    <script type="text/javascript">
+      var app = angular.module("locsmgr", []);
+
+      //Controller Part
+      app.controller("locsmgrController", function ($scope, $http) {
+
+        //Initialize page with default data which is blank in this example
+        $scope.locations = [];
+
+        $scope.form = {
+          destination: "",
+          distance: 0.0
+        };
+
+        //Now load the data from server
+        _refreshPageData();
+
+        //HTTP POST methods for add elements
+        $scope.add = function () {
+          var data = { "destination": $scope.form.destination, "distance": $scope.form.distance };
+
+          $http({
+            method: "POST",
+            url: '/locations',
+            data: angular.toJson(data),
+            headers: {
+              'Content-Type': 'application/json'
+            }
+          }).then(_success, _error);
+        };
+
+        /* Private Methods */
+        //HTTP GET- get all elements collection
+        function _refreshPageData() {
+          $http({
+            method: 'GET',
+            url: '/locations'
+          }).then(function successCallback(response) {
+            $scope.locations = response.data;
+          }, function errorCallback(response) {
+            console.log(response.statusText);
+          });
+        }
+
+        function _success(response) {
+          _refreshPageData();
+          _clearForm();
+        }
+
+        function _error(response) {
+          alert(response.data.message || response.statusText);
+        }
+
+        //Clear the form
+        function _clearForm() {
+          $scope.form.destination = "";
+          $scope.form.distance = 0.0;
+        }
+      });
+    </script>
+</head>
+<body ng-app="locsmgr" ng-controller="locsmgrController">
+
+<div class="container">
+    <h1>REST Service - Locations</h1>
+
+    <h3>Add a location</h3>
+    <form ng-submit="add()">
+        <div class="row">
+            <div class="col-6"><input type="text" placeholder="Destination" ng-model="form.destination" size="60"/></div>
+        </div>
+        <div class="row">
+            <div class="col-6"><input type="number" placeholder="Distance" ng-model="form.distance" size="60"/></div>
+        </div>
+        <input type="submit" value="Save"/>
+    </form>
+
+    <h3>List of Locations</h3>
+    <div class="row">
+        <div class="col-4">Destination</div>
+        <div class="col-8">Distance</div>
+    </div>
+    <div class="row" ng-repeat="loc in locations">
+        <div class="col-4">{{ loc.destination }}</div>
+        <div class="col-8">{{ loc.distance }}</div>
+    </div>
+</div>
+
+</body>
+</html>
