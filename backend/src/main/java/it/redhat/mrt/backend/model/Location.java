@@ -47,7 +47,7 @@ public class Location {
             return null;
         }
         this.destination = document.getString("destination");
-        this.distance = document.getInteger("distance");
+        this.distance = distance(document);
         return this;
     }
 
@@ -56,6 +56,17 @@ public class Location {
             return null;
         }
         return new Document("destination", destination).append("distance", distance);
+    }
+
+    private int distance(Document document){
+        Object value = document.get("distance");
+        try {
+            Integer integerValue = (Integer) value;
+            return integerValue.intValue();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return 0;
     }
 
 }

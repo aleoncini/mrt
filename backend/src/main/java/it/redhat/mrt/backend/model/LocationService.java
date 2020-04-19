@@ -1,4 +1,4 @@
-package it.redhat.mrt.backend.rest;
+package it.redhat.mrt.backend.model;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -12,7 +12,6 @@ import com.mongodb.client.MongoCursor;
 import org.bson.Document;
 
 import io.quarkus.mongodb.runtime.MongoClientName;
-import it.redhat.mrt.backend.model.Location;
 
 @ApplicationScoped
 public class LocationService {
@@ -21,7 +20,7 @@ public class LocationService {
 
     public List<Location> list(){
         List<Location> list = new ArrayList<>();
-        MongoCursor<Document> cursor = mongoClient.getDatabase("mrtdb").getCollection("locations").find().iterator();
+        MongoCursor<Document> cursor = mongoClient.getDatabase("mrt").getCollection("locations").find().iterator();
 
         try {
             while (cursor.hasNext()) {
@@ -38,7 +37,7 @@ public class LocationService {
     public void add(Location location){
         Document document = location.toDocument();
         if(document != null){
-            mongoClient.getDatabase("mrtdb").getCollection("locations").insertOne(document);
+            mongoClient.getDatabase("mrt").getCollection("locations").insertOne(document);
         }
     }
 
