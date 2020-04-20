@@ -1,0 +1,115 @@
+@font-face {
+  font-family: 'Open Sans';
+  font-style: normal;
+  font-weight: 300;
+  src: local('Open Sans Light'), local('OpenSans-Light'), url(fonts/OpenSans-Light.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Open Sans';
+  font-style: normal;
+  font-weight: 400;
+  src: local('Open Sans'), local('OpenSans'), url(fonts/OpenSans-Regular.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Open Sans';
+  font-style: normal;
+  font-weight: 600;
+  src: local('Open Sans Semibold'), local('OpenSans-Semibold'), url(fonts/OpenSans-Semibold.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Open Sans';
+  font-style: normal;
+  font-weight: 700;
+  src: local('Open Sans Bold'), local('OpenSans-Bold'), url(fonts/OpenSans-Bold.ttf) format('truetype');
+}
+
+.bd-placeholder-img {
+    font-size: 1.125rem;
+    text-anchor: middle;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+.btn-circle {
+    width: 30px;
+    height: 30px;
+    padding: 6px 0px;
+    border-radius: 15px;
+    text-align: center;
+    font-size: 12px;
+    line-height: 1.42857;
+}
+
+.btn-circle.btn-xl {
+    width: 70px;
+    height: 70px;
+    padding: 10px 16px;
+    border-radius: 35px;
+    font-size: 24px;
+    line-height: 1.33;
+}
+
+@media (min-width: 768px) {
+    .bd-placeholder-img-lg {
+        font-size: 3.5rem;
+    }
+}
+
+.rh-form {
+  width: 550px;
+}
+.rh-form .modal-content {
+  padding: 20px;
+  border-radius: 1px;
+  border: none;
+}
+.rh-form .modal-header {
+  border-bottom: none;
+      position: relative;
+  justify-content: center;
+}
+.rh-form h4 {
+  text-align: center;
+  font-size: 26px;
+}
+.rh-form .form-group {
+      margin-bottom: 20px;
+  }
+.rh-form .form-control, .modal-login .btn {
+  min-height: 40px;
+  border-radius: 30px;
+      font-size: 15px;
+      transition: all 0.5s;
+}
+.rh-form .form-control {
+      font-size: 13px;
+}
+.rh-form .form-control:focus {
+      border-color: #a40000;
+}
+.rh-form .hint-text {
+  text-align: center;
+  padding-top: 10px;
+}
+.rh-form .close {
+  position: absolute;
+  top: -5px;
+  right: -5px;
+}
+.rh-form .btn {
+  background: #a40000;
+  border: none;
+  line-height: normal;
+}
+.rh-form .btn:hover, .modal-login .btn:focus {
+  background: #820000;
+}
+.rh-form .hint-text a {
+  color: #999;
+}
+.trigger-btn {
+  display: inline-block;
+  margin: 100px auto;
+}
