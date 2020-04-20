@@ -1,12 +1,14 @@
 # backend project
 
+This is a Quarkus native application that operates REsT services to get and save data using a Mongo DB instance.
+
 This project uses Quarkus, the Supersonic Subatomic Java Framework.
 
 If you want to learn more about Quarkus, please visit its website: https://quarkus.io/ .
 
 ## Running the application in dev mode
 
-You can run your application in dev mode that enables live coding using:
+After having pulled the cose to your local filesystem You can locally run your application in dev mode that enables live coding using:
 ```
 ./mvnw quarkus:dev
 ```

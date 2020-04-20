@@ -1,0 +1,30 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: secure-proxy
+  namespace: mrt
+spec:
+  selector:
+    matchLabels:
+      app: gatekeeper
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: gatekeeper
+    spec:
+      containers:
+      - name: gatekeeper
+        image: quay.io/keycloak/keycloak-gatekeeper
+        ports:
+          - containerPort: 8080
+        args:
+          - '--config'
+          - /etc/secrets/config.yaml
+        volumeMounts:
+          - name: config-vol
+            mountPath: /etc/secrets
+      volumes:
+      - name: config-vol
+        configMap:
+          name: secure-proxy-config
