@@ -1,6 +1,6 @@
 function nextStep() {
     $('#first_step_settings').hide();
-    $('#settings_form').show(500);
+    loadUserForSetup($('#inputAssociateId').val());
 };
 
 function previousStep() {
@@ -12,15 +12,18 @@ function loadUserForSetup(rhid) {
     var theUrl = '/rs/associates/' + rhid;
     $.get(theUrl, function(data) {
         var data = jQuery.parseJSON(response.responseText);
-        if (data.id === "none"){
-            $("#unregistered_user_alert").fadeIn();
-        } else {
-            localStorage.setItem("playerid", data.id);
-            localStorage.setItem("playername", data.name);
-        }
+        fillSetupForm(data);
+    })
+    .fail(function() {
+        $('#companyNumberLabel').text(rhid);
+        $('#settings_form').show(500);
     });
 };
 
+function fillSetupForm() {
+    $('#settings_form').show(500);
+};
+  
 function saveUser() {
     // { "rhid": "9053",
     //   "name": "Andrea Leoncini",
@@ -28,16 +31,17 @@ function saveUser() {
     //   "costCenter": "420",
     //   "car": { "registryNumber":"FB214ZM", "mileageRate": 0.89 }
     // }
-    if($('#inputYear').val() != "")
-    var data = '{ "rhid": "' + $('#inputAssociateId').val() + '", ';
-    data += '"name": "' + $('#inputAssociateName').val() + '", ';
-    data += '"email": "' + $('#inputAssociateMail').val() + '", ';
-    data += '"costCenter": "' + $('#inputAssociateCostCenter').val() + '", ';
-    data += '"car": { "registryNumber": "' + $('#inputCarRegNumber').val() + '", "mileageRate": ' + $('#inputCarRate').val() + ' } ';
-    data += '}';
+    // if($('#inputYear').val() != "")
+    var data;
+    data.rhid = $('#inputAssociateId').val();
+    data.name = $('#inputAssociateName').val();
+    data.email = $('#inputAssociateMail').val();
+    data.costCenter = $('#inputAssociateCostCenter').val();
+    data.carId = $('#inputCarRegNumber').val();
+    data.mileageRate = $('#inputCarRate').val();
     $.ajax({
           type: "POST",
-          url: "/rs/associates/add",
+          url: "/rs/associates",
           data: data,
           contentType: "application/json; charset=utf-8",
           dataType: "json",
