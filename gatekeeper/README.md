@@ -25,3 +25,19 @@ After having pulled the cose to your local filesystem You can locally run your a
  4708  oc rollout history keycloak-gatekeeper 
  4709  oc get services
  4710  oc get svc
+
+## Configure audience in Keycloak
+
+*ERROR* unable to verify the id token	{"error": "oidc: JWT claims invalid: invalid claims, 'aud' claim and 'client_id' do not match, aud=account, client_id=kgk"}
+
+1. Go to the realm configuration
+2. if not already available create a specific client that manage the Keycloak Gatekeeper secure proxy (in my case I named it "kgk")
+3. On the left menu go to "Client Scopes" menu
+4. Add a new Client scope 'mrt-service'
+5. Open the 'Mappers' tab in the settings page of the 'mrt-service'
+6. Create Protocol Mapper 'mrt-audience'
+7. Choose Mapper type: Audience, Included Client Audience: kgk, Add to access token: on
+8. Now open the configuration page for client 'kgk' in the "Clients" menu
+Client Scopes tab in my-app settings
+Add available client scopes "good-service" to assigned default client scopes
+If you have more than one client repeat the steps for the other clients as well and add the good-service scope. The intention behind this is to isolate client access. The issued access token will only be valid for the intended audience. This is thoroughly described in Keycloak's documentation [1,2].
