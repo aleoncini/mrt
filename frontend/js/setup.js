@@ -10,16 +10,24 @@ function previousStep() {
   
 function loadUserForSetup(rhid) {
     var theUrl = '/rs/associates/' + rhid;
-    $.get(theUrl)
-        .done(function( response ) {
+    $.ajax({
+        url: theUrl,
+        type: 'GET',
+        data: {},
+        dataType: 'json',
+        success: function(response, status, xhr){
             console.log('====> ' + response);
+            var associate = jQuery.parseJSON(response.responseText);
+            console.log('====> ' + associate);
             //var data = jQuery.parseJSON(response.responseText);
-            fillSetupForm(data);
-        })
-        .fail(function() {
-            $('#companyNumberLabel').text(rhid);
-            $('#settings_form').show(500);
-        });
+            fillSetupForm(associate);
+        },
+        error: function(xhr, status, error){
+            var errorMessage = xhr.status + ': ' + xhr.statusText
+            console.log('Error - ' + errorMessage);
+        }
+    });
+
 };
 
 function fillSetupForm() {
