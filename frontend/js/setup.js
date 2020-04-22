@@ -10,14 +10,15 @@ function previousStep() {
   
 function loadUserForSetup(rhid) {
     var theUrl = '/rs/associates/' + rhid;
-    $.get(theUrl, function(data) {
-        var data = jQuery.parseJSON(response.responseText);
-        fillSetupForm(data);
-    })
-    .fail(function() {
-        $('#companyNumberLabel').text(rhid);
-        $('#settings_form').show(500);
-    });
+    $.get(theUrl)
+        .done(function( data ) {
+            var data = jQuery.parseJSON(response.responseText);
+            fillSetupForm(data);
+        })
+        .fail(function() {
+            $('#companyNumberLabel').text(rhid);
+            $('#settings_form').show(500);
+        });
 };
 
 function fillSetupForm() {
