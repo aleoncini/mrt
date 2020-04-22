@@ -12,7 +12,8 @@ function loadUserForSetup(rhid) {
     var theUrl = '/rs/associates/' + rhid;
     $.get(theUrl)
         .done(function( response ) {
-            var data = jQuery.parseJSON(response.responseText);
+            console.log('====> ' + response);
+            //var data = jQuery.parseJSON(response.responseText);
             fillSetupForm(data);
         })
         .fail(function() {
