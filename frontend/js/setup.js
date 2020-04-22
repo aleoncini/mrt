@@ -16,12 +16,9 @@ function loadUserForSetup(rhid) {
         data: {},
         dataType: 'json',
         success: function(response, status, xhr){
-            console.log('====> ' + xhr);
-            console.log('====> ' + xhr.status);
-            console.log('====> ' + status);
-            //var associate = jQuery.parseJSON(response.responseText);
-            //console.log('====> ' + associate);
-            //var data = jQuery.parseJSON(response.responseText);
+            if(xhr.status == 204){  // no content
+                $('#companyNumberLabel').text(rhid);
+            }
             fillSetupForm();
         }
     });
