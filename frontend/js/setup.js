@@ -15,16 +15,14 @@ function loadUserForSetup(rhid) {
         type: 'GET',
         data: {},
         dataType: 'json',
-        success: function(response, status, xhr){
-            console.log('====> ' + response);
-            var associate = jQuery.parseJSON(response.responseText);
-            console.log('====> ' + associate);
+        complete: function(response, status, xhr){
+            console.log('====> ' + xhr);
+            console.log('====> ' + xhr.status);
+            console.log('====> ' + status);
+            //var associate = jQuery.parseJSON(response.responseText);
+            //console.log('====> ' + associate);
             //var data = jQuery.parseJSON(response.responseText);
-            fillSetupForm(associate);
-        },
-        error: function(xhr, status, error){
-            var errorMessage = xhr.status + ': ' + xhr.statusText
-            console.log('Error - ' + errorMessage);
+            fillSetupForm();
         }
     });
 
