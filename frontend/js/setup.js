@@ -15,7 +15,7 @@ function loadUserForSetup(rhid) {
         type: 'GET',
         data: {},
         dataType: 'json',
-        complete: function(response, status, xhr){
+        success: function(response, status, xhr){
             console.log('====> ' + xhr);
             console.log('====> ' + xhr.status);
             console.log('====> ' + status);
