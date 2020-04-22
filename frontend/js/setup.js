@@ -11,7 +11,7 @@ function previousStep() {
 function loadUserForSetup(rhid) {
     var theUrl = '/rs/associates/' + rhid;
     $.get(theUrl)
-        .done(function( data ) {
+        .done(function( response ) {
             var data = jQuery.parseJSON(response.responseText);
             fillSetupForm(data);
         })
