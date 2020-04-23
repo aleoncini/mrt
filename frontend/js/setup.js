@@ -18,6 +18,8 @@ function loadUserForSetup(rhid) {
         success: function(response, status, xhr){
             if(xhr.status == 204){  // no content
                 $('#companyNumberLabel').text(rhid);
+            }else if(xhr.status == 200){
+                console.log('====> ' + response);
             }
             fillSetupForm();
         }
