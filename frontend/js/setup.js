@@ -39,19 +39,19 @@ function saveUser() {
     //   "car": { "registryNumber":"FB214ZM", "mileageRate": 0.89 }
     // }
     // if($('#inputYear').val() != "")
-    var data = {};
-    data.rhid = $('#inputAssociateId').val();
-    data.name = $('#inputAssociateName').val();
-    data.email = $('#inputAssociateMail').val();
-    data.costCenter = $('#inputAssociateCostCenter').val();
-    data.carId = $('#inputCarRegNumber').val();
-    data.mileageRate = $('#inputCarRate').val();
+    var associate = {};
+    associate.rhid = $('#inputAssociateId').val();
+    associate.name = $('#inputAssociateName').val();
+    associate.email = $('#inputAssociateMail').val();
+    associate.costCenter = $('#inputAssociateCostCenter').val();
+    associate.carId = $('#inputCarRegNumber').val();
+    associate.mileageRate = $('#inputCarRate').val();
     $.ajax({
-          type: "POST",
-          url: "/rs/associates",
-          data: data,
-          contentType: "application/json; charset=utf-8",
-          dataType: "json",
+          type: 'POST',
+          url: '/rs/associates',
+          data: JSON.stringify(associate),
+          contentType: 'application/json',
+          dataType: 'json',
           success: function(data){
             localStorage.rhid = $('#inputAssociateId').val();
             localStorage.name = $('#inputAssociateName').val();
