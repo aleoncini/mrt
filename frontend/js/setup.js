@@ -20,15 +20,15 @@ function loadUserForSetup(rhid) {
                 $('#companyNumberLabel').text(rhid);
             }else if(xhr.status == 200){
                 console.log('====> ' + response);
+                //fillSetupForm();
             }
-            fillSetupForm();
+            $('#settings_form').show(500);
         }
     });
 
 };
 
 function fillSetupForm() {
-    $('#settings_form').show(500);
 };
   
 function saveUser() {
@@ -39,7 +39,7 @@ function saveUser() {
     //   "car": { "registryNumber":"FB214ZM", "mileageRate": 0.89 }
     // }
     // if($('#inputYear').val() != "")
-    var data;
+    var data = {};
     data.rhid = $('#inputAssociateId').val();
     data.name = $('#inputAssociateName').val();
     data.email = $('#inputAssociateMail').val();
