@@ -16,8 +16,11 @@ function initLocations() {
         data: {},
         dataType: 'json',
         success: function(response, status, xhr){
-            var data = jQuery.parseJSON(response.responseText);
-            if((data != null) && (data.length > 0)){
+            var data;
+            if(response != null){
+                data = jQuery.parseJSON(response.responseText);
+            }
+            if(data.length > 0){
                 formatLocationList(data.locations);
             }
         },
@@ -93,7 +96,7 @@ function saveTrip() {
     the_trip.date = the_date;
     var the_location = {};
     the_location.destination = locationName;
-    the_location.distance = $('#inputDistance').val();
+    the_location.distance = parseInt( $('#inputDistance').val(), 10);
     the_trip.location = the_location;
     the_trip.purpose = $('#inputPurpose').val();
     console.log(the_trip);
