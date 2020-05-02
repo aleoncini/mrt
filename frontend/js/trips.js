@@ -17,8 +17,9 @@ function initLocations() {
         dataType: 'json',
         success: function(response, status, xhr){
             var data = jQuery.parseJSON(response.responseText);
-            formatLocationList(data.locations);
-            //$("#the_response").text(data.result);
+            if((data != null) && (data.length > 0)){
+                formatLocationList(data.locations);
+            }
         },
         error: function(){
             console.log("===> error while loading locations, probably CORS denied the request.")
@@ -95,7 +96,7 @@ function saveTrip() {
     the_location.distance = $('#inputDistance').val();
     the_trip.location = the_location;
     the_trip.purpose = $('#inputPurpose').val();
-    console.log(data);
+    console.log(the_trip);
     $.ajax({
           type: "POST",
           url: "/rs/trips",
