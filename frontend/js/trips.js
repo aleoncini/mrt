@@ -1,3 +1,5 @@
+var distance = 0;
+var locationName = '';
 var numberOfTrips = 0;
 var totalMileage = 0;
 
@@ -81,4 +83,30 @@ function addTripToTable(trip) {
   document.getElementById("bannerNumberOfTrips").innerHTML = numberOfTrips;
   document.getElementById("bannerTotalMIleage").innerHTML = totalMileage;
   $('#tbl_round_list > tbody:last-child').append(rowContent);
+};
+
+function saveTrip() {
+    var the_trip = {};
+    the_trip.rhid = localStorage.rhid;
+    var the_date = {};
+    the_date.day = $('#inputDay').val();
+    the_date.month = $('#inputMonth :selected').val();
+    the_date.year = $('#inputYear :selected').val();
+    the_trip.date = the_date;
+    var the_location = {};
+    the_location.destination = locationName;
+    the_location.distance = $('#inputDistance').val();
+    the_trip.location = the_location;
+    the_trip.purpose = $('#inputPurpose').val();
+    console.log(data);
+    $.ajax({
+          type: "POST",
+          url: "/rs/trips",
+          data: the_trip,
+          contentType: "application/json; charset=utf-8",
+          dataType: "json",
+          success: function(data){
+            addTripToTable(the_trip);
+          }
+    });
 };
