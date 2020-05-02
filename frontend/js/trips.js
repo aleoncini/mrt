@@ -40,15 +40,12 @@ function getTrips(month, year) {
     $.ajax({
         url: theUrl,
         type: 'GET',
-        data: {},
         dataType: 'json',
         complete: function(response, status, xhr){
             var data = jQuery.parseJSON(response.responseText);
             $.each(data.trips, function (index, trip) {
                 addTripToTable(trip)
             });
-            formatTripsTable(data.trips);
-            //$("#the_response").text(data.result);
         }
     });
 };
