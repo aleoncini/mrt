@@ -5,17 +5,17 @@ import java.util.Objects;
 import org.bson.Document;
 
 public class Trip {
-    private String associateId;
+    private String rhid;
     private DateOfTrip date;
     private Location location;
     private String purpose;
 
-    public String getAssociateUid() {
-        return associateId;
+    public String getRhid() {
+        return rhid;
     }
 
-    public Trip setAssociateId(String id) {
-        this.associateId = id;
+    public Trip setRhid(String id) {
+        this.rhid = id;
         return this;
     }
 
@@ -68,7 +68,7 @@ public class Trip {
         }
         Document dateDoc = (Document) document.get("date");
         Document locationDoc = (Document) document.get("location");
-        this.associateId = document.getString("associateId");
+        this.rhid = document.getString("rhid");
         this.purpose = document.getString("purpose");
         this.location = new Location().build(locationDoc);
         this.date = new DateOfTrip().build(dateDoc);
@@ -76,10 +76,10 @@ public class Trip {
     }
 
     public Document toDocument(){
-        if ((associateId == null) || (associateId.length() == 0) || (date == null) || (location == null)){
+        if ((rhid == null) || (rhid.length() == 0) || (date == null) || (location == null)){
             return null;
         }
-        return new Document("associateId", associateId)
+        return new Document("rhid", rhid)
                 .append("purpose", purpose)
                 .append("location", location.toDocument())
                 .append("date", date.toDocument());

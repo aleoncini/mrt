@@ -8,7 +8,7 @@ public class Associate {
     private String name;
     private String email;
     private String costCenter;
-    private String redhatId;
+    private String rhid;
     private String carId;
     private double mileageRate;
 
@@ -40,11 +40,11 @@ public class Associate {
     }
 
     public String getRedhatId() {
-        return redhatId;
+        return rhid;
     }
 
     public Associate setRedhatId(String id) {
-        this.redhatId = id;
+        this.rhid = id;
         return this;
     }
 
@@ -83,8 +83,8 @@ public class Associate {
     }
 
     public Document toDocument(){
-        if ((redhatId == null) 
-            || (redhatId.length() == 0) 
+        if ((rhid == null) 
+            || (rhid.length() == 0) 
             || (name == null) 
             || (name.length() == 0) 
             || (costCenter == null) 
@@ -95,7 +95,7 @@ public class Associate {
         ) {
             return null;
         }
-        return new Document("rhid", redhatId)
+        return new Document("rhid", rhid)
                 .append("name", name)
                 .append("costCenter", costCenter)
                 .append("email", email)
@@ -107,7 +107,7 @@ public class Associate {
         if (document == null){
             return null;
         }
-        this.redhatId = document.getString("rhid");
+        this.rhid = document.getString("rhid");
         this.name = document.getString("name");
         this.costCenter = document.getString("costCenter");
         this.email = document.getString("email");
