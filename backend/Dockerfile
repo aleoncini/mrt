@@ -20,4 +20,5 @@ COPY --from=build /backend/target/*-runner /work/application
 COPY --from=build /tmp/ssl-libs/ /work/
 RUN chmod 775 /work
 EXPOSE 8080
-CMD ["./application", "-Dquarkus.http.host=0.0.0.0", "-Djava.library.path=/work/lib", "-Djavax.net.ssl.trustStore=/work/cacerts"]
+ENV MONGOCONNSTRING mongodb://localhost:27017
+CMD ["./application", "-Dquarkus.http.host=0.0.0.0", "-Dquarkus.mongodb.mrt.connection-string=${MONGOCONNSTRING}", "-Djava.library.path=/work/lib", "-Djavax.net.ssl.trustStore=/work/cacerts"]
