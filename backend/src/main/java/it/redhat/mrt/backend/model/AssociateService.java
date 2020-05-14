@@ -25,7 +25,7 @@ public class AssociateService {
         try {
             while (cursor.hasNext()) {
                 Document document = cursor.next();
-                Associate associate = new Associate().build(document);
+                Associate associate = Associate.build(document);
                 list.add(associate);
             }
         } finally {
@@ -37,7 +37,7 @@ public class AssociateService {
     public Associate get(String id){
         Document query = new Document("rhid", id);
         Document associate = mongoClient.getDatabase("mrt").getCollection("associates").find(query).first();
-        return new Associate().build(associate);
+        return Associate.build(associate);
     }
 
     public void add(Associate associate){
