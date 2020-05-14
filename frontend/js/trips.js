@@ -16,6 +16,7 @@ function initLocations() {
         data: {},
         dataType: 'json',
         success: function(response, status, xhr){
+            console.log(response);
             var data;
             if(response != null){
                 data = jQuery.parseJSON(response.responseText);
@@ -95,7 +96,7 @@ function saveTrip() {
     the_date.year = $('#inputYear :selected').val();
     the_trip.date = the_date;
     var the_location = {};
-    the_location.destination = locationName;
+    the_location.destination = $('#inputLocationName').val();
     the_location.distance = parseInt( $('#inputDistance').val(), 10);
     the_trip.location = the_location;
     the_trip.purpose = $('#inputPurpose').val();

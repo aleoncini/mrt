@@ -103,17 +103,26 @@ public class Associate {
                 .append("mileageRate", mileageRate);
     }
 
-    public Associate build(Document document){
+    public static Associate build(Document document){
+
         if (document == null){
             return null;
         }
-        this.rhid = document.getString("rhid");
-        this.name = document.getString("name");
-        this.costCenter = document.getString("costCenter");
-        this.email = document.getString("email");
-        this.carId = document.getString("carId");
-        this.mileageRate = document.getDouble("mileageRate");
-        return this;
+
+        String rhid = document.getString("rhid");
+        String name = document.getString("name");
+        String costCenter = document.getString("costCenter");
+        String email = document.getString("email");
+        String carId = document.getString("carId");
+        double mileageRate = document.getDouble("mileageRate");
+
+        return new Associate()
+        			.setRedhatId(rhid)
+        			.setName(name)
+        			.setCostCenter(costCenter)
+        			.setEmail(email)
+        			.setCarId(carId)
+        			.setMileageRate(mileageRate);
     }
 
 }
