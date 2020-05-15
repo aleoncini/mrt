@@ -2,9 +2,11 @@ package it.redhat.mrt.backend.model;
 
 import java.util.Objects;
 
-import org.bson.Document;
-
+/**
+ * This class represents a Location
+ */
 public class Location {
+	
     private String destination;
     private int distance;
 
@@ -34,39 +36,13 @@ public class Location {
 
         Location other = (Location) obj;
 
-        return Objects.equals(other.destination, this.destination);
+        return Objects.equals(other.destination, this.destination)
+        		&& (other.distance == this.distance);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(this.destination);
-    }
-
-    public Location build(Document document){
-        if (document == null){
-            return null;
-        }
-        this.destination = document.getString("destination");
-        this.distance = distance(document);
-        return this;
-    }
-
-    public Document toDocument(){
-        if ((destination == null) || (destination.length() == 0)){
-            return null;
-        }
-        return new Document("destination", destination).append("distance", distance);
-    }
-
-    private int distance(Document document){
-        Object value = document.get("distance");
-        try {
-            Integer integerValue = (Integer) value;
-            return integerValue.intValue();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return 0;
+        return Objects.hash(destination, distance);
     }
 
 }
