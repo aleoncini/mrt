@@ -12,7 +12,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
 import it.redhat.mrt.backend.model.Associate;
-import it.redhat.mrt.backend.model.AssociateService;
+import it.redhat.mrt.backend.service.AssociateService;
 
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)

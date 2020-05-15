@@ -2,9 +2,11 @@ package it.redhat.mrt.backend.model;
 
 import java.util.Objects;
 
-import org.bson.Document;
-
+/**
+ * This class represents an Associate
+ */
 public class Associate {
+
     private String name;
     private String email;
     private String costCenter;
@@ -74,55 +76,17 @@ public class Associate {
 
         Associate other = (Associate) obj;
 
-        return Objects.equals(other.email, this.email);
+        return Objects.equals(other.name, this.name)
+        		&& Objects.equals(other.email, this.email)
+        		&& Objects.equals(other.costCenter, this.costCenter)
+        		&& Objects.equals(other.rhid, this.rhid)
+        		&& Objects.equals(other.carId, this.carId)
+        		&& (other.mileageRate == this.mileageRate);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(this.email);
-    }
-
-    public Document toDocument(){
-        if ((rhid == null) 
-            || (rhid.length() == 0) 
-            || (name == null) 
-            || (name.length() == 0) 
-            || (costCenter == null) 
-            || (costCenter.length() == 0) 
-            || (carId == null)
-            || (carId.length() == 0)
-            || (mileageRate == 0)
-        ) {
-            return null;
-        }
-        return new Document("rhid", rhid)
-                .append("name", name)
-                .append("costCenter", costCenter)
-                .append("email", email)
-                .append("carId", carId)
-                .append("mileageRate", mileageRate);
-    }
-
-    public static Associate build(Document document){
-
-        if (document == null){
-            return null;
-        }
-
-        String rhid = document.getString("rhid");
-        String name = document.getString("name");
-        String costCenter = document.getString("costCenter");
-        String email = document.getString("email");
-        String carId = document.getString("carId");
-        double mileageRate = document.getDouble("mileageRate");
-
-        return new Associate()
-        			.setRedhatId(rhid)
-        			.setName(name)
-        			.setCostCenter(costCenter)
-        			.setEmail(email)
-        			.setCarId(carId)
-        			.setMileageRate(mileageRate);
+        return Objects.hash(name, email, costCenter, rhid, carId, mileageRate);
     }
 
 }
