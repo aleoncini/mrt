@@ -51,7 +51,7 @@ public class DocumentAssociateSerializerTest {
 		first.setName("name");
 		first.setEmail("email");
 		first.setCostCenter("cost");
-		first.setRedhatId("id");
+		first.setRhid("id");
 		first.setCarId("carid");
 		first.setMileageRate(0.1);
 		
@@ -97,7 +97,7 @@ public class DocumentAssociateSerializerTest {
 				.setName("name")
 				.setEmail("email")
 				.setCostCenter("cost")
-				.setRedhatId("id")
+				.setRhid("id")
 				.setCarId("carid")
 				.setMileageRate(0.1);
 		
