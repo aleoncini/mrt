@@ -19,8 +19,8 @@ function loadUserForSetup(rhid) {
             if(xhr.status == 204){  // no content
                 $('#companyNumberLabel').text(rhid);
             }else if(xhr.status == 200){
-                console.log('====> ' + response);
-                //fillSetupForm();
+                //console.log('====> ' + response);
+                loadUserData(response);
             }
             $('#settings_form').show(500);
         },
@@ -35,6 +35,16 @@ function loadUserForSetup(rhid) {
     });
 
 };
+
+function loadUserData(response) {
+
+    localStorage.rhid = response.rhid;
+    localStorage.name = response.name;
+    alert("The tool is now setup to work with RHID: " + localStorage.rhid + ". If you want to act as different user go to setup page and save new info.");
+    window.location="index.html";
+
+};
+
 
 function fillSetupForm() {
 };
