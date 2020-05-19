@@ -10,6 +10,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 
 import it.redhat.mrt.backend.model.Associate;
 import it.redhat.mrt.backend.service.AssociateService;
@@ -27,8 +28,15 @@ public class AssociateResource {
 
     @GET
     @Path("{id}")
-    public Associate get(@PathParam("id") String id) {
-        return service.get(id);
+    public Response get(@PathParam("id") String id) {
+
+    	Associate associate = service.get(id);
+
+        if (associate == null) {
+        	return Response.status(Response.Status.NOT_FOUND).entity("Associate not found for id " + id).build();
+        }
+
+        return Response.ok(associate).build();
     }
 
     @POST
