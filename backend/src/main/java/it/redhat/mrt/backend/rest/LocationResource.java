@@ -11,7 +11,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
 import it.redhat.mrt.backend.model.Location;
-import it.redhat.mrt.backend.model.LocationService;
+import it.redhat.mrt.backend.service.LocationService;
 
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)

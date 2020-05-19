@@ -6,27 +6,27 @@ import org.junit.jupiter.api.Test;
 import io.quarkus.test.junit.QuarkusTest;
 
 @QuarkusTest
-public class AssociateTest {
+public class DateOfTripTest {
 
 	@Test
 	void testEquals() {
 
 		/** test empty objects */
-		Associate first = new Associate();
-		Associate second = new Associate();
+		DateOfTrip first = new DateOfTrip();
+		DateOfTrip second = new DateOfTrip();
 		
 		Assertions.assertTrue(first.equals(second));
 		Assertions.assertTrue(second.equals(first));
 		
 		/** test different objects */
-		first = new Associate().setEmail("myemail");
-		second = new Associate().setEmail("otheremail");
+		first = new DateOfTrip().setDay(1).setMonth(1).setYear(2020);
+		second = new DateOfTrip().setDay(1).setMonth(1).setYear(2021);
 		
 		Assertions.assertFalse(first.equals(second));
 		Assertions.assertFalse(second.equals(first));
 		
 		/** test equals objects */
-		second.setEmail("myemail");
+		second.setYear(2020);
 		
 		Assertions.assertTrue(first.equals(second));
 		Assertions.assertTrue(second.equals(first));
@@ -37,22 +37,22 @@ public class AssociateTest {
 	void testHashCode() {
 		
 		/** test empty objects */
-		Associate first = new Associate();
-		Associate second = new Associate();
+		DateOfTrip first = new DateOfTrip();
+		DateOfTrip second = new DateOfTrip();
 		
 		Assertions.assertEquals(first.hashCode(), second.hashCode());
 		
 		/** test different objects */
-		first = new Associate().setEmail("myemail");
-		second = new Associate().setEmail("otheremail");
+		first = new DateOfTrip().setDay(1).setMonth(1).setYear(2020);
+		second = new DateOfTrip().setDay(1).setMonth(1).setYear(2021);
 		
 		Assertions.assertNotEquals(first.hashCode(), second.hashCode());
 		
 		/** test equals objects */
-		second.setEmail("myemail");
+		second.setYear(2020);
 		
 		Assertions.assertEquals(first.hashCode(), second.hashCode());
 		
 	}
-
+	
 }

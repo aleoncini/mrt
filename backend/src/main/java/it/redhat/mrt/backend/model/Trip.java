@@ -2,9 +2,11 @@ package it.redhat.mrt.backend.model;
 
 import java.util.Objects;
 
-import org.bson.Document;
-
+/**
+ * This class represents a Trip
+ */
 public class Trip {
+
     private String rhid;
     private DateOfTrip date;
     private Location location;
@@ -54,35 +56,16 @@ public class Trip {
 
         Trip other = (Trip) obj;
 
-        return ((this.date.equals(other.date)) && ((this.location.equals(other.location))));
+        return Objects.equals(other.rhid, this.rhid)
+        		&& (Objects.equals(other.date, this.date))
+        		&& (Objects.equals(other.location, this.location))
+        		&& (Objects.equals(other.purpose, this.purpose));
+        
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(this.location.hashCode() + this.date.hashCode());
-    }
-
-    public Trip build(Document document){
-        if (document == null){
-            return null;
-        }
-        Document dateDoc = (Document) document.get("date");
-        Document locationDoc = (Document) document.get("location");
-        this.rhid = document.getString("rhid");
-        this.purpose = document.getString("purpose");
-        this.location = new Location().build(locationDoc);
-        this.date = new DateOfTrip().build(dateDoc);
-        return this;
-    }
-
-    public Document toDocument(){
-        if ((rhid == null) || (rhid.length() == 0) || (date == null) || (location == null)){
-            return null;
-        }
-        return new Document("rhid", rhid)
-                .append("purpose", purpose)
-                .append("location", location.toDocument())
-                .append("date", date.toDocument());
+        return Objects.hash(rhid, date, location, purpose);
     }
 
 }

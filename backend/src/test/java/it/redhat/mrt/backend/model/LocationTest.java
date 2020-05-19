@@ -6,27 +6,27 @@ import org.junit.jupiter.api.Test;
 import io.quarkus.test.junit.QuarkusTest;
 
 @QuarkusTest
-public class AssociateTest {
+public class LocationTest {
 
 	@Test
 	void testEquals() {
 
 		/** test empty objects */
-		Associate first = new Associate();
-		Associate second = new Associate();
+		Location first = new Location();
+		Location second = new Location();
 		
 		Assertions.assertTrue(first.equals(second));
 		Assertions.assertTrue(second.equals(first));
 		
 		/** test different objects */
-		first = new Associate().setEmail("myemail");
-		second = new Associate().setEmail("otheremail");
+		first = new Location().setDestination("moon");
+		second = new Location().setDestination("jupiter");
 		
 		Assertions.assertFalse(first.equals(second));
 		Assertions.assertFalse(second.equals(first));
 		
 		/** test equals objects */
-		second.setEmail("myemail");
+		second.setDestination("moon");
 		
 		Assertions.assertTrue(first.equals(second));
 		Assertions.assertTrue(second.equals(first));
@@ -37,22 +37,22 @@ public class AssociateTest {
 	void testHashCode() {
 		
 		/** test empty objects */
-		Associate first = new Associate();
-		Associate second = new Associate();
+		Location first = new Location();
+		Location second = new Location();
 		
 		Assertions.assertEquals(first.hashCode(), second.hashCode());
 		
 		/** test different objects */
-		first = new Associate().setEmail("myemail");
-		second = new Associate().setEmail("otheremail");
+		first = new Location().setDestination("moon");
+		second = new Location().setDestination("jupiter");
 		
 		Assertions.assertNotEquals(first.hashCode(), second.hashCode());
 		
 		/** test equals objects */
-		second.setEmail("myemail");
+		second.setDestination("moon");
 		
 		Assertions.assertEquals(first.hashCode(), second.hashCode());
 		
 	}
-
+	
 }
