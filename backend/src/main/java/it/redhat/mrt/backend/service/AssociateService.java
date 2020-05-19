@@ -42,7 +42,8 @@ public class AssociateService {
     public Associate get(String id){
         Document query = new Document("rhid", id);
         Document associate = mongoClient.getDatabase("mrt").getCollection("associates").find(query).first();
-        return associateSerializer.deserialize(associate);
+
+        return (associate != null) ? associateSerializer.deserialize(associate) : null;
     }
 
     public void add(Associate associate){
