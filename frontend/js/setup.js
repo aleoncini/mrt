@@ -23,7 +23,15 @@ function loadUserForSetup(rhid) {
                 //fillSetupForm();
             }
             $('#settings_form').show(500);
-        }
+        },
+		error: function(response, status, xhr){
+            if(xhr.status == 404){
+                console.log('====> ' + response);
+            }
+            $('#settings_form').show(500);
+
+       }
+
     });
 
 };
