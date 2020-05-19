@@ -17,8 +17,8 @@ public class DocumentAssociateSerializer implements AssociateSerializer<Document
 	public Document serialize(Associate associate) {
 
 		if (associate == null
-				|| (associate.getRedhatId() == null) 
-	            || (associate.getRedhatId().length() == 0) 
+				|| (associate.getRhid() == null) 
+	            || (associate.getRhid().length() == 0) 
 	            || (associate.getName() == null) 
 	            || (associate.getName().length() == 0) 
 	            || (associate.getCostCenter() == null) 
@@ -30,7 +30,7 @@ public class DocumentAssociateSerializer implements AssociateSerializer<Document
 	            throw new IllegalArgumentException("Associate object contains invalid data");
 	        }
 
-	        return new Document("rhid", associate.getRedhatId())
+	        return new Document("rhid", associate.getRhid())
 	                .append("name", associate.getName())
 	                .append("costCenter", associate.getCostCenter())
 	                .append("email", associate.getEmail())
@@ -65,7 +65,7 @@ public class DocumentAssociateSerializer implements AssociateSerializer<Document
         double mileageRate = document.getDouble("mileageRate");
 
         return new Associate()
-        			.setRedhatId(rhid)
+        			.setRhid(rhid)
         			.setName(name)
         			.setCostCenter(costCenter)
         			.setEmail(email)

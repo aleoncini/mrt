@@ -41,11 +41,11 @@ public class Associate {
         return this;
     }
 
-    public String getRedhatId() {
+    public String getRhid() {
         return rhid;
     }
 
-    public Associate setRedhatId(String id) {
+    public Associate setRhid(String id) {
         this.rhid = id;
         return this;
     }
