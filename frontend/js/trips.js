@@ -17,12 +17,9 @@ function initLocations() {
         dataType: 'json',
         success: function(response, status, xhr){
             console.log(response);
-            var data;
-            if(response != null){
-                data = jQuery.parseJSON(response.responseText);
-            }
-            if(data.length > 0){
-                formatLocationList(data.locations);
+            //var data;
+            if(response.length > 0){
+                formatLocationList(response);
             }
         },
         error: function(){
@@ -47,8 +44,8 @@ function getTrips(month, year) {
         type: 'GET',
         dataType: 'json',
         complete: function(response, status, xhr){
-            var data = jQuery.parseJSON(response.responseText);
-            $.each(data.trips, function (index, trip) {
+            var trips = jQuery.parseJSON(response.responseText);
+            $.each(trips, function (index, trip) {
                 addTripToTable(trip)
             });
         }
@@ -70,10 +67,6 @@ function refreshTripsTable() {
 };
 
 function addTripToTable(trip) {
-    console.log('====> ' + trip.rhid);
-    console.log('====> ' + trip.date.day + '/' + trip.date.month + '/' + trip.date.year);
-    console.log('====> ' + trip.location.destination + ', ' + trip.location.distance);
-    console.log('====> ' + trip.purpose);
   var rowContent = '<tr>';
   rowContent += '<td>' + trip.date.day + '</td>';
   rowContent += '<td>' + trip.location.destination + '</td>';
@@ -83,28 +76,27 @@ function addTripToTable(trip) {
   numberOfTrips += 1;
   totalMileage += parseInt(trip.location.distance, 10);
   document.getElementById("bannerNumberOfTrips").innerHTML = numberOfTrips;
-  document.getElementById("bannerTotalMIleage").innerHTML = totalMileage;
-  $('#tbl_round_list > tbody:last-child').append(rowContent);
+  document.getElementById("bannerTotalMileage").innerHTML = totalMileage;
+  $('#tbl_trips > tbody:last-child').append(rowContent);
 };
 
 function saveTrip() {
     var the_trip = {};
     the_trip.rhid = localStorage.rhid;
     var the_date = {};
-    the_date.day = $('#inputDay').val();
-    the_date.month = $('#inputMonth :selected').val();
-    the_date.year = $('#inputYear :selected').val();
+    the_date.day = parseInt($('#inputDay').val());
+    the_date.month = parseInt($('#inputMonth :selected').val());
+    the_date.year = parseInt($('#inputYear :selected').val());
     the_trip.date = the_date;
     var the_location = {};
     the_location.destination = $('#inputLocationName').val();
     the_location.distance = parseInt( $('#inputDistance').val(), 10);
     the_trip.location = the_location;
     the_trip.purpose = $('#inputPurpose').val();
-    console.log(the_trip);
     $.ajax({
           type: "POST",
           url: "/rs/trips",
-          data: the_trip,
+          data: JSON.stringify(the_trip),
           contentType: "application/json; charset=utf-8",
           dataType: "json",
           success: function(data){
