@@ -5,7 +5,7 @@ import org.jboss.resteasy.annotations.jaxrs.PathParam;
 
 import it.redhat.mrt.pdf.model.Trip;
 
-import java.util.Set;
+import java.util.List;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
@@ -18,6 +18,6 @@ public interface TripService {
     @GET
     @Path("/{rhid}/{year}/{month}")
     @Produces("application/json")
-    Set<Trip> get(@PathParam String rhid, @PathParam int year, @PathParam int month);
+    List<Trip> getMonthlyTrips(@PathParam String rhid, @PathParam int year, @PathParam int month);
 
 }

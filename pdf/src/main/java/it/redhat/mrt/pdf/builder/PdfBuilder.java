@@ -33,19 +33,15 @@ public class PdfBuilder {
     private Color darkRed= new Color(175, 0, 0);
 
     private Report report;
-    private String reportDirectory = "/tmp/";
+    private String reportDirectory = "/home/jboss/reports/";
 
     public PdfBuilder setReport(Report report){
         this.report = report;
         return this;
     }
 
-    public PdfBuilder setReportDirectory(String dir){
-        this.reportDirectory = dir;
-        return this;
-    }
-
     public void build(){
+        logger.info("[PdfBuilder] building pdf report for user: " + this.report.getAssociate().getName());
         if (report == null) {
 			throw new NullPointerException("Report not set for this builder.");
         }

@@ -2,12 +2,13 @@ package it.redhat.mrt.pdf.model;
 
 import java.time.Month;
 import java.time.format.TextStyle;
+import java.util.List;
 import java.util.Locale;
 import java.util.Set;
 
 public class Report {
     private Associate associate;
-    private Set<Trip> trips;
+    private List<Trip> trips;
     private int year;
     private int month;
 
@@ -38,12 +39,12 @@ public class Report {
         return this.associate;
     }
  
-    public Report setTrips(Set<Trip> trips){
+    public Report setTrips(List<Trip> trips){
         this.trips = trips;
         return this;
     }
  
-    public Set<Trip> getTrips(){
+    public List<Trip> getTrips(){
         return this.trips;
     }
  
