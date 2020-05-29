@@ -15,7 +15,7 @@ public class ReportTest {
           .when().get("/reports")
           .then()
              .statusCode(200)
-             .body(is("hello"));
+             .body(is("ok\n"));
     }
 
 }

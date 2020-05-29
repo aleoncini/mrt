@@ -5,9 +5,10 @@ import org.jboss.resteasy.annotations.jaxrs.PathParam;
 
 import it.redhat.mrt.pdf.model.Trip;
 
-import java.util.List;
+import java.util.Set;
 
 import javax.ws.rs.GET;
+import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 
@@ -18,6 +19,10 @@ public interface TripService {
     @GET
     @Path("/{rhid}/{year}/{month}")
     @Produces("application/json")
-    List<Trip> getMonthlyTrips(@PathParam String rhid, @PathParam int year, @PathParam int month);
+    Set<Trip> getMonthlyTrips(@PathParam String rhid, @PathParam int year, @PathParam int month);
+
+    @POST
+    @Produces("application/json")
+    Trip add(Trip trip);
 
 }

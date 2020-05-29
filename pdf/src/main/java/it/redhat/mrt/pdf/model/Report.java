@@ -8,7 +8,7 @@ import java.util.Set;
 
 public class Report {
     private Associate associate;
-    private List<Trip> trips;
+    private Set<Trip> trips;
     private int year;
     private int month;
 
@@ -39,12 +39,12 @@ public class Report {
         return this.associate;
     }
  
-    public Report setTrips(List<Trip> trips){
+    public Report setTrips(Set<Trip> trips){
         this.trips = trips;
         return this;
     }
  
-    public List<Trip> getTrips(){
+    public Set<Trip> getTrips(){
         return this.trips;
     }
  

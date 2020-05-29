@@ -1,7 +1,5 @@
 package it.redhat.mrt.pdf.rest;
 
-import java.util.Collection;
-import java.util.List;
 import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 
@@ -18,8 +16,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import it.redhat.mrt.pdf.builder.PdfBuilder;
-import it.redhat.mrt.pdf.model.Report;
+import it.redhat.mrt.pdf.model.Associate;
 import it.redhat.mrt.pdf.model.Trip;
+import it.redhat.mrt.pdf.model.Report;
 import it.redhat.mrt.pdf.service.AssociateService;
 import it.redhat.mrt.pdf.service.TripService;
 
@@ -38,7 +37,7 @@ public class ReportResource {
 
     @GET
     public String test() {
-        return new String("hello");
+        return new String("ok\n");
     }
 
     @POST
@@ -46,6 +45,11 @@ public class ReportResource {
     public String build(@PathParam("rhid") String rhid,@PathParam("year") int year,@PathParam("month") int month) {
         logger.info("[ReportResource] scheduling build for user with rhid: " + rhid);
         CompletableFuture.runAsync(() -> {
+            logger.info("[ReportResource] running async...");
+            Associate associate = aService.get(rhid);
+            logger.info("[ReportResource] async, got associate: " + associate.getName());
+            Set<Trip> trips = tService.getMonthlyTrips(rhid, year, month);
+            logger.info("[ReportResource] async, got trips: " + trips.size());
             Report report = new Report().setAssociate(aService.get(rhid))
                 .setYear(year)
                 .setMonth(month)

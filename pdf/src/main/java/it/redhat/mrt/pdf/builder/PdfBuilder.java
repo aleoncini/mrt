@@ -33,7 +33,7 @@ public class PdfBuilder {
     private Color darkRed= new Color(175, 0, 0);
 
     private Report report;
-    private String reportDirectory = "/home/jboss/reports/";
+    private String reportDirectory = "/reports/";
 
     public PdfBuilder setReport(Report report){
         this.report = report;
