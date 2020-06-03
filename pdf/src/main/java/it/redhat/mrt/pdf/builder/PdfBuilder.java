@@ -1,6 +1,8 @@
 package it.redhat.mrt.pdf.builder;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.net.URISyntaxException;
@@ -19,6 +21,9 @@ import it.redhat.mrt.pdf.model.Report;
 import it.redhat.mrt.pdf.model.Trip;
 
 public class PdfBuilder {
+
+	public static final String BANNER_RESOURCE = "/RHBannerNew.png";
+
     private static final Logger logger = LoggerFactory.getLogger("it.redhat.mrt");
 
     private PDDocument document;
@@ -66,13 +71,39 @@ public class PdfBuilder {
         document = new PDDocument();
         document.addPage(new PDPage());
         PDPage page = document.getPage(0);
+        ByteArrayOutputStream byteArrayOutputStream = null;
+        InputStream inputStream = null;
+
         try {
-            bannerImage = PDImageXObject.createFromFile(reportDirectory + "RHBannerNew.png", document);
+
+        	// Read banner resource from jar into a byte array
+        	byteArrayOutputStream = new ByteArrayOutputStream();
+            inputStream = getClass().getResourceAsStream(BANNER_RESOURCE);
+            byte[] buffer = new byte[4096];
+            while (true) {
+                int nread = inputStream.read(buffer);
+                if (nread <= 0) {
+                    break;
+                }
+                byteArrayOutputStream.write(buffer, 0, nread);
+            }
+
+            byte[] data = byteArrayOutputStream.toByteArray();
+
+            bannerImage = PDImageXObject.createFromByteArray(document, data, null);
             contentStream = new PDPageContentStream(document, page);
+
         } catch (Throwable t) {
             StringWriter trace = new StringWriter();
             t.printStackTrace(new PrintWriter(trace, true));
             logger.warn(trace.toString());
+        } finally {
+
+        	// close opened resources
+        	if (inputStream != null) try { inputStream.close(); } catch (Exception e) {logger.warn(e.getMessage());}
+
+        	if (byteArrayOutputStream != null) try { byteArrayOutputStream.close(); } catch (Exception e) {logger.warn(e.getMessage());}
+
         }
         contentWidth = page.getBleedBox().getWidth() - (borderWidth * 2);
         xLeft = borderWidth;
