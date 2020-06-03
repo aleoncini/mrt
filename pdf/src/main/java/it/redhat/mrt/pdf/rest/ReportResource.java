@@ -1,5 +1,7 @@
 package it.redhat.mrt.pdf.rest;
 
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 
@@ -50,10 +52,10 @@ public class ReportResource {
             logger.info("[ReportResource] async, got associate: " + associate.getName());
             Set<Trip> trips = tService.getMonthlyTrips(rhid, year, month);
             logger.info("[ReportResource] async, got trips: " + trips.size());
-            Report report = new Report().setAssociate(aService.get(rhid))
+            Report report = new Report().setAssociate(associate)
                 .setYear(year)
                 .setMonth(month)
-                .setTrips(tService.getMonthlyTrips(rhid, year, month));
+                .setTrips(trips);
             new PdfBuilder()
                 .setReport(report)
                 .build();
