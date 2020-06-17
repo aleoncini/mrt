@@ -24,7 +24,9 @@ public class PdfBuilder {
 
 	public static final String BANNER_RESOURCE = "/RHBannerNew.png";
 
-    private static final Logger logger = LoggerFactory.getLogger("it.redhat.mrt");
+	public static final String reportDirectory = "/reports/";
+
+	private static final Logger logger = LoggerFactory.getLogger("it.redhat.mrt");
 
     private PDDocument document;
     private PDPageContentStream contentStream;
@@ -38,7 +40,6 @@ public class PdfBuilder {
     private Color darkRed= new Color(175, 0, 0);
 
     private Report report;
-    private String reportDirectory = "/reports/";
 
     public PdfBuilder setReport(Report report){
         this.report = report;
