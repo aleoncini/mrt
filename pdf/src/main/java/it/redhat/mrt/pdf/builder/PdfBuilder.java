@@ -1,6 +1,7 @@
 package it.redhat.mrt.pdf.builder;
 
 import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintWriter;
@@ -24,7 +25,7 @@ public class PdfBuilder {
 
 	public static final String BANNER_RESOURCE = "/RHBannerNew.png";
 
-	public static final String reportDirectory = "/reports/";
+	public static final String reportDirectory = "/reports";
 
 	private static final Logger logger = LoggerFactory.getLogger("it.redhat.mrt");
 
@@ -116,7 +117,7 @@ public class PdfBuilder {
     }
 
     private void save(){
-        String filename = this.reportDirectory + 
+        String filename = this.reportDirectory + File.separator +
             this.report.getAssociate().getRhid() + "_" + 
             this.report.getYear() + "_" + 
             this.report.getMonth() + ".pdf";
