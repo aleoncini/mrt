@@ -6,12 +6,49 @@ This project uses Quarkus, the Supersonic Subatomic Java Framework.
 
 If you want to learn more about Quarkus, please visit its website: https://quarkus.io/ .
 
-## Running the application in dev mode
+## Deploy the BACKEND module on OCP
+The deploy of this module on OCP is based on a *Dockerfile Strategy*, it points to a GIT repo containing the Dockerfile to build the container and
+run the application. To do that way execute the following steps:
 
-After having pulled the cose to your local filesystem You can locally run your application in dev mode that enables live coding using:
-```
-./mvnw quarkus:dev
-```
+1. Access the OCP cluster where you want to deploy the application and switch to the project.
+2. From the developer console open the Topology view.
+3. Click on **+Add** button.
+4. Select "From Dockerfile" tab.
+5. Enter the GIT url, the application name, choose Deployment as resource type, check Create Route and then click Create.
+
+The platform will start to build the container and then the deployment process.
+[Note:] The build process to create the container where you will run the app is based on a UBI8 OpenJDK base image from Red Hat official Registry. To access the resource authentication is required. If you haven't done in advance it is required that you create a secret (using the admin console for the project) with a Service Account security token and that you set the secret to the deployment configuration. To add the secret to the Deployment configuration go to **Builds** view of the Developer Console, click on the backend build, and open the YAML tab. Edit the YAML to insert the reference to the secret for the pull strategy of the images. Something like:
+
+    strategy:
+        type: Docker
+        dockerStrategy:
+            pullSecret:
+                name: redhat-registry
+            dockerfilePath: Dockerfile
+
+in the example the "redhat-registry" is the name of the secret that contains the token to access the Red Hat Registry.
+
+There is one final step to make the backend module up and running: the Mongo DB service URL.
+The Quarkus application running in the backend module needs to know the URL to access the mongo instances and expects to find it as an Environment Variable: *MONGOCONNSTRING*. The URL is in the format:
+
+    mongodb://dbusername:dbuserpassword@servicename:port/databasename 
+
+The service name can be verified from the developer console in the Topology view clicking on the pod icon of the Mongo database that open a lateral information panel. In the Resources tab of the lateral panel look at the Services paragraph.
+For example the URL could be:
+
+    mongodb://usr:pwd@mongodb:27017/mrt
+
+To apply this environment variable to the deployment configuration using the developer console click on backend configuration in the Build view, click on Environment tab, enter **MONGOCONNSTRING** in the *NAME* field and the URL discussed above in the *VALUE* field, then Save. 
+
+## deploy the application locally using podman
+
+Git clone the project locally, cd backend and type:
+
+    podman build  -t mrt-backend .
+
+then you can run the app with the following command:
+
+    podman run --rm --name backend -d -p 8080:8080 --env MONGOCONNSTRING=mongodb://<host_running-mongodb>:27017/mrt mrt-backend
 
 ## Packaging and running the application
 
@@ -30,7 +67,3 @@ Or, if you don't have GraalVM installed, you can run the native executable build
 You can then execute your native executable with: `./target/backend-1.0-SNAPSHOT-runner`
 
 If you want to learn more about building native executables, please consult https://quarkus.io/guides/building-native-image-guide.
-
-## Run options
-
-The application read environment variables to configure itself. Please use -Dquarkus.mongodb.mrt.connection-string=mongodb://localhost:27017 configure the connection to mongodb 
