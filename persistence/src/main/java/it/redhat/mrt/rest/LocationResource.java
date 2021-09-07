@@ -62,6 +62,12 @@ public class LocationResource {
     }
 
     @GET
+    @Path("/range/{distance}")
+    public List<PanacheMongoEntityBase> searchByRange(@PathParam("distance") int distance) {
+        return Location.find("distance <= ?1", distance).list();
+    }
+
+    @GET
     @Path("/count")
     public Long count() {
         return Location.count();

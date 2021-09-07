@@ -44,3 +44,11 @@ In a local environment on the other hand if you want to persist data you have to
 
     > podman run -v /my/own/datadir:/data/db --name mongodb -d -p 27017:27017 mongo:3.6
 
+When using a persistent volume you may incur a problem related to file system privileges, something like:
+
+    > find: '/data/db': Permission denied
+    > chown: changing ownership of '/data/db': Permission denied
+
+In this case, if you are running the lab in local secured environment you may try to use the following command (note the *privileged* parameter):
+
+    > podman run -v /my/own/datadir:/data/db --privileged --name mongodb -d -p 27017:27017 mongo:3.6

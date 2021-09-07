@@ -15,56 +15,56 @@ import javax.ws.rs.NotFoundException;
 
 import org.bson.types.ObjectId;
 import io.quarkus.mongodb.panache.PanacheMongoEntityBase;
-import it.redhat.mrt.model.Trip;
+import it.redhat.mrt.model.Associate;
 
-@Path("/trips")
+@Path("/associates")
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)
-public class TripResource {
-    
-    @GET
-    public List<PanacheMongoEntityBase> list() {
-        return Trip.listAll();
-    }
+public class AssociateResource {
 
     @GET
-    @Path("{rhid}/{year}/{month}")
-    public List<PanacheMongoEntityBase> get(@PathParam("rhid") String rhid, @PathParam("year") int year, @PathParam("month") int month) {
-        return Trip.find("rhid = ?1 and date.year = ?2 and date.month = ?3", rhid, year, month).list();
+    public List<PanacheMongoEntityBase> list() {
+        return Associate.listAll();
     }
 
     @GET
     @Path("/{id}")
-    public Trip get(@PathParam("id") String id) {
-        return Trip.findById(new ObjectId(id));
+    public Associate get(@PathParam("id") String id) {
+        return Associate.findById(new ObjectId(id));
+    }
+
+    @GET
+    @Path("/rhid/{rhid}")
+    public Associate getByRhid(@PathParam("rhid") String rhid) {
+        return Associate.findByRhid(rhid);
     }
 
     @POST
-    public Trip create(Trip trip) {
-        trip.persist();
-        return trip;
+    public Associate create(Associate associate) {
+        associate.persist();
+        return associate;
     }
 
     @PUT
     @Path("/{id}")
-    public void update(@PathParam("id") String id, Trip trip) {
-        trip.update();
+    public void update(@PathParam("id") String id, Associate associate) {
+        associate.update();
     }
 
     @DELETE
     @Path("/{id}")
     public void delete(@PathParam("id") String id) {
-        Trip trip = Trip.findById(new ObjectId(id));
-        if(trip == null) {
+        Associate associate = Associate.findById(new ObjectId(id));
+        if(associate == null) {
             throw new NotFoundException();
         }
-        trip.delete();
+        associate.delete();
     }
 
     @GET
     @Path("/count")
     public Long count() {
-        return Trip.count();
+        return Associate.count();
     }    
 
 }
