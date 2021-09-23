@@ -1,0 +1,194 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="Andrea Leoncini">
+    <title>MR Tool - trips</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="css/bootstrap.css" rel="stylesheet">
+
+</head>
+
+<body style="padding-top: 3.5rem">
+    <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
+        <img src="images/logo.svg" width="135" height="32"><img src="images/transparent_spacer.png">
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault" aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+    
+        <div class="collapse navbar-collapse" id="navbarsExampleDefault">
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="index.html">Home</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+    
+    <main role="main">
+
+        <div class="container">
+            <br>
+            <h2>Your monthly trips</h2>
+            <p class="lead">
+                Use this page to populate the reports for Business Mileage.
+            </p>
+            <br>
+
+            <form>
+                <div class="form-row align-items-center">
+                    <div class="col-auto">
+                        <label class="sr-only" for="inputYear">Year</label>
+                        <select id="inputYear" class="form-control mb-2" data-style="btn-info">
+                            <option value="2020"> 2020 </option>
+                            <option value="2021" selected> 2021 </option>
+                            <option value="2022"> 2022 </option>
+                        </select>
+                    </div>
+                    <div class="col-auto">
+                        <label class="sr-only" for="inputMonth">Month</label>
+                        <select id="inputMonth" class="form-control mb-2" data-style="btn-info" onchange="loadTrips(parseInt($('#inputYear :selected').val()), this.value, displayAllTrips);">
+                            <option value="0" selected> Choose month... </option>
+                            <option value="1">January</option>
+                            <option value="2">February</option>
+                            <option value="3">March</option>
+                            <option value="4">April</option>
+                            <option value="5">May</option>
+                            <option value="6">June</option>
+                            <option value="7">July</option>
+                            <option value="8">August</option>
+                            <option value="9">September</option>
+                            <option value="10">October</option>
+                            <option value="11">November</option>
+                            <option value="12">December</option>
+                        </select>
+                    </div>
+                </div>
+            </form>                  
+        </div>
+
+        <br>
+
+        <div id="tripsBannerContainer" class="container" style="background:red; color:white;display:none">
+            <div class="row align-items-center">
+                <div class="col">
+                    <p style="size: 1.6em;font-weight: bold;">
+                        Number of Trips: <span id="bannerNumberOfTrips">0</span>
+                    </p>
+                </div>
+                <div class="col">
+                    <p style="size: 1.6em; font-weight: bold;">
+                        Total mileage (Km): <span id="bannerTotalMileage">0</span>
+                    </p>
+                </div>
+            </div>
+        </div>
+    
+        <br>
+
+        <div id="tripsTableContainer" class="container" style="display:none">
+            <table class="table table-condensed table-hover" id="tbl_trips">
+                <thead>
+                    <tr><th>Day</th><th>From office to</th><th>Company or contact</th><th>mileage (Km)</th></tr>
+                </thead>
+                <tbody id="tripsTableBody"></tbody>
+            </table>
+            <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#tripModal">Add Trip</button>
+        </div>
+
+    </main>
+  
+
+    <!-- New Trip Modal -->
+    <div class="modal fade" id="tripModal" tabindex="-1" aria-labelledby="tripModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="tripModalLabel">Enter New Trip</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <select id="inputDay" class="form-control" data-style="btn-info">
+                            <option>day</option>
+                            <option>1</option>
+                            <option>2</option>
+                            <option>3</option>
+                            <option>4</option>
+                            <option>5</option>
+                            <option>6</option>
+                            <option>7</option>
+                            <option>8</option>
+                            <option>9</option>
+                            <option>10</option>
+                            <option>11</option>
+                            <option>12</option>
+                            <option>13</option>
+                            <option>14</option>
+                            <option>15</option>
+                            <option>16</option>
+                            <option>17</option>
+                            <option>18</option>
+                            <option>19</option>
+                            <option>20</option>
+                            <option>21</option>
+                            <option>22</option>
+                            <option>23</option>
+                            <option>24</option>
+                            <option>25</option>
+                            <option>26</option>
+                            <option>27</option>
+                            <option>28</option>
+                            <option>29</option>
+                            <option>30</option>
+                            <option>31</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <input type="text" class="form-control" id="inputLocationName" placeholder="From office to..." required="required" list="tList">
+                        <datalist id="tList"></datalist>
+                    </div>
+                    <div class="form-group">
+                        <input type="text" class="form-control" id="inputPurpose" placeholder="Company or Contact" required="required">
+                    </div>
+                    <div class="form-group">
+                        <input type="text" class="form-control" id="inputDistance" placeholder="Km..." required="required">
+                    </div>  
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-primary" id="saveTripButton">Save Trip</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- END -- New Trip Modal -->
+
+<!-- jQuery first, then Bootstrap JS -->
+<script src="js/jquery-3.6.0.min.js"></script>
+<script src="js/bootstrap.bundle.js"></script>
+<script src="js/trips.js"></script>
+<script type="text/javascript">
+
+    $(document).ready(function(){
+        //initLocations();
+
+        $('#saveTripButton').click(function(){
+            $('#tripModal').modal('hide');
+            saveTrip(addTripToTable);
+        });
+
+        $("#inputLocationName").change(function(ev){
+            locationName = $(this).val();
+            var val = ev.target.value
+            distance = $("#tList option[value='" + val + "']").text();
+            $('#inputDistance').val(distance);
+        });
+    });
+
+</script>
+</body>
+</html>

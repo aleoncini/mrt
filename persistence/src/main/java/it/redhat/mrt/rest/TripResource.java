@@ -22,15 +22,17 @@ import it.redhat.mrt.model.Trip;
 @Produces(MediaType.APPLICATION_JSON)
 public class TripResource {
     
+    private final static String rhid = "9053";
+
     @GET
     public List<PanacheMongoEntityBase> list() {
         return Trip.listAll();
     }
 
     @GET
-    @Path("{rhid}/{year}/{month}")
-    public List<PanacheMongoEntityBase> get(@PathParam("rhid") String rhid, @PathParam("year") int year, @PathParam("month") int month) {
-        return Trip.find("rhid = ?1 and date.year = ?2 and date.month = ?3", rhid, year, month).list();
+    @Path("{year}/{month}")
+    public List<Trip> get(@PathParam("year") int year, @PathParam("month") int month) {
+        return Trip.getTrips(rhid, year, month);
     }
 
     @GET
@@ -41,6 +43,7 @@ public class TripResource {
 
     @POST
     public Trip create(Trip trip) {
+        trip.rhid = rhid;
         trip.persist();
         return trip;
     }
