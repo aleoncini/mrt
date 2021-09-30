@@ -1,5 +1,5 @@
-//var STORE_ORIGIN = 'http://store-ossg.apps.ocp4.rhocplab.com/';
-var STORE_ORIGIN = 'http://localhost:8080/';
+const STORE_ORIGIN = 'https://app-mrt.apps.ocp4.rhocplab.com/';
+//var STORE_ORIGIN = 'http://localhost:8080/';
 
 function formatLocationList(locations) {
     $('#tList').empty();
