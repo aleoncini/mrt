@@ -11,23 +11,13 @@ function formatLocationList(locations) {
 };
 
 function displayAllTrips(trips) {
+    $('#tripsTableContainer').hide();
+    $("#tripsTableBody").empty();
+    $('#bannerNumberOfTrips').text('0');
+    $('#bannerTotalMileage').text('0');
     $.each(trips, function (index, trip) {
         addTripToTable(trip)
     });
-    $('#tripsBannerContainer').show();
-    $('#tripsTableContainer').show(500);
-};
-
-function refreshTripsTable() {
-    $('#tripsTableContainer').hide();
-    $('#tripsBannerContainer').hide();
-    $("#tripsTableBody").empty();
-
-    numberOfTrips = 0;
-    totalMileage = 0;
-    document.getElementById("bannerNumberOfTrips").innerHTML = '0';
-    document.getElementById("bannerTotalMileage").innerHTML = '0';
-
     $('#tripsBannerContainer').show();
     $('#tripsTableContainer').show(500);
 };
@@ -41,11 +31,38 @@ function addTripToTable(trip) {
     rowContent += '<td>' + trip.purpose + '</td>';
     rowContent += '<td>' + trip.distance + '</td>';
     rowContent += '</tr>';
-    $('#tbl_trips  tr:last').after(rowContent);
+    $('#tbl_trips  tbody').append(rowContent);
     numberOfTrips += 1;
     totalMileage += trip.distance;
     $('#bannerNumberOfTrips').text(numberOfTrips);
     $('#bannerTotalMileage').text(totalMileage);
+};
+
+function showReportBuildResult(answer) {
+    $("#reportSuccessfullyRequested").fadeIn();
+    window.setTimeout(function () { 
+        $("#reportSuccessfullyRequested").fadeOut();
+    }, 2000);
+};
+
+function displayReportList(reportList) {
+    $("#reportsTableBody").empty();
+    $.each(reportList, function (index, reportInfo) {
+        addReportInfoToTable(reportInfo);
+    });
+};
+
+function addReportInfoToTable(info) {
+    var filename = '/archive/pdf/' + info.name;
+    var rowContent = '<tr>';
+    rowContent += '<td>' + info.month + '</td>';
+    rowContent += '<td>' + info.creationTime + '</td>';
+    rowContent += '<td>' + info.size + '</td>';
+    rowContent += '<td>' + info.version + '</td>';
+    rowContent += '<td><a href="' + filename + '"><img src="images/file-earmark-arrow-down.svg" alt="download" width="32" height="32"></a></td>';
+    rowContent += '<td><img src="images/trash.svg" alt="delete" width="32" height="32"></td>';
+    rowContent += '</tr>';
+    $('#tbl_reports  tbody').append(rowContent);
 };
 
 // --- STORAGE FUNCTIONS ----------------------------------------- 
@@ -65,7 +82,6 @@ function saveTrip(callbackFunction) {
         contentType: "application/json; charset=utf-8",
         dataType: "json",
         complete: function(response, status, xhr){
-            console.log(response.responseText);
             var trip = jQuery.parseJSON(response.responseText);
             callbackFunction(trip);
         }
@@ -84,3 +100,32 @@ function loadTrips(year, month, callbackFunction) {
         }
     });
 };
+
+function requestReportBuild(month, callbackFunction) {
+    var theUrl = STORE_ORIGIN + 'reports/2021/' + month;
+    $.ajax({
+        url: theUrl,
+        type: 'POST',
+        dataType: 'json',
+        complete: function(response, status, xhr){
+            var answer = jQuery.parseJSON(response.responseText);
+            callbackFunction(answer);
+        }
+    });
+};
+
+// --- PDF ARCHIVE FUNCTIONS ----------------------------------------- 
+
+function loadReportList(year, callbackFunction) {
+    var theUrl = STORE_ORIGIN + 'archive/' + year;
+    $.ajax({
+        url: theUrl,
+        type: 'GET',
+        dataType: 'json',
+        complete: function(response, status, xhr){
+            var data = jQuery.parseJSON(response.responseText);
+            callbackFunction(data);
+        }
+    });
+};
+

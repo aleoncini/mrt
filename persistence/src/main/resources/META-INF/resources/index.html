@@ -49,7 +49,6 @@
     </div>
 
     <div class="container">
-        <!-- Example row of columns -->
         <div class="row">
             <div class="col-md-4">
                 <h2>Enter Trips</h2>
@@ -57,14 +56,30 @@
                 <p><a class="btn btn-secondary" href="trips.html" role="button">Enter Trips &raquo;</a></p>
             </div>
             <div class="col-md-4">
-                <h2>Heading</h2>
-                <p>Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui. </p>
-                <p><a class="btn btn-secondary" href="#" role="button">View details &raquo;</a></p>
+                <h2>Pdf</h2>
+                <p>Prepare a Mileage Report in Pdf that can be used for administrative purpose or process like for example to start an expense report.</p>
+                <div class="alert alert-success" id="reportSuccessfullyRequested" role="alert" style="display:none;" >Report build scheduled.</div>
+                <select id="inputPdfMonth" class="form-control mb-2" data-style="btn-info">
+                    <option value="0" selected> Choose month... </option>
+                    <option value="1">January</option>
+                    <option value="2">February</option>
+                    <option value="3">March</option>
+                    <option value="4">April</option>
+                    <option value="5">May</option>
+                    <option value="6">June</option>
+                    <option value="7">July</option>
+                    <option value="8">August</option>
+                    <option value="9">September</option>
+                    <option value="10">October</option>
+                    <option value="11">November</option>
+                    <option value="12">December</option>
+                </select>
+                <p><a class="btn btn-secondary" role="button" id="btn_createReport">Create Report &raquo;</a></p>
             </div>
             <div class="col-md-4">
-                <h2>Heading</h2>
-                <p>Donec sed odio dui. Cras justo odio, dapibus ac facilisis in, egestas eget quam. Vestibulum id ligula porta felis euismod semper. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus.</p>
-                <p><a class="btn btn-secondary" href="#" role="button">View details &raquo;</a></p>
+                <h2>Archive</h2>
+                <p>Here you can find all the reports you have built for each year</p>
+                <p><a class="btn btn-secondary" href='reports.html'  role="button">View Reports &raquo;</a></p>
             </div>
         </div>
 
@@ -104,10 +119,15 @@
     <!-- JavaScript libraries-->
     <script src="js/bootstrap.bundle.js"></script>
     <script src="js/jquery-3.6.0.min.js"></script>
+    <script src="js/trips.js"></script>
 
     <script type="text/javascript">
 
         $(document).ready(function(){
+            $('#btn_createReport').click(function(){
+                var month = parseInt($('#inputPdfMonth :selected').val());
+                requestReportBuild(month, showReportBuildResult);
+            });
         });
 
     </script>

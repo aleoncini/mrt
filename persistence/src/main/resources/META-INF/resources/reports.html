@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="Andrea Leoncini">
+    <title>MR Tool - reports</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="css/bootstrap.css" rel="stylesheet">
+
+</head>
+
+<body style="padding-top: 3.5rem">
+    <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
+        <img src="images/logo.svg" width="135" height="32"><img src="images/transparent_spacer.png">
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault" aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+    
+        <div class="collapse navbar-collapse" id="navbarsExampleDefault">
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="index.html">Home</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+    
+    <main role="main">
+
+        <div class="container">
+            <br>
+            <h2>Your Reports Archive</h2>
+            <p class="lead">
+                This is a list of all reports that you have requested a print file (in PDF format).
+                If you have requested more prints for the same month here you will find all of them with different version numbers.
+                If you don't need anymore the oldest versions please delete them so we can save disk space. 
+            </p>
+            <br>
+
+            <form>
+                <div class="form-row align-items-center">
+                    <div class="col-auto">
+                        <label class="sr-only" for="inputYear">Year</label>
+                        <select id="selReportListYear" class="form-control mb-2" data-style="btn-info" onchange="loadReportList(this.value, displayReportList);">
+                            <option value="2020"> 2020 </option>
+                            <option value="2021" selected> 2021 </option>
+                            <option value="2022"> 2022 </option>
+                        </select>
+                    </div>
+                </div>
+            </form>                  
+        </div>
+
+    
+        <br>
+
+        <div id="reportsTableContainer" class="container">
+            <table class="table table-condensed table-hover" id="tbl_reports">
+                <thead>
+                    <tr><th>Month</th><th>date</th><th>size</th><th>ver.</th><th>&nbsp;</th><th>&nbsp;</th></tr>
+                </thead>
+                <tbody id="reportsTableBody"></tbody>
+            </table>
+        </div>
+
+    </main>
+  
+
+<!-- jQuery first, then Bootstrap JS -->
+<script src="js/jquery-3.6.0.min.js"></script>
+<script src="js/bootstrap.bundle.js"></script>
+<script src="js/trips.js"></script>
+<script type="text/javascript">
+
+    $(document).ready(function(){
+        loadReportList($('#selReportListYear :selected').val(), displayReportList);
+    });
+
+</script>
+</body>
+</html>

@@ -20,4 +20,17 @@ public class Trip extends PanacheMongoEntity {
         return Trip.find("rhid = ?1 and year = ?2 and month = ?3", rhid, year, month).list();
     }
 
+    public static int getTotalMileage(String rhid, int year, int month){
+        if(month == 1){
+            return 0;
+        }
+        int totalDistance = 0;
+        List<Trip> trips = Trip.find("rhid = ?1 and year = ?2", rhid, year).list();
+        for (Trip trip : trips) {
+            if(trip.month < month){
+                totalDistance += trip.distance;
+            }
+        }
+        return totalDistance;
+    }
 }
