@@ -27,7 +27,7 @@ public class ReportFileInfo {
 
         File basedir = new File(path);
         if (!basedir.isDirectory()) {
-            throw new IllegalArgumentException("path must be a directory!");
+            throw new IllegalArgumentException("path <" + path + "> is not a directory!");
         }
 
         File[] files = basedir.listFiles((dir, name) -> name.endsWith(".pdf"));

@@ -1,5 +1,5 @@
 const STORE_ORIGIN = 'https://app-mrt.apps.ocp4.rhocplab.com/';
-//var STORE_ORIGIN = 'http://localhost:8080/';
+//const STORE_ORIGIN = 'http://localhost:8080/';
 
 function formatLocationList(locations) {
     $('#tList').empty();
@@ -59,8 +59,8 @@ function addReportInfoToTable(info) {
     rowContent += '<td>' + info.creationTime + '</td>';
     rowContent += '<td>' + info.size + '</td>';
     rowContent += '<td>' + info.version + '</td>';
-    rowContent += '<td><a href="' + filename + '"><img src="images/file-earmark-arrow-down.svg" alt="download" width="32" height="32"></a></td>';
-    rowContent += '<td><img src="images/trash.svg" alt="delete" width="32" height="32"></td>';
+    rowContent += '<td><a href="/archive/pdf/' + info.name + '"><img src="images/file-earmark-arrow-down.svg" alt="download" width="32" height="32"></a></td>';
+    rowContent += '<td style="cursor: pointer;" class="delete_report" data-filename="' + info.name + '"><img src="images/trash.svg" alt="delete" width="32" height="32"></td>';
     rowContent += '</tr>';
     $('#tbl_reports  tbody').append(rowContent);
 };
@@ -102,7 +102,8 @@ function loadTrips(year, month, callbackFunction) {
 };
 
 function requestReportBuild(month, callbackFunction) {
-    var theUrl = STORE_ORIGIN + 'reports/2021/' + month;
+    var year = new Date().getFullYear();
+    var theUrl = STORE_ORIGIN + 'reports/' + year + '/' + month;
     $.ajax({
         url: theUrl,
         type: 'POST',
@@ -129,3 +130,14 @@ function loadReportList(year, callbackFunction) {
     });
 };
 
+function deleteReportFile(filename) {
+    var theUrl = STORE_ORIGIN + 'archive/' + filename;
+    $.ajax({
+        url: theUrl,
+        type: 'DELETE',
+        dataType: 'json',
+        complete: function(response, status, xhr){
+            console.log('FILE ' + filename + ' removed from file system!');
+        }
+    });
+};

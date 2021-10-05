@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.io.FilenameFilter;
 import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -158,16 +159,26 @@ public class Builder {
     }
 
     private String getReportFilename(){
-        String fullDirName = getReportDirectoryName();
-        int counter = 1;
-        String filename = this.report.rhid + "_" + this.report.year + "_" + this.report.month + "_" + counter + ".pdf";
-        File file = new File(fullDirName, filename);
-        while (file.exists()) {
-            counter += 1;
-            filename = this.report.rhid + "_" + this.report.year + "_" + this.report.month + "_" + counter + ".pdf";        
-            file = new File(fullDirName, filename); 
+        File dir = new File(getReportDirectoryName());
+        File[] files = dir.listFiles(new FilenameFilter() {
+            public boolean accept(File dir, String name) {
+                return name.toLowerCase().endsWith(".pdf");
+            }
+        });
+
+        int version = 1;
+        String rootName = this.report.rhid + "_" + this.report.year + "_" + this.report.month;
+        for (int i = 0; i < files.length; i++) {
+            String docName = files[i].getName();
+            if(docName.startsWith(rootName)){
+                String[] parts = docName.substring(0, docName.length() - 4).split("_");
+                int ver = Integer.parseInt(parts[3]);
+                if(ver >= version){
+                    version = ver + 1;
+                }
+            }
         }
-        return filename;        
+        return this.report.rhid + "_" + this.report.year + "_" + this.report.month + "_" + version + ".pdf";
     }
 
     private String getReportDirectoryName(){
@@ -327,6 +338,10 @@ public class Builder {
     private void drawHeaderValues() throws IOException {
         int monthlyDistance = report.getMonthlyDistance();
         int totalDistance = report.getTotalDistance();
+        int previousTotalDistance = totalDistance - monthlyDistance;
+        if(previousTotalDistance < 0){
+            previousTotalDistance = 0;
+        }
         writeCellValue(0, 0, report.name);
         writeCellValue(0, 1, report.costCenter);
         writeCellValue(0, 2, report.rhid);
@@ -334,7 +349,7 @@ public class Builder {
         writeCellValue(1, 1, report.carId);
         writeCellValue(1, 2, "" + Double.toString(report.mileageRate));
         writeCellValue(2, 0, "" + monthlyDistance);
-        writeCellValue(2, 1, "" + (totalDistance - monthlyDistance));
+        writeCellValue(2, 1, "" + previousTotalDistance);
         writeCellValue(2, 2, "" + totalDistance);
     }
 

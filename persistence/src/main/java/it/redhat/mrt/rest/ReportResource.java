@@ -39,7 +39,6 @@ public class ReportResource {
         Report report = Report.build(idToken);
         report.month = month;
         report.year = year;
-        logger.info("[ReportResource] launching async...");
         CompletableFuture.runAsync(() -> {
             logger.info("[ReportResource] running async, creating PDF Report.");
             new Builder().setBaseDir(dirname).setReport(report).build();

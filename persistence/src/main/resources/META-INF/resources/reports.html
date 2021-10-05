@@ -77,6 +77,10 @@
 
     $(document).ready(function(){
         loadReportList($('#selReportListYear :selected').val(), displayReportList);
+        $(document).on("click", ".delete_report", function () {
+            deleteReportFile(this.dataset.filename);
+            $(this).parent().remove();
+        });
     });
 
 </script>
