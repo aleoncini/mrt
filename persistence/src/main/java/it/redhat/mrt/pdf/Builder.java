@@ -286,8 +286,8 @@ public class Builder {
         contentStream.moveTo(xLeft, 60);
         contentStream.lineTo(xRight, 60);
         contentStream.stroke();
-        contentStream.moveTo(xLeft, 100);
-        contentStream.lineTo(xRight, 100);
+        contentStream.moveTo(xLeft, 120);
+        contentStream.lineTo(xRight, 120);
         contentStream.stroke();
 
         contentStream.setLineWidth(.5f);
@@ -296,11 +296,11 @@ public class Builder {
         contentStream.moveTo(xMiddle, 80);
         contentStream.lineTo(xRight, 80);
         contentStream.stroke();
-        /*
+        
         contentStream.moveTo(xMiddle, 100);
         contentStream.lineTo(xRight, 100);
         contentStream.stroke();
-        */
+        
     }
 
     private void drawFooterLabels() throws IOException {
@@ -311,11 +311,10 @@ public class Builder {
         float text_width = (PDType1Font.HELVETICA.getStringWidth(text) / 1000.0f) * 6;
 
         contentStream.beginText();
-        contentStream.newLineAtOffset(xRight - 60 - text_width, 87);
+        contentStream.newLineAtOffset(xRight - 60 - text_width, 107);
         contentStream.showText(text);
         contentStream.endText();
 
-        /*
         text = "Total cost for month/period (Euro)";
         text_width = (PDType1Font.HELVETICA.getStringWidth(text) / 1000.0f) * 6;
 
@@ -323,16 +322,14 @@ public class Builder {
         contentStream.newLineAtOffset(xRight - 60 - text_width, 87);
         contentStream.showText(text);
         contentStream.endText();
-        */
 
-        text = "Rembursement (" + report.mileageRate + " Euro/Km)";
+        text = "Reimbursement (0,17 Euro/Km)";
         text_width = (PDType1Font.HELVETICA.getStringWidth(text) / 1000.0f) * 6;
 
         contentStream.beginText();
         contentStream.newLineAtOffset(xRight - 60 - text_width, 67);
         contentStream.showText(text);
         contentStream.endText();
-
     }
 
     private void drawHeaderValues() throws IOException {
@@ -362,26 +359,25 @@ public class Builder {
         float text_width = (PDType1Font.HELVETICA.getStringWidth(text) / 1000.0f) * 10;
 
         contentStream.beginText();
-        contentStream.newLineAtOffset(xRight - 10 - text_width, 87);
+        contentStream.newLineAtOffset(xRight - 10 - text_width, 107);
         contentStream.showText(text);
         contentStream.endText();
 
-        /*
+        Locale italian = new Locale("it", "IT", "EURO");
+        Locale.setDefault(italian);
+        NumberFormat nf = NumberFormat.getCurrencyInstance();
+
         double cost = distance * report.mileageRate;
-        text = "" + cost;
+        //text = "" + cost;
+        text = nf.format(cost);
         text_width = (PDType1Font.HELVETICA.getStringWidth(text) / 1000.0f) * 10;
 
         contentStream.beginText();
         contentStream.newLineAtOffset(xRight - 10 - text_width, 87);
         contentStream.showText(text);
         contentStream.endText();
-        */
 
-        double rembursement = distance * report.mileageRate;
-        Locale italian = new Locale("it", "IT", "EURO");
-        Locale.setDefault(italian);
-        NumberFormat nf = NumberFormat.getCurrencyInstance();
-        System.out.println(nf.format(rembursement));
+        double rembursement = distance * 0.17;
         //text = "" + new DecimalFormat("#.##").format(rembursement);
         text = nf.format(rembursement);
         text_width = (PDType1Font.HELVETICA.getStringWidth(text) / 1000.0f) * 10;
