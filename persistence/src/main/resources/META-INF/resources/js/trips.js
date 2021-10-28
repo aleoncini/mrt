@@ -1,5 +1,4 @@
-const STORE_ORIGIN = 'https://app-mrt.apps.ocp4.rhocplab.com/';
-//const STORE_ORIGIN = 'http://localhost:8080/';
+var STORE_ORIGIN = window.location.origin;
 
 function formatLocationList(locations) {
     $('#tList').empty();
@@ -30,6 +29,7 @@ function addTripToTable(trip) {
     rowContent += '<td>' + trip.destination + '</td>';
     rowContent += '<td>' + trip.purpose + '</td>';
     rowContent += '<td>' + trip.distance + '</td>';
+    rowContent += '<td style="cursor: pointer;" class="delete_trip" data-id="' + trip.id + '"><img src="images/trash.svg" alt="delete" width="24" height="24"></td>';
     rowContent += '</tr>';
     $('#tbl_trips  tbody').append(rowContent);
     numberOfTrips += 1;
@@ -53,7 +53,6 @@ function displayReportList(reportList) {
 };
 
 function addReportInfoToTable(info) {
-    var filename = '/archive/pdf/' + info.name;
     var rowContent = '<tr>';
     rowContent += '<td>' + info.month + '</td>';
     rowContent += '<td>' + info.creationTime + '</td>';
@@ -66,15 +65,8 @@ function addReportInfoToTable(info) {
 };
 
 // --- STORAGE FUNCTIONS ----------------------------------------- 
-function saveTrip(callbackFunction) {
-    var theUrl = STORE_ORIGIN + 'trips';
-    var the_trip = {};
-    the_trip.day = parseInt($('#inputDay').val());
-    the_trip.month = parseInt($('#inputMonth :selected').val());
-    the_trip.year = parseInt($('#inputYear :selected').val());
-    the_trip.destination = $('#inputLocationName').val();
-    the_trip.distance = parseInt( $('#inputDistance').val(), 10);
-    the_trip.purpose = $('#inputPurpose').val();
+function saveTrip(the_trip, callbackFunction) {
+    var theUrl = STORE_ORIGIN + '/trips';
     $.ajax({
         type: "POST",
         url: theUrl,
@@ -88,8 +80,20 @@ function saveTrip(callbackFunction) {
     });
 };
 
+function deleteTrip(id) {
+    var theUrl = STORE_ORIGIN + '/trips/' + id;
+    $.ajax({
+        url: theUrl,
+        type: 'DELETE',
+        dataType: 'json',
+        complete: function(response, status, xhr){
+            console.log('TRIP ' + id + ' removed from DB!');
+        }
+    });
+};
+
 function loadTrips(year, month, callbackFunction) {
-    var theUrl = STORE_ORIGIN + 'trips/' + year + "/" + month;
+    var theUrl = STORE_ORIGIN + '/trips/' + year + "/" + month;
     $.ajax({
         url: theUrl,
         type: 'GET',
@@ -103,7 +107,7 @@ function loadTrips(year, month, callbackFunction) {
 
 function requestReportBuild(month, callbackFunction) {
     var year = new Date().getFullYear();
-    var theUrl = STORE_ORIGIN + 'reports/' + year + '/' + month;
+    var theUrl = STORE_ORIGIN + '/reports/' + year + '/' + month;
     $.ajax({
         url: theUrl,
         type: 'POST',
@@ -118,7 +122,7 @@ function requestReportBuild(month, callbackFunction) {
 // --- PDF ARCHIVE FUNCTIONS ----------------------------------------- 
 
 function loadReportList(year, callbackFunction) {
-    var theUrl = STORE_ORIGIN + 'archive/' + year;
+    var theUrl = STORE_ORIGIN + '/archive/' + year;
     $.ajax({
         url: theUrl,
         type: 'GET',
@@ -131,7 +135,7 @@ function loadReportList(year, callbackFunction) {
 };
 
 function deleteReportFile(filename) {
-    var theUrl = STORE_ORIGIN + 'archive/' + filename;
+    var theUrl = STORE_ORIGIN + '/archive/' + filename;
     $.ajax({
         url: theUrl,
         type: 'DELETE',

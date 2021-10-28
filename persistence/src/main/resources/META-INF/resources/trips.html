@@ -92,7 +92,7 @@
         <div id="tripsTableContainer" class="container" style="display:none">
             <table class="table table-condensed table-hover" id="tbl_trips">
                 <thead>
-                    <tr><th>Day</th><th>From office to</th><th>Company or contact</th><th>mileage (Km)</th></tr>
+                    <tr><th>Day</th><th>From office to</th><th>Company or contact</th><th>mileage (Km)</th><th>&nbsp;</th></tr>
                 </thead>
                 <tbody id="tripsTableBody"></tbody>
             </table>
@@ -110,10 +110,10 @@
                     <h5 class="modal-title" id="tripModalLabel">Enter New Trip</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
+                <div class="alert alert-danger" id="formNotComplete" role="alert" style="display:none;" ></div>
                 <div class="modal-body">
                     <div class="form-group">
                         <select id="inputDay" class="form-control" data-style="btn-info">
-                            <option>day</option>
                             <option>1</option>
                             <option>2</option>
                             <option>3</option>
@@ -176,8 +176,58 @@
     $(document).ready(function(){
 
         $('#saveTripButton').click(function(){
+            var the_trip = {};
+            the_trip.day = parseInt($('#inputDay').val());
+            the_trip.month = parseInt($('#inputMonth :selected').val());
+            the_trip.year = parseInt($('#inputYear :selected').val());
+            
+            the_trip.destination = $('#inputLocationName').val();
+            if(the_trip.destination.length == 0){
+                $("#formNotComplete").html('Please enter a valid destination.');
+                $("#formNotComplete").fadeIn();
+                $('#inputLocationName').focus();
+                window.setTimeout(function () { 
+                    $("#formNotComplete").fadeOut();
+                }, 2000);
+                return;
+            }
+
+            the_trip.purpose = $('#inputPurpose').val();
+            if(the_trip.purpose.length == 0){
+                $("#formNotComplete").html('Please enter a valid purpose.');
+                $("#formNotComplete").fadeIn();
+                $('#inputPurpose').focus();
+                window.setTimeout(function () { 
+                    $("#formNotComplete").fadeOut();
+                }, 2000);
+                return;
+            }
+
+            var dist = $('#inputDistance').val();
+            if((dist.length == 0) || (isNaN(dist))){
+                $("#formNotComplete").html('Please enter distance as a numeric value.');
+                $("#formNotComplete").fadeIn();
+                $('#inputDistance').focus();
+                window.setTimeout(function () { 
+                    $("#formNotComplete").fadeOut();
+                }, 2000);
+                return;
+            }
+
+            the_trip.distance = parseInt(dist, 10);
+            if(the_trip.distance <= 0){
+                $("#formNotComplete").html('Distance must be a number greater than 0');
+                $("#formNotComplete").fadeIn();
+                $('#inputDistance').focus();
+                window.setTimeout(function () { 
+                    $("#formNotComplete").fadeOut();
+                }, 2000);
+                return;
+            }
+
             $('#tripModal').modal('hide');
-            saveTrip(addTripToTable);
+
+            saveTrip(the_trip, addTripToTable);
         });
 
         $("#inputLocationName").change(function(ev){
@@ -186,6 +236,12 @@
             distance = $("#tList option[value='" + val + "']").text();
             $('#inputDistance').val(distance);
         });
+
+        $(document).on("click", ".delete_trip", function () {
+            deleteTrip(this.dataset.id);
+            $(this).parent().remove();
+        });
+
     });
 
 </script>
