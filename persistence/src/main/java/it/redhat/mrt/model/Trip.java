@@ -27,7 +27,7 @@ public class Trip extends PanacheMongoEntity {
         int totalDistance = 0;
         List<Trip> trips = Trip.find("rhid = ?1 and year = ?2", rhid, year).list();
         for (Trip trip : trips) {
-            if(trip.month < month){
+            if(trip.month <= month){
                 totalDistance += trip.distance;
             }
         }
