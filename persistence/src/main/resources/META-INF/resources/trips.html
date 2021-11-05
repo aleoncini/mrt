@@ -34,7 +34,7 @@
             <br>
             <h2>Your monthly trips</h2>
             <p class="lead">
-                Use this page to populate the reports for Business Mileage.
+                Select Year and Month and review all the trips you have saved for the period.
             </p>
             <br>
 
@@ -96,76 +96,11 @@
                 </thead>
                 <tbody id="tripsTableBody"></tbody>
             </table>
-            <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#tripModal">Add Trip</button>
+            <a class="btn btn-primary" href='trip.html' role="button">Add Trip</a>
         </div>
 
     </main>
   
-
-    <!-- New Trip Modal -->
-    <div class="modal fade" id="tripModal" tabindex="-1" aria-labelledby="tripModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="tripModalLabel">Enter New Trip</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="alert alert-danger" id="formNotComplete" role="alert" style="display:none;" ></div>
-                <div class="modal-body">
-                    <div class="form-group">
-                        <select id="inputDay" class="form-control" data-style="btn-info">
-                            <option>1</option>
-                            <option>2</option>
-                            <option>3</option>
-                            <option>4</option>
-                            <option>5</option>
-                            <option>6</option>
-                            <option>7</option>
-                            <option>8</option>
-                            <option>9</option>
-                            <option>10</option>
-                            <option>11</option>
-                            <option>12</option>
-                            <option>13</option>
-                            <option>14</option>
-                            <option>15</option>
-                            <option>16</option>
-                            <option>17</option>
-                            <option>18</option>
-                            <option>19</option>
-                            <option>20</option>
-                            <option>21</option>
-                            <option>22</option>
-                            <option>23</option>
-                            <option>24</option>
-                            <option>25</option>
-                            <option>26</option>
-                            <option>27</option>
-                            <option>28</option>
-                            <option>29</option>
-                            <option>30</option>
-                            <option>31</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <input type="text" class="form-control" id="inputLocationName" placeholder="From office to..." required="required" list="tList">
-                        <datalist id="tList"></datalist>
-                    </div>
-                    <div class="form-group">
-                        <input type="text" class="form-control" id="inputPurpose" placeholder="Company or Contact" required="required">
-                    </div>
-                    <div class="form-group">
-                        <input type="text" class="form-control" id="inputDistance" placeholder="Km..." required="required">
-                    </div>  
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                    <button type="button" class="btn btn-primary" id="saveTripButton">Save Trip</button>
-                </div>
-            </div>
-        </div>
-    </div>
-    <!-- END -- New Trip Modal -->
 
 <!-- jQuery first, then Bootstrap JS -->
 <script src="js/jquery-3.6.0.min.js"></script>
@@ -174,61 +109,6 @@
 <script type="text/javascript">
 
     $(document).ready(function(){
-
-        $('#saveTripButton').click(function(){
-            var the_trip = {};
-            the_trip.day = parseInt($('#inputDay').val());
-            the_trip.month = parseInt($('#inputMonth :selected').val());
-            the_trip.year = parseInt($('#inputYear :selected').val());
-            
-            the_trip.destination = $('#inputLocationName').val();
-            if(the_trip.destination.length == 0){
-                $("#formNotComplete").html('Please enter a valid destination.');
-                $("#formNotComplete").fadeIn();
-                $('#inputLocationName').focus();
-                window.setTimeout(function () { 
-                    $("#formNotComplete").fadeOut();
-                }, 2000);
-                return;
-            }
-
-            the_trip.purpose = $('#inputPurpose').val();
-            if(the_trip.purpose.length == 0){
-                $("#formNotComplete").html('Please enter a valid purpose.');
-                $("#formNotComplete").fadeIn();
-                $('#inputPurpose').focus();
-                window.setTimeout(function () { 
-                    $("#formNotComplete").fadeOut();
-                }, 2000);
-                return;
-            }
-
-            var dist = $('#inputDistance').val();
-            if((dist.length == 0) || (isNaN(dist))){
-                $("#formNotComplete").html('Please enter distance as a numeric value.');
-                $("#formNotComplete").fadeIn();
-                $('#inputDistance').focus();
-                window.setTimeout(function () { 
-                    $("#formNotComplete").fadeOut();
-                }, 2000);
-                return;
-            }
-
-            the_trip.distance = parseInt(dist, 10);
-            if(the_trip.distance <= 0){
-                $("#formNotComplete").html('Distance must be a number greater than 0');
-                $("#formNotComplete").fadeIn();
-                $('#inputDistance').focus();
-                window.setTimeout(function () { 
-                    $("#formNotComplete").fadeOut();
-                }, 2000);
-                return;
-            }
-
-            $('#tripModal').modal('hide');
-
-            saveTrip(the_trip, addTripToTable);
-        });
 
         $("#inputLocationName").change(function(ev){
             locationName = $(this).val();

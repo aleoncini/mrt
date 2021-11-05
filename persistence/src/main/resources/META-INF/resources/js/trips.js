@@ -1,5 +1,6 @@
 var STORE_ORIGIN = window.location.origin;
 
+
 function formatLocationList(locations) {
     $('#tList').empty();
     var options = "";
