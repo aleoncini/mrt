@@ -29,7 +29,6 @@ import it.redhat.mrt.model.Trip;
 public class Builder {
     public static final String BANNER_RESOURCE = "/RHBannerNew.png";
 
-	//public static final String reportDirectory = "/tmp/reports";
     @ConfigProperty(name = "mrt.reports.dirname") 
     String dirname;
 

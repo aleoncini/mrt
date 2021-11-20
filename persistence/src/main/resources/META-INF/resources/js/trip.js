@@ -1,6 +1,30 @@
 var STORE_ORIGIN = window.location.origin;
 var the_destination = {};
 
+function initKey() {
+    var theUrl = STORE_ORIGIN + '/key';
+    $.ajax({
+        url: theUrl,
+        type: 'GET',
+        dataType: 'json',
+        complete: function(response, status, xhr){
+            var keyObject = jQuery.parseJSON(response.responseText);
+            console.log('Key READY...');
+            initGoogleScript(keyObject.value);
+        }
+    });
+};
+
+function initGoogleScript(theKey) {
+    var the_script = document.createElement( 'script' );
+    var the_src = 'https://maps.googleapis.com/maps/api/js?key=' + theKey + '&callback=initMap&libraries=places';
+    the_script.setAttribute( 'src', the_src );
+    the_script.setAttribute('defer', null);
+    the_script.setAttribute('async', null);
+    console.log('Appending the script...');
+    document.body.appendChild( the_script );
+};
+
 function initMap() {
     const directionsService = new google.maps.DirectionsService();
     const directionsRenderer = new google.maps.DirectionsRenderer();
@@ -106,7 +130,7 @@ function calculateAndDisplayRoute(directionsService, directionsRenderer) {
 function calculateRouteDistance(routeDistance) {
     const totalDistance = Math.ceil((routeDistance * 2.4) / 1000);
     $('#distance').html(totalDistance);
-}
+};
 
 function saveTrip(the_trip, callbackFunction) {
     var theUrl = STORE_ORIGIN + '/trips';

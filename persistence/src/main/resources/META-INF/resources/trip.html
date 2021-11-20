@@ -103,6 +103,8 @@
 
     $(document).ready(function(){
 
+        console.log('Document READY...');
+        initKey();
         $('#saveTripButton').click(function(){
             var the_trip = {};
 
@@ -172,9 +174,6 @@
 
     });
 
-</script>
-<script async defer
-    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBAG12O1x32KPG7gMA_YnhOZTz3w84m8QA&callback=initMap&libraries=places">
 </script>
 </body>
 </html>
