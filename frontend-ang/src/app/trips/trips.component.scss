@@ -1,0 +1,38 @@
+.top-area {
+    padding: 4rem 2rem;
+    margin-bottom: 2rem;
+}
+
+.top-area-content {
+    padding-right: 15px;
+    padding-left: 15px;
+    .mat-flat-button {
+        padding: 0.5rem 1rem;
+        font-size: 1.25rem;
+        line-height: 1.5;
+    }
+}
+
+.area {
+    max-width: 1140px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.top-title {
+    font-size: 2rem;
+    font-weight: 500;
+    line-height: 1.2;
+    margin-bottom: 8px;
+}
+
+.top-content {
+    font-size: 1.25rem;
+    font-weight: 300;
+    margin-bottom: 3rem;
+}
+
+.area-title {
+    font-size: 1.25rem;
+    font-weight: 300;
+}

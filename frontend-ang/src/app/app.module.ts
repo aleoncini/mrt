@@ -22,6 +22,11 @@ import { TripsComponent } from './trips/trips.component';
 import { SetupComponent } from './setup/setup.component';
 import {MatSelectModule} from '@angular/material/select';
 import { ArchiveComponent } from './archive/archive.component';
+import { MatNativeDateModule } from '@angular/material/core';
+import { MatInputModule } from '@angular/material/input';
+import { MatFormFieldModule } from "@angular/material/form-field";
+import {MatStepperModule} from '@angular/material/stepper';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 @NgModule({
   declarations: [
@@ -36,6 +41,7 @@ import { ArchiveComponent } from './archive/archive.component';
     BrowserModule,
     AppRoutingModule,
     MatDatepickerModule,
+    MatNativeDateModule,
     MatGridListModule,
     MatCardModule,
     MatMenuModule,
@@ -48,9 +54,14 @@ import { ArchiveComponent } from './archive/archive.component';
     BrowserAnimationsModule,
     AngularSvgIconModule.forRoot(),
     HttpClientModule,
-    MatSelectModule
+    MatSelectModule,
+    MatInputModule,
+    MatFormFieldModule,
+    MatStepperModule,
+    FormsModule,
+    ReactiveFormsModule
   ],
-  providers: [],
+  providers: [MatDatepickerModule],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
