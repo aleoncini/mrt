@@ -20,6 +20,8 @@ import { ToolbarComponent } from './toolbar/toolbar.component';
 import { HomeComponent } from './home/home.component';
 import { TripsComponent } from './trips/trips.component';
 import { SetupComponent } from './setup/setup.component';
+import {MatSelectModule} from '@angular/material/select';
+import { ArchiveComponent } from './archive/archive.component';
 
 @NgModule({
   declarations: [
@@ -27,7 +29,8 @@ import { SetupComponent } from './setup/setup.component';
     ToolbarComponent,
     HomeComponent,
     TripsComponent,
-    SetupComponent
+    SetupComponent,
+    ArchiveComponent
   ],
   imports: [
     BrowserModule,
@@ -44,7 +47,8 @@ import { SetupComponent } from './setup/setup.component';
     MatListModule,
     BrowserAnimationsModule,
     AngularSvgIconModule.forRoot(),
-    HttpClientModule
+    HttpClientModule,
+    MatSelectModule
   ],
   providers: [],
   bootstrap: [AppComponent]
