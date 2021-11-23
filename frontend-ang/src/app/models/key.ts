@@ -1,3 +1,3 @@
-interface Key {
+export interface Key {
     value: string
 }

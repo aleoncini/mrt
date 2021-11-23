@@ -1,11 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
-
-export interface Trip {
-  date: number;
-  size: number;
-  version: number;
-}
+import { Trip } from '../models/trip';
 
 const ELEMENT_DATA: Trip[] = [
   { date: 1, size: 2, version: 3 },
