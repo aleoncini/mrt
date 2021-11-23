@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { TripsService } from '../endpoints/trips.service';
 
 @Component({
   selector: 'app-trips',
@@ -10,8 +11,9 @@ export class TripsComponent implements OnInit {
   firstFormGroup: FormGroup;
   secondFormGroup: FormGroup;
   thirdFormGroup: FormGroup;
+  key: Key | undefined;
 
-  constructor(private _formBuilder: FormBuilder) {
+  constructor(private _formBuilder: FormBuilder, private tripsService: TripsService) {
     this.firstFormGroup = this._formBuilder.group({
       firstCtrl: ['', Validators.required],
     });
@@ -21,10 +23,13 @@ export class TripsComponent implements OnInit {
     this.thirdFormGroup = this._formBuilder.group({
       thirdCtrl: ['', Validators.required],
     });
-   }
-
-  ngOnInit(): void {
-    
   }
 
+  ngOnInit(): void {
+
+  }
+
+  initKey() {
+    this.tripsService.getKey().subscribe(response => this.key = { ...response.body! });
+  };
 }
