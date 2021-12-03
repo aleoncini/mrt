@@ -1,0 +1,52 @@
+<div class="top-area">
+    <div class="top-area-content area">
+        <p class="top-title">Mileage Report Tool</p>
+        <p class="top-content">Simplify your life. Save time. Do the
+            right things. Send the report each month!</p>
+        <button mat-flat-button color="primary">Get Latest</button>
+    </div>
+</div>
+
+<div class="bottom-area area">
+    <div class="bottom-area-content ">
+        <p class="card-title">Enter Trips</p>
+        <p class="card-content">Enter trips you do each month with your car. Trips will be then used to compile the
+            Mileage Report.</p>
+        <button mat-flat-button [routerLink]="'/trips'">Enter Trips »</button>
+    </div>
+
+    <div class="bottom-area-content ">
+        <p class="card-title">Pdf</p>
+        <p class="card-content">Prepare a Mileage Report in Pdf that can be used for administrative purpose or process
+            like for example to start an expense report. To download the report visit the ARCHIVE page.</p>
+        <mat-form-field appearance="outline" class="month-picker">
+            <mat-label>Choose month...</mat-label>
+            <mat-select>
+                <mat-option value="0">Choose month...</mat-option>
+                <mat-option value="1">January</mat-option>
+                <mat-option value="2">February</mat-option>
+                <mat-option value="3">March</mat-option>
+                <mat-option value="4">April</mat-option>
+                <mat-option value="5">May</mat-option>
+                <mat-option value="6">June</mat-option>
+                <mat-option value="7">July</mat-option>
+                <mat-option value="8">August</mat-option>
+                <mat-option value="9">September</mat-option>
+                <mat-option value="10">October</mat-option>
+                <mat-option value="11">November</mat-option>
+                <mat-option value="12">December</mat-option>
+            </mat-select>
+        </mat-form-field>
+        <button mat-flat-button>Create Report »</button>
+    </div>
+
+    <div class="bottom-area-content ">
+        <p class="card-title">Heading</p>
+        <p class="card-content">Here you can find all the reports you have built for each year.</p>
+        <button mat-flat-button [routerLink]="'/archive'">View Reports »</button>
+    </div>
+</div>
+
+<footer class="footer area">
+    <p>© Red Hat Italy 2019-2021</p>
+</footer>   

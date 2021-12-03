@@ -1,0 +1,16 @@
+<mat-toolbar color="primary">
+    <div class="toolbar-left">
+      <button class="redhat-button" type="button" aria-label="Toggle sidenav" mat-icon-button disabled>
+        <svg-icon class="svg-icon" src="../../assets/redhat_logo.svg"></svg-icon>
+      </button>
+      <div class="nav-buttons">
+        <button mat-button [routerLink]="'/home'">Home</button>
+        <button mat-button [routerLink]="'/trips'">Trips</button>
+        <button mat-button [routerLink]="'/setup'">Setup</button>
+      </div>
+    </div>
+  
+    <div class="toolbar-right">
+      <button mat-button>User</button>
+    </div>
+  </mat-toolbar>

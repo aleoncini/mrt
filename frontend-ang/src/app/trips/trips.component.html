@@ -1,0 +1,75 @@
+<div class="top-area">
+    <div class="top-area-content area">
+        <p class="top-title">Your monthly trips</p>
+        <p class="top-content">Use this page to populate the reports for Business Mileage.</p>
+
+    </div>
+
+    <div class="date area">
+
+        <p class="area-title">Day of the Trip</p>
+
+        <mat-stepper orientation="vertical"  #stepper>
+            <mat-step [stepControl]="firstFormGroup">
+                <form [formGroup]="firstFormGroup">
+                    <ng-template matStepLabel>Choose a date</ng-template>
+                    <mat-form-field appearance="fill" class="example-form-field">
+                        <mat-label>Choose a date</mat-label>
+                        <input matInput [matDatepicker]="datepicker">
+                        <mat-datepicker-toggle matSuffix [for]="datepicker"></mat-datepicker-toggle>
+                        <mat-datepicker #datepicker>
+                            <mat-datepicker-actions>
+                                <button mat-button matDatepickerCancel>Cancel</button>
+                                <button mat-raised-button color="primary" matDatepickerApply>Apply</button>
+                            </mat-datepicker-actions>
+                        </mat-datepicker>
+                    </mat-form-field>
+                    <div>
+                        <button mat-button matStepperNext>Next</button>
+                    </div>
+                </form>
+            </mat-step>
+            <mat-step [stepControl]="secondFormGroup">
+                <form [formGroup]="secondFormGroup">
+                    <ng-template matStepLabel>Fill out your address</ng-template>
+                    <mat-form-field appearance="fill">
+                        <mat-label>Address</mat-label>
+                        <input matInput formControlName="secondCtrl" placeholder="Ex. 1 Main St, New York, NY" required>
+                    </mat-form-field>
+                    <div>
+                        <button mat-button matStepperPrevious>Back</button>
+                        <button mat-button matStepperNext>Next</button>
+                    </div>
+                </form>
+            </mat-step>
+            <mat-step [stepControl]="thirdFormGroup">
+                <form [formGroup]="thirdFormGroup">
+                    <ng-template matStepLabel>Fill out the meeting details</ng-template>
+                    <mat-form-field appearance="fill">
+                        <mat-label>Company or Contact</mat-label>
+                        <input matInput formControlName="thirdCtrl" required>
+                    </mat-form-field>
+                    <mat-form-field appearance="fill">
+                        <mat-label>Purpose</mat-label>
+                        <input matInput formControlName="thirdCtrl" required>
+                    </mat-form-field>
+                    <div>
+                        <button mat-button matStepperPrevious>Back</button>
+                        <button mat-button matStepperNext>Next</button>
+                    </div>
+                </form>
+            </mat-step>
+            <mat-step>
+                <ng-template matStepLabel>Done</ng-template>
+                <p>You are now done.</p>
+                <div>
+                    <button mat-button matStepperPrevious>Back</button>
+                    <button mat-button (click)="stepper.reset()">Send</button>
+                </div>
+            </mat-step>
+        </mat-stepper>
+
+    </div>
+
+
+</div>

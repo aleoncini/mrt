@@ -1,0 +1,23 @@
+.mat-toolbar {
+    background: #343a40;
+}
+
+.mat-toolbar.mat-primary {
+    position: sticky;
+    top: 0;
+    z-index: 1;
+    display: flex;
+    justify-content: space-between;
+}
+
+.redhat-button {
+    width: 70%;
+}
+
+.toolbar-left {
+    display: flex;
+}
+
+.nav-buttons {
+    padding-left: 20%;
+}
