@@ -15,6 +15,7 @@ objects:
   data:
     quarkus-log-level: 'INFO'
     quarkus-log-file-path: '/tmp/quarkus.log'
+    google-key: "replaceme"
 - apiVersion: v1
   kind: Secret
   metadata:
@@ -59,6 +60,11 @@ objects:
                   configMapKeyRef:
                     name: persistence
                     key: quarkus-log-file-path
+              - name: GOOGLE_KEY
+                valueFrom:
+                  configMapKeyRef:
+                    name: persistence
+                    key: google-key
             ports:
               - containerPort: 8080
                 protocol: TCP
