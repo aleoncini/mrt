@@ -15,7 +15,9 @@ objects:
   data:
     quarkus-log-level: 'INFO'
     quarkus-log-file-path: '/tmp/quarkus.log'
-    google-key: "replaceme"
+    google-key: 'replaceme'
+    quarkus-http-auth-permission-authenticated-paths: '/*'
+    quarkus-http-auth-permission-authenticated-policy: 'authenticated'
 - apiVersion: v1
   kind: Secret
   metadata:
@@ -65,6 +67,16 @@ objects:
                   configMapKeyRef:
                     name: persistence
                     key: google-key
+              - name: QUARKUS_HTTP_AUTH_PERMISSION_AUTHENTICATED_PATHS
+                valueFrom:
+                  configMapKeyRef:
+                    name: persistence
+                    key: quarkus-http-auth-permission-authenticated-paths
+              - name: QUARKUS_HTTP_AUTH_PERMISSION_AUTHENTICATED_POLICY
+                valueFrom:
+                  configMapKeyRef:
+                    name: persistence
+                    key: quarkus-http-auth-permission-authenticated-policy
             ports:
               - containerPort: 8080
                 protocol: TCP
