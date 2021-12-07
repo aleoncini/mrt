@@ -1,6 +1,8 @@
 package it.redhat.mrt.rest;
 
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -33,13 +35,13 @@ public class ArchiveResource {
     @GET
     @Path("/pdf/{doc}")
     @Produces(MediaType.APPLICATION_OCTET_STREAM)
-    public File getPdf(@PathParam("doc") String docName) {
+    public File getPdf(@PathParam("doc") String docName) throws Exception {
         return archiveService.getPdf(docName, getRhidFromJWT());
     }
 
     @GET
     @Path("/{year}")
-    public List<ReportFileInfo> getFileList(@PathParam("year") int year) {
+    public List<ReportFileInfo> getFileList(@PathParam("year") int year) throws IOException {
 
         return archiveService.getFileList(year, getRhidFromJWT());
 
@@ -47,7 +49,7 @@ public class ArchiveResource {
 
     @DELETE
     @Path("/{doc}")
-    public void delete(@PathParam("doc") String docName) {
+    public void delete(@PathParam("doc") String docName) throws Exception {
 
         archiveService.delete(docName, getRhidFromJWT());
 
