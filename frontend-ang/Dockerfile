@@ -1,18 +1,18 @@
-FROM node:latest as build
+FROM registry.access.redhat.com/ubi8/nodejs-14 as build
 
-WORKDIR /usr/local/app
+COPY --chown=1001:0 ./ /tmp/src/
 
-COPY ./ /usr/local/app/
+RUN /usr/libexec/s2i/assemble
 
-RUN npm install
-
-RUN npm run build
-
+CMD /usr/libexec/s2i/run
 
 # Serve app with nginx server
 
-FROM nginx:latest
+FROM registry.access.redhat.com/ubi8/nginx-118
 
-COPY --from=build /usr/local/app/dist/frontend-ang /usr/share/nginx/html
+COPY --from=build --chown=1001:0 /opt/app-root/src/dist/frontend-ang /tmp/src/
 
-EXPOSE 80
+RUN /usr/libexec/s2i/assemble
+
+CMD /usr/libexec/s2i/run
+
