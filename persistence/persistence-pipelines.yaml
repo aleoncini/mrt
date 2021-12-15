@@ -12,7 +12,7 @@ spec:
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: persistence-m2-pvc
+  name: persistence-artifacts-pvc
 spec:
   accessModes:
     - ReadWriteOnce
@@ -39,6 +39,15 @@ data:
   dev-image-path: 'image-registry.openshift-image-registry.svc:5000/mrt/persistence'
   dev-latest-built-image: ''
 ---
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: persistence-s2ienvironment
+data:
+  MAVEN_S2I_GOALS: "package"
+  S2I_SOURCE_DEPLOYMENTS_FILTER: "*-runner.jar lib"
+  MAVEN_ARGS_APPEND: "-Dquarkus.package.type=uber-jar"
+---
 apiVersion: tekton.dev/v1beta1
 kind: Pipeline
 metadata:
@@ -48,7 +57,7 @@ spec:
     - name: repo-url
   workspaces:
     - name: src
-    - name: m2
+    - name: artifacts
     - name: varlibcontainers
     - name: empty
   tasks:
@@ -66,23 +75,23 @@ spec:
           value: "true"
     - name: compile
       taskRef:
-        name: s2i-java-11
+        name: s2i-build
       runAfter:
         - fetch-repository
       workspaces:
         - name: source
           workspace: src
-        - name: m2
-          workspace: m2
+        - name: artifacts
+          workspace: artifacts
       params:
+        - name: S2I_IMAGE
+          value: "registry.access.redhat.com/ubi8/openjdk-11"
         - name: CONTEXT
           value: "persistence"
-        - name: S2I_SOURCE_DEPLOYMENTS_FILTER
-          value: "*-runner.jar lib"
-        - name: MAVEN_S2I_GOALS
-          value: "package test"
-        - name: MAVEN_ARGS_APPEND
-          value: "-Dquarkus.package.type=uber-jar"
+        - name: S2I_ENVIRONMENT
+          value: "persistence-s2ienvironment"
+        - name: INCREMENTAL
+          value: "true"
     - name: get-dev-path
       taskRef:
         name: get-configmap-value
@@ -99,6 +108,8 @@ spec:
       runAfter:
         - get-dev-path
       params:
+        - name: S2I_IMAGE
+          value: "registry.access.redhat.com/ubi8/openjdk-11"
         - name: TLSVERIFY
           value: "false"
         - name: IMAGE
