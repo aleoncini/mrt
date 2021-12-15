@@ -14,14 +14,6 @@ objects:
     name: mongodb
   data:
     mongodb-database: 'mrt'
-- apiVersion: v1
-  kind: Secret
-  metadata:
-    name: mongodb
-  data:
-    mongodb-admin-password: YWRtaW5wYXNzd29yZA==
-    mongodb-user: bG9naW4=
-    mongodb-password: cGFzcw==
 - apiVersion: apps/v1
   kind: Deployment
   metadata:
