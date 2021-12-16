@@ -83,8 +83,6 @@ spec:
           value: "/usr/libexec/s2i/"
         - name: S2I_OUTPUT_DIR
           value: "/workspace/dist/frontend-ang"
-        - name: USER
-          value: "1001"
     - name: get-dev-path
       taskRef:
         name: get-configmap-value
