@@ -32,11 +32,11 @@ export class TripsComponent implements OnInit {
 
   }
 
-  initKey() {
-    this.tripsService.getKey().subscribe(response => this.key = { ...response.body! });
-  };
+  // initKey() {
+  //   this.tripsService.getKey().subscribe(response => this.key = { ...response.body! });
+  // };
 
   saveTrip(trip: Trip){
-    this.tripsService.saveTrip(trip).subscribe(() => console.log("Trip added."));
+    this.tripsService.CreateTrip(trip).subscribe(() => console.log("Trip added."));
   }
 }
