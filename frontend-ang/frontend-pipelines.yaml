@@ -116,7 +116,7 @@ spec:
         - name: SCRIPT
           value: |
             runner=$(buildah from registry.access.redhat.com/ubi8/nginx-118)
-            buildah copy --chown 1001:0 $runner /workspace/source/frontend-ang/built/frontend-ang /tmp/src/
+            buildah copy --chown 1001:0 $runner /workspace/source/frontend-ang/stageoutput/frontend-ang /tmp/src/
             buildah run $runner -- /usr/libexec/s2i/assemble
             buildah config --cmd /usr/libexec/s2i/run $runner
             buildah commit $runner $(tasks.get-dev-path.results.VALUE)
