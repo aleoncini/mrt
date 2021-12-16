@@ -1,3 +1,4 @@
 export interface Key {
-    value: string
+    name: string;
+    value: string;
 }

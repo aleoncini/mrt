@@ -1,6 +1,10 @@
 
 export interface Trip {
-    date: number;
-    size: number;
-    version: number;
+    rhid: string;
+    year: number;
+    month: number;
+    day: number;
+    distance: number;
+    destination: string;
+    purpose: string;
   }
