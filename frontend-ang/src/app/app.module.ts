@@ -28,6 +28,7 @@ import { MatFormFieldModule } from "@angular/material/form-field";
 import {MatStepperModule} from '@angular/material/stepper';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import {MatTableModule} from '@angular/material/table';
+import { GoogleMapsModule } from '@angular/google-maps';
 
 @NgModule({
   declarations: [
@@ -61,7 +62,8 @@ import {MatTableModule} from '@angular/material/table';
     MatStepperModule,
     FormsModule,
     ReactiveFormsModule,
-    MatTableModule
+    MatTableModule,
+    GoogleMapsModule
   ],
   providers: [MatDatepickerModule],
   bootstrap: [AppComponent]
