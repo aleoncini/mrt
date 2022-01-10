@@ -1,3 +1,6 @@
 [submodule "frontend-react"]
 	path = frontend-react
 	url = https://github.com/patternfly/patternfly-react-seed
+[submodule "frontend-patternfly"]
+	path = frontend-patternfly
+	url = https://github.com/Laiot/patternfly-react-seed.git
