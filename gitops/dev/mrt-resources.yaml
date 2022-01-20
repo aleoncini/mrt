@@ -8,6 +8,7 @@ items:
     labels:
       app: mongodb
     name: mongodb
+    namespace: mrt
   spec:
     replicas: 1
     selector:
@@ -59,6 +60,7 @@ items:
     labels:
       app: mrt-backend
     name: mrt-backend
+    namespace: mrt
   spec:
     replicas: 1
     selector:
@@ -127,6 +129,7 @@ items:
     labels:
       app: mongodb
     name: mongodb
+    namespace: mrt
   spec:
     ports:
     - name: 27017-tcp
@@ -141,6 +144,7 @@ items:
     labels:
       app: mrt-backend
     name: mrt-backend
+    namespace: mrt
   spec:
     ports:
     - name: 8080-tcp
@@ -163,6 +167,7 @@ items:
     labels:
       app: mrt-backend
     name: mrt-backend
+    namespace: mrt
   spec:
     port:
       targetPort: 8080-tcp
@@ -175,6 +180,7 @@ items:
     labels:
       app: mongodb
     name: mongodb
+    namespace: mrt
   spec:
     tags:
     - annotations:
@@ -191,6 +197,7 @@ items:
     labels:
       app: mrt-backend
     name: mrt-backend
+    namespace: mrt
   spec:
     tags:
     - annotations:

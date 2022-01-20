@@ -7,6 +7,7 @@ items:
   kind: ConfigMap
   metadata:
     name: auth-server
+    namespace: mrt
 - apiVersion: v1
   data:
     admin-password: pa55word
@@ -16,4 +17,5 @@ items:
   kind: ConfigMap
   metadata:
     name: mongodb-credentials
+    namespace: mrt
 kind: List
