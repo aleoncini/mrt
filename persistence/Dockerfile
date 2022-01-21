@@ -1,12 +1,13 @@
 # Build stage using Red Hat UBI 8 base image to compile and package application
 FROM registry.access.redhat.com/ubi8/openjdk-11 as build
-COPY --chown=jboss:jboss ./pom.xml ./
-RUN mvn dependency:go-offline -B
-COPY --chown=jboss:jboss ./ ./
-RUN mvn clean package -DskipTests -Dquarkus.package.type=uber-jar
+
+ENV S2I_SOURCE_DEPLOYMENTS_FILTER="*-runner.jar lib"
+ENV MAVEN_ARGS_APPEND="-Dquarkus.package.type=uber-jar"
+
+COPY --chown=jboss:0 ./ /tmp/src
+
+RUN /usr/local/s2i/assemble
 
 # Create final image
 FROM registry.access.redhat.com/ubi8/openjdk-11
-COPY --from=build /home/jboss/target/persistence-1.0.0-SNAPSHOT-runner.jar ./
-EXPOSE 8080
-ENTRYPOINT ["java","-Djava.security.egd=file:/dev/./urandom","-Dquarkus.mongodb.mrt.connection-string=${MONGOCONNSTRING}","-jar","./persistence-1.0.0-SNAPSHOT-runner.jar"]
+COPY --chown=jboss:0 --from=build /deployments /deployments

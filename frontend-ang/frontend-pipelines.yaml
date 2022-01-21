@@ -1,0 +1,151 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: frontend-source-pvc
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: frontend-m2-pvc
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: frontend-varlibcontainers-pvc
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 2Gi
+---
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: frontend-pipelineconfig
+data:
+  dev-image-path: 'image-registry.openshift-image-registry.svc:5000/mrt/frontend'
+  dev-latest-built-image: ''
+---
+apiVersion: tekton.dev/v1beta1
+kind: Pipeline
+metadata:
+  name: frontend-dev-pipeline
+spec:
+  params:
+    - name: repo-url
+  workspaces:
+    - name: src
+    - name: artifacts
+    - name: varlibcontainers
+    - name: empty
+  tasks:
+    - name: fetch-repository
+      taskRef:
+        name: git-clone
+        kind: ClusterTask
+      workspaces:
+        - name: output
+          workspace: src
+      params:
+        - name: url
+          value: $(params.repo-url)
+        - name: deleteExisting
+          value: "true"
+    - name: compile
+      taskRef:
+        name: s2i-build
+      runAfter:
+        - fetch-repository
+      workspaces:
+        - name: source
+          workspace: src
+        - name: artifacts
+          workspace: artifacts
+      params:
+        - name: S2I_IMAGE
+          value: "registry.access.redhat.com/ubi8/nodejs-14"
+        - name: CONTEXT
+          value: "frontend-ang"
+        - name: S2I_SCRIPTS
+          value: "/usr/libexec/s2i/"
+        - name: S2I_OUTPUT_DIR
+          value: "/workspace/dist/frontend-ang"
+    - name: get-dev-path
+      taskRef:
+        name: get-configmap-value
+      runAfter:
+        - compile
+      params:
+        - name: CONFIGMAP-NAME
+          value: "frontend-pipelineconfig"
+        - name: CONFIGMAP-KEY
+          value: "dev-image-path"
+    - name: build
+      taskRef:
+        name: image-from-buildah
+      runAfter:
+        - get-dev-path
+      params:
+        - name: S2I_IMAGE
+          value: "registry.access.redhat.com/ubi8/nginx-118"
+        - name: TLSVERIFY
+          value: "false"
+        - name: IMAGE
+          value: $(tasks.get-dev-path.results.VALUE)
+        - name: CONTEXT
+          value: "frontend-ang"
+        - name: S2I_SRC_DIR
+          value: "frontend-ang"
+        - name: S2I_DST_DIR
+          value: "frontend"
+        - name: SCRIPT
+          value: |
+            runner=$(buildah from registry.access.redhat.com/ubi8/nginx-118)
+            buildah copy --chown 1001:0 $runner /workspace/source/frontend-ang/stageoutput/frontend-ang /tmp/src/
+            buildah run $runner -- /usr/libexec/s2i/assemble
+            buildah config --cmd /usr/libexec/s2i/run $runner
+            buildah commit $runner $(tasks.get-dev-path.results.VALUE)
+      workspaces:
+        - name: source
+          workspace: src
+        - name: varlibcontainers
+          workspace: varlibcontainers
+    - name: deploy
+      taskRef:
+        name: openshift-actions
+      runAfter:
+        - build
+      workspaces:
+        - name: source
+          workspace: src
+      params:
+        - name: CONTEXT
+          value: "frontend-ang"
+        - name: SCRIPT
+          value: |
+            oc process -p IMAGE=$(tasks.get-dev-path.results.VALUE)@$(tasks.build.results.IMAGE_DIGEST) -p CAUSE=$(tasks.fetch-repository.results.commit) -f frontend-template.yaml | oc apply -f -
+    - name: update-built-image
+      taskRef:
+        name: set-configmap-value
+      runAfter:
+        - deploy
+      params:
+        - name: CONFIGMAP-NAME
+          value: "frontend-pipelineconfig"
+        - name: CONFIGMAP-KEY
+          value: "dev-latest-built-image"
+        - name: VALUE
+          value: $(tasks.get-dev-path.results.VALUE)@$(tasks.build.results.IMAGE_DIGEST)
