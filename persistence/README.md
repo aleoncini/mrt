@@ -1,5 +1,21 @@
 # MRT Project - *persistence* module
 
+This module contains application APIs to manage persistence of data into a mongodb instance.
+
+to install the mongodb instance the bitnami heml chart is used with this two commands:
+
+1. (optional) If you haven't executed before you need to add the bitnami repo to the project. Log into the OCP environment, change project and then execute the following command:
+```shell script
+> helm repo add bitnami https://charts.bitnami.com/bitnami
+```
+
+2. create the helm chart:
+```shell script
+> helm install mongodb bitnami/mongodb --set mongodbRootPassword=rootpwd --set mongodbUsername=mrtuser --set mongodbPassword=mrtpwd --set mongodbDatabase=mrt --set replicaSet.enabled=false
+```
+
+## Running the application in dev mode
+
 This is a Quarkus native application that operates REsT services to get and save data using a Mongo DB instance.
 
 This project uses Quarkus, the Supersonic Subatomic Java Framework.
