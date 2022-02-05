@@ -1,14 +1,10 @@
-FROM openresty/openresty:alpine-fat
+FROM registry.access.redhat.com/ubi8/nginx-118
 
-RUN mkdir /var/log/nginx
+# Add application sources
+ADD ./nginx.conf "${NGINX_CONF_PATH}"
+ADD ./nginx-default-cfg/*.conf "${NGINX_DEFAULT_CONF_PATH}"
+#ADD test-app/nginx-cfg/*.conf "${NGINX_CONFIGURATION_PATH}"
+ADD ./ .
 
-RUN apk add --no-cache openssl-dev
-RUN apk add --no-cache git
-RUN apk add --no-cache gcc
-RUN luarocks install lua-resty-openidc
-
-COPY ./nginx-default-cfg/* /etc/nginx/conf.d/
-COPY ./ /usr/local/openresty/nginx/html/
-
-ENTRYPOINT ["/usr/local/openresty/nginx/sbin/nginx", "-g", "daemon off;"]
-EXPOSE 80
+# Run script uses standard ways to run the application
+CMD nginx -g "daemon off;"
