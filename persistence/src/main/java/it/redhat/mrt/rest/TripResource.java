@@ -2,7 +2,6 @@ package it.redhat.mrt.rest;
 
 import java.util.List;
 
-import javax.inject.Inject;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
@@ -15,10 +14,8 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.NotFoundException;
 
 import org.bson.types.ObjectId;
-import org.eclipse.microprofile.jwt.JsonWebToken;
 
 import io.quarkus.mongodb.panache.PanacheMongoEntityBase;
-import io.quarkus.oidc.IdToken;
 import it.redhat.mrt.model.Trip;
 
 @Path("/trips")
@@ -26,22 +23,15 @@ import it.redhat.mrt.model.Trip;
 @Produces(MediaType.APPLICATION_JSON)
 public class TripResource {
     
-    @Inject
-    @IdToken
-    JsonWebToken idToken;
-
-    @Inject
-    JsonWebToken accessToken;
-
     @GET
     public List<PanacheMongoEntityBase> list() {
         return Trip.listAll();
     }
 
     @GET
-    @Path("{year}/{month}")
-    public List<Trip> get(@PathParam("year") int year, @PathParam("month") int month) {
-        return Trip.getTrips(getRhid(), year, month);
+    @Path("/{rhid}/{year}/{month}")
+    public List<Trip> get(@PathParam("rhid") String rhid, @PathParam("year") int year, @PathParam("month") int month) {
+        return Trip.getTrips(rhid, year, month);
     }
 
     @GET
@@ -52,7 +42,6 @@ public class TripResource {
 
     @POST
     public Trip create(Trip trip) {
-        trip.rhid = getRhid();
         trip.persist();
         return trip;
     }
@@ -79,12 +68,4 @@ public class TripResource {
         return Trip.count();
     }    
 
-    private String getRhid(){
-        String rhid = "undefined";
-        Object rhidObject = idToken.getClaim("rhid");
-        if (rhidObject != null) {
-            rhid = rhidObject.toString();
-        }    
-        return rhid;
-    }
 }
