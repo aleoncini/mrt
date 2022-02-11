@@ -11,9 +11,7 @@ export class TripsService {
 
   private address = environment.url + ":" + environment.port + "/trips/"
 
-
   constructor(private http: HttpClient) { }
-
 
   GetAllTrips(): Observable<Trip[]> {
     return this.http.get<Trip[]>(this.address)

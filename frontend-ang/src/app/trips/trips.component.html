@@ -9,13 +9,13 @@
 
         <p class="area-title">Day of the Trip</p>
 
-        <mat-stepper orientation="vertical"  #stepper>
+        <mat-stepper orientation="vertical" #stepper>
             <mat-step [stepControl]="firstFormGroup">
                 <form [formGroup]="firstFormGroup">
                     <ng-template matStepLabel>Choose a date</ng-template>
                     <mat-form-field appearance="fill" class="example-form-field">
                         <mat-label>Choose a date</mat-label>
-                        <input matInput [matDatepicker]="datepicker">
+                        <input matInput formControlName="firstCtrl" [matDatepicker]="datepicker">
                         <mat-datepicker-toggle matSuffix [for]="datepicker"></mat-datepicker-toggle>
                         <mat-datepicker #datepicker>
                             <mat-datepicker-actions>
@@ -32,13 +32,21 @@
             <mat-step [stepControl]="secondFormGroup">
                 <form [formGroup]="secondFormGroup">
                     <ng-template matStepLabel>Fill out your address</ng-template>
-                    <mat-form-field appearance="fill">
-                        <mat-label>Address</mat-label>
-                        <input matInput formControlName="secondCtrl" placeholder="Ex. 1 Main St, New York, NY" required>
-                    </mat-form-field>
-                    <div>
-                        <button mat-button matStepperPrevious>Back</button>
-                        <button mat-button matStepperNext>Next</button>
+                    <div class="address-step">
+                        <div>
+                            <mat-form-field appearance="fill">
+                                <mat-label>Address</mat-label>
+                                <input matInput formControlName="secondCtrl" placeholder="Ex. 1 Main St, New York, NY" required>
+                            </mat-form-field>
+                            <div>
+                                <button mat-button matStepperPrevious>Back</button>
+                                <button mat-button (click)="seachPlace()">Search</button>
+                                <button mat-button matStepperNext>Next</button>
+                            </div>
+                        </div>
+                        <div>
+                            <google-map [center]="center" [zoom]="zoom"></google-map>
+                        </div>
                     </div>
                 </form>
             </mat-step>
@@ -47,10 +55,6 @@
                     <ng-template matStepLabel>Fill out the meeting details</ng-template>
                     <mat-form-field appearance="fill">
                         <mat-label>Company or Contact</mat-label>
-                        <input matInput formControlName="thirdCtrl" required>
-                    </mat-form-field>
-                    <mat-form-field appearance="fill">
-                        <mat-label>Purpose</mat-label>
                         <input matInput formControlName="thirdCtrl" required>
                     </mat-form-field>
                     <div>
@@ -64,12 +68,9 @@
                 <p>You are now done.</p>
                 <div>
                     <button mat-button matStepperPrevious>Back</button>
-                    <button mat-button (click)="stepper.reset()">Send</button>
+                    <button mat-button (click)=" saveTrip(); stepper.reset();">Send</button>
                 </div>
             </mat-step>
         </mat-stepper>
-
     </div>
-
-
 </div>
