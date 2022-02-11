@@ -56,7 +56,7 @@ items:
   kind: Deployment
   metadata:
     annotations:
-      image.openshift.io/triggers: '[{"from":{"kind":"ImageStreamTag","name":"mrt-backend:v0.1"},"fieldPath":"spec.template.spec.containers[?(@.name==\"mrt-backend\")].image"}]'
+      image.openshift.io/triggers: '[{"from":{"kind":"ImageStreamTag","name":"mrt-backend:v0.2"},"fieldPath":"spec.template.spec.containers[?(@.name==\"mrt-backend\")].image"}]'
     labels:
       app: mrt-backend
     name: mrt-backend
@@ -108,7 +108,7 @@ items:
               secretKeyRef:
                 key: google-key
                 name: google-key
-          image: quay.io/vsantoma/mrt-backend@sha256:6c7f809bd4729c4be40e488ae47151d12f7e7ff8a9f808d7b9ff4285afff1e65
+          image: quay.io/vsantoma/mrt-backend:v0.2
           name: mrt-backend
           ports:
           - containerPort: 8080
@@ -201,11 +201,11 @@ items:
   spec:
     tags:
     - annotations:
-        openshift.io/imported-from: quay.io/vsantoma/mrt-backend:v0.1
+        openshift.io/imported-from: quay.io/vsantoma/mrt-backend:v0.2
       from:
         kind: DockerImage
-        name: quay.io/vsantoma/mrt-backend:v0.1
-      name: v0.1
+        name: quay.io/vsantoma/mrt-backend:v0.2
+      name: v0.2
       referencePolicy:
         type: Source
 kind: List
