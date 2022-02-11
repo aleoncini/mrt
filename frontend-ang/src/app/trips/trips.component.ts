@@ -18,6 +18,7 @@ export class TripsComponent implements OnInit {
   firstFormGroup: FormGroup;
   secondFormGroup: FormGroup;
   thirdFormGroup: FormGroup;
+  googleKey: string;
   // key: Key;
   googleMap: any;
   romeCoord = environment.romeOfficePosition;
@@ -46,7 +47,8 @@ export class TripsComponent implements OnInit {
     //       map(() => true),
     //       catchError(() => of(false)),
     //     );
-
+    this.googleKey = "";
+    this.googleKeyService.GetGoogleKey().subscribe((key) => this.googleKey = key.value);
     this.center = this.romeCoord
   }
 
@@ -69,8 +71,8 @@ export class TripsComponent implements OnInit {
 
   seachPlace() {
     let destination = this.secondFormGroup.controls['secondCtrl'].value;
-    let directions = this.httpClient.get<any>("https://maps.googleapis.com/maps/api/directions/json?origin=Toronto&destination=" + destination + "&key=" + environment.googleKey);
-    this.httpClient.get<any>("https://maps.google.com/maps/api/geocode/json?address=" + destination + "&key=" + environment.googleKey).subscribe((res) => {
+    let directions = this.httpClient.get<any>("https://maps.googleapis.com/maps/api/directions/json?origin=Toronto&destination=" + destination + "&key=" + this.googleKey);
+    this.httpClient.get<any>("https://maps.google.com/maps/api/geocode/json?address=" + destination + "&key=" + this.googleKey).subscribe((res) => {
       this.center = res.results[0].geometry.location;
     });
     directions.subscribe((res) => {
