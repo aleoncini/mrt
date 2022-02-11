@@ -13,7 +13,7 @@ items:
     admin-password: pa55word
     database: mrt
     password: password
-    user: user
+    user: mrtuser
   kind: ConfigMap
   metadata:
     name: mongodb-credentials
