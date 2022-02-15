@@ -1,6 +1,21 @@
 # mrt
 Mileage Report Tool
 
+## Deploy a local development environment using podman
+
+If you are developing one of the modules of the project (suppose the API module or the front-end web application) and you want to setup a lab on your workstation to test the new implementations you can use podman to run images of the other modules you need to run the entire application.
+
+what is the MRT architecture?
+
+The application is used to build the monthly reports of the trips that a Sales Team member makes every month to meet customers. The use consists in a quick setup of the Associate information (mainly related to the car allowance policy) and a simple data entry to record all the trips for each associates.
+The architecture of the application is quite simple and typical: there is a DB to persist above specified data, basically a couple of collections: *trips* and *associates*, the first one contains all the movements (the trips) and the second one the configuration for each single associate. There is a module developed in Java based on *Quarkus* runtime that can be containerized to be run in any environment. Finally there is a module that contains a web interface to interact with application, it's an *Nginx* server with the specific html pages. Last but not least the application is protected by an external IDP, it's a Red Hat SSO server running on the Red Hat Italy internet lab at the address https://access-sso.apps.ocp4.rhocplab.com/.
+
+So to have a local lab on the developer workstation you need to run the following components:
+
+1. The MongoDB (see the instructions below to run it);
+2. The persistence module (see the instructions in the module readme);
+3. The front-end module (see the instructions in the module readme);
+
 ## Deploy Mongo DB module on OCP Lab
 steps to deploy DB
 

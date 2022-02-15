@@ -12,7 +12,9 @@ FROM registry.access.redhat.com/ubi8/nginx-118
 
 COPY --from=build --chown=1001:0 /opt/app-root/src/dist/frontend-ang /tmp/src/
 
-RUN /usr/libexec/s2i/assemble
+# Add nginx configuration
+ADD ./nginx.conf "${NGINX_CONF_PATH}"
+ADD ./nginx-default-cfg/*.conf "${NGINX_DEFAULT_CONF_PATH}"
 
-CMD /usr/libexec/s2i/run
-
+# Run script uses standard ways to run the application
+CMD nginx -g "daemon off;"
