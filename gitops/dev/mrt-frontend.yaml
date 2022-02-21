@@ -1,0 +1,130 @@
+apiVersion: v1
+items:
+- apiVersion: v1
+  kind: Service
+  metadata:
+    labels:
+      app: mrt-frontend
+      app.kubernetes.io/component: mrt-frontend
+      app.kubernetes.io/instance: mrt-frontend
+    name: mrt-frontend
+    namespace: mrt
+  spec:
+    ports:
+    - name: 8080-tcp
+      port: 8080
+      protocol: TCP
+      targetPort: 8080
+    - name: 8443-tcp
+      port: 8443
+      protocol: TCP
+      targetPort: 8443
+    selector:
+      deployment: mrt-frontend
+
+- apiVersion: apps/v1
+  kind: Deployment
+  metadata:
+    annotations:
+      image.openshift.io/triggers: '[{"from":{"kind":"ImageStreamTag","name":"mrt-frontend:latest"},"fieldPath":"spec.template.spec.containers[?(@.name==\"mrt-frontend\")].image"}]'
+    labels:
+      app: mrt-frontend
+      app.kubernetes.io/component: mrt-frontend
+      app.kubernetes.io/instance: mrt-frontend
+    name: mrt-frontend
+    namespace: mrt
+  spec:
+    replicas: 1
+    selector:
+      matchLabels:
+        deployment: mrt-frontend
+    template:
+      metadata:
+        creationTimestamp: null
+        labels:
+          deployment: mrt-frontend
+      spec:
+        containers:
+        - image: image-registry.openshift-image-registry.svc:5000/mrt/mrt-frontend@sha256:ef4ceb8516db9b5e29c91a842b668ee7c93abf72038a25736eff139717f671ad
+          name: mrt-frontend
+          ports:
+          - containerPort: 8080
+            protocol: TCP
+          - containerPort: 8443
+            protocol: TCP
+
+- apiVersion: build.openshift.io/v1
+  kind: BuildConfig
+  metadata:
+    annotations:
+      openshift.io/generated-by: OpenShiftNewApp
+    labels:
+      app: mrt-frontend
+      app.kubernetes.io/component: mrt-frontend
+      app.kubernetes.io/instance: mrt-frontend
+    name: mrt-frontend
+    namespace: mrt
+  spec:
+    output:
+      to:
+        kind: ImageStreamTag
+        name: mrt-frontend:latest
+    source:
+      contextDir: web
+      git:
+        uri: https://github.com/aleoncini/mrt
+      type: Git
+    strategy:
+      dockerStrategy:
+        from:
+          kind: ImageStreamTag
+          name: nginx-118:latest
+      type: Docker
+    triggers:
+    - github:
+        secret: jBsI9t_KHoQ-ma50lxWo
+      type: GitHub
+    - generic:
+        secret: lxm9BjC1oU7cWdbxR0B_
+      type: Generic
+    - type: ConfigChange
+    - imageChange:
+        lastTriggeredImageID: registry.access.redhat.com/ubi8/nginx-118@sha256:00a7f9256a20abd90f2bb95169a618461fbe509b22c316f0f58ff7e5fd75a3b2
+      type: ImageChange
+
+- apiVersion: image.openshift.io/v1
+  kind: ImageStream
+  metadata:
+    labels:
+      app: mrt-frontend
+      app.kubernetes.io/component: mrt-frontend
+      app.kubernetes.io/instance: mrt-frontend
+    name: mrt-frontend
+    namespace: mrt
+  spec:
+    lookupPolicy:
+      local: false
+
+- apiVersion: image.openshift.io/v1
+  kind: ImageStream
+  metadata:
+    labels:
+      app: mrt-frontend
+      app.kubernetes.io/component: mrt-frontend
+      app.kubernetes.io/instance: mrt-frontend
+    name: nginx-118
+    namespace: mrt
+  spec:
+    lookupPolicy:
+      local: false
+    tags:
+    - annotations:
+        openshift.io/imported-from: registry.access.redhat.com/ubi8/nginx-118
+      from:
+        kind: DockerImage
+        name: registry.access.redhat.com/ubi8/nginx-118
+      name: latest
+      referencePolicy:
+        type: Source
+
+kind: List

@@ -2,7 +2,7 @@ var STORE_ORIGIN = window.location.origin;
 var the_destination = {};
 
 function initKey() {
-    var theUrl = STORE_ORIGIN + '/key';
+    var theUrl = STORE_ORIGIN + 'api/key';
     $.ajax({
         url: theUrl,
         type: 'GET',
@@ -133,7 +133,7 @@ function calculateRouteDistance(routeDistance) {
 };
 
 function saveTrip(the_trip, callbackFunction) {
-    var theUrl = STORE_ORIGIN + '/trips';
+    var theUrl = STORE_ORIGIN + 'api/trips';
     $.ajax({
         type: "POST",
         url: theUrl,

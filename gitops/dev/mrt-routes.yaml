@@ -6,12 +6,13 @@ items:
   kind: Route
   metadata:
     labels:
-      app: mrt-backend
-    name: mrt-backend
+      app: mrt
+    name: mrt
     namespace: mrt
   spec:
     port:
       targetPort: 8080-tcp
     to:
       kind: Service
-      name: mrt-backend
+      name: mrt-frontend
+    host: mrt.apps.playground.rhocplab.com

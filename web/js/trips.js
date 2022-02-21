@@ -67,7 +67,7 @@ function addReportInfoToTable(info) {
 
 // --- STORAGE FUNCTIONS ----------------------------------------- 
 function saveTrip(the_trip, callbackFunction) {
-    var theUrl = STORE_ORIGIN + '/trips';
+    var theUrl = STORE_ORIGIN + 'api/trips';
     $.ajax({
         type: "POST",
         url: theUrl,
@@ -82,7 +82,7 @@ function saveTrip(the_trip, callbackFunction) {
 };
 
 function deleteTrip(id) {
-    var theUrl = STORE_ORIGIN + '/trips/' + id;
+    var theUrl = STORE_ORIGIN + 'api/trips/' + id;
     $.ajax({
         url: theUrl,
         type: 'DELETE',
@@ -94,7 +94,7 @@ function deleteTrip(id) {
 };
 
 function loadTrips(year, month, callbackFunction) {
-    var theUrl = STORE_ORIGIN + '/trips/' + year + "/" + month;
+    var theUrl = STORE_ORIGIN + 'api/trips/' + year + "/" + month;
     $.ajax({
         url: theUrl,
         type: 'GET',
@@ -108,7 +108,7 @@ function loadTrips(year, month, callbackFunction) {
 
 function requestReportBuild(month, callbackFunction) {
     var year = new Date().getFullYear();
-    var theUrl = STORE_ORIGIN + '/reports/' + year + '/' + month;
+    var theUrl = STORE_ORIGIN + 'api/reports/' + year + '/' + month;
     $.ajax({
         url: theUrl,
         type: 'POST',
@@ -123,7 +123,7 @@ function requestReportBuild(month, callbackFunction) {
 // --- PDF ARCHIVE FUNCTIONS ----------------------------------------- 
 
 function loadReportList(year, callbackFunction) {
-    var theUrl = STORE_ORIGIN + '/archive/' + year;
+    var theUrl = STORE_ORIGIN + 'api/archive/' + year;
     $.ajax({
         url: theUrl,
         type: 'GET',
@@ -136,7 +136,7 @@ function loadReportList(year, callbackFunction) {
 };
 
 function deleteReportFile(filename) {
-    var theUrl = STORE_ORIGIN + '/archive/' + filename;
+    var theUrl = STORE_ORIGIN + 'api/archive/' + filename;
     $.ajax({
         url: theUrl,
         type: 'DELETE',
