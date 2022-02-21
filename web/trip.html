@@ -10,10 +10,19 @@
     <!-- Bootstrap core CSS -->
     <link href="css/bootstrap.css" rel="stylesheet">
     <link href="css/trip.css" rel="stylesheet">
-
+    <script src="https://access-sso.apps.ocp4.rhocplab.com/auth/js/keycloak.js"></script>
+    <script>
+        function initKeycloak() {
+            var keycloak = new Keycloak();
+            console.log('=========> initializing keycloak!!');
+            keycloak.init({
+              onLoad: 'login-required'
+            })
+        }
+    </script>
 </head>
 
-<body style="padding-top: 3.5rem">
+<body style="padding-top: 3.5rem"  onload="initKeycloak()">
     <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
         <img src="images/logo.svg" width="135" height="32"><img src="images/transparent_spacer.png">
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault" aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
