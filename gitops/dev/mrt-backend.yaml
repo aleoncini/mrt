@@ -1,0 +1,199 @@
+apiVersion: v1
+kind: List
+items:
+
+- apiVersion: image.openshift.io/v1
+  kind: ImageStream
+  metadata:
+    namespace: mrt
+    creationTimestamp: null
+    labels:
+      app: mrt-backend
+      app.kubernetes.io/component: mrt-backend
+      app.kubernetes.io/instance: mrt-backend
+    name: openjdk-11
+  spec:
+    lookupPolicy:
+      local: false
+    tags:
+    - annotations:
+        openshift.io/imported-from: registry.access.redhat.com/ubi8/openjdk-11
+      from:
+        kind: DockerImage
+        name: registry.access.redhat.com/ubi8/openjdk-11
+      name: latest
+
+- apiVersion: image.openshift.io/v1
+  image:
+    dockerImageLayers: null
+    dockerImageMetadata: null
+  kind: ImageStreamTag
+  lookupPolicy:
+    local: false
+  metadata:
+    namespace: mrt
+    annotations:
+      openshift.io/imported-from: mrt-backend:latest
+    labels:
+      app: mrt-backend
+      app.kubernetes.io/component: mrt-backend
+      app.kubernetes.io/instance: mrt-backend
+    name: mrt-backend:latest
+  tag:
+    from:
+      kind: DockerImage
+      name: mrt-backend:latest
+    name: latest
+
+- apiVersion: build.openshift.io/v1
+  kind: BuildConfig
+  metadata:
+    namespace: mrt
+    labels:
+      app: mrt-backend
+      app.kubernetes.io/component: mrt-backend
+      app.kubernetes.io/instance: mrt-backend
+    name: mrt-backend
+  spec:
+    output:
+      to:
+        kind: ImageStreamTag
+        name: mrt-backend:latest
+    source:
+      contextDir: persistence
+      git:
+        uri: https://github.com/aleoncini/mrt
+      type: Git
+    strategy:
+      dockerStrategy:
+        from:
+          kind: ImageStreamTag
+          name: openjdk-11:latest
+      type: Docker
+    triggers:
+    - github:
+        secret: 69-V3gnvbQWz7Qzt71DP
+      type: GitHub
+    - generic:
+        secret: yAGRo73Su58q7VlPmDmk
+      type: Generic
+    - type: ConfigChange
+    - imageChange: {}
+      type: ImageChange
+
+- apiVersion: apps/v1
+  kind: Deployment
+  metadata:
+    namespace: mrt
+    annotations:
+      image.openshift.io/triggers: '[{"from":{"kind":"ImageStreamTag","name":"mrt-backend:latest"},"fieldPath":"spec.template.spec.containers[?(@.name==\"mrt-backend\")].image"}]'
+    labels:
+      app: mrt-backend
+      app.kubernetes.io/component: mrt-backend
+      app.kubernetes.io/instance: mrt-backend
+    name: mrt-backend
+  spec:
+    replicas: 1
+    selector:
+      matchLabels:
+        deployment: mrt-backend
+    template:
+      metadata:
+        labels:
+          deployment: mrt-backend
+      spec:
+        containers:
+        - image: ' '
+          name: mrt-backend
+          ports:
+          - containerPort: 8080
+            protocol: TCP
+          - containerPort: 8443
+            protocol: TCP
+          - containerPort: 8778
+            protocol: TCP
+          env:
+          - name: AUTH_SECRET
+            valueFrom:
+              configMapKeyRef:
+                key: secret
+                name: auth-server
+          - name: AUTH_SERVER_URL
+            valueFrom:
+              configMapKeyRef:
+                key: server-url
+                name: auth-server
+          - name: MONGODB_USER
+            valueFrom:
+              configMapKeyRef:
+                key: user
+                name: mongodb-credentials
+          - name: MONGODB_ADMIN_PASSWORD
+            valueFrom:
+              configMapKeyRef:
+                key: admin-password
+                name: mongodb-credentials
+          - name: MONGODB_DATABASE
+            valueFrom:
+              configMapKeyRef:
+                key: database
+                name: mongodb-credentials
+          - name: MONGODB_PASSWORD
+            valueFrom:
+              configMapKeyRef:
+                key: password
+                name: mongodb-credentials
+          - name: GOOGLE_KEY
+            valueFrom:
+              secretKeyRef:
+                key: google-key
+                name: google-key
+          volumeMounts:
+          - mountPath: /reports
+            name: mrt-backend-volume
+        volumes:
+        - persistenceVolumeClaim:
+            claimName: mrt-backend-pvc
+          name: mrt-backend-volume
+
+- apiVersion: v1
+  kind: PersistentVolumeClaim
+  metadata:
+    name: mrt-backend-pvc
+    namespace: mrt
+    labels:
+      app: mrt-backend
+  spec:
+    accessModes:
+    - ReadWriteOnce
+    resources:
+      requests:
+        storage: 1Gi
+
+- apiVersion: v1
+  kind: Service
+  metadata:
+    namespace: mrt
+    creationTimestamp: null
+    labels:
+      app: mrt-backend
+      app.kubernetes.io/component: mrt-backend
+      app.kubernetes.io/instance: mrt-backend
+    name: mrt-backend
+  spec:
+    ports:
+    - name: 8080-tcp
+      port: 8080
+      protocol: TCP
+      targetPort: 8080
+    - name: 8443-tcp
+      port: 8443
+      protocol: TCP
+      targetPort: 8443
+    - name: 8778-tcp
+      port: 8778
+      protocol: TCP
+      targetPort: 8778
+    selector:
+      deployment: mrt-backend
+
