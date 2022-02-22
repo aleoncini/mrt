@@ -1,12 +1,16 @@
 var STORE_ORIGIN = window.location.origin;
 
+var userId = null
 var keycloak = new Keycloak();
 console.log('=========> initializing keycloak!!');
 keycloak.init({
     onLoad: 'login-required'
+}).then(function(authenticated){
+    if(authenticated)
+        userId = keycloak.subject;
+    else
+        console.log("Authentication failed")
 })
-
-var userId = keycloak.subject
 
 // --- GOOGLE MAPS FUNCTIONS ----------------------------------------- 
 
