@@ -76,7 +76,7 @@
 <script src="js/trips.js"></script>
 <script type="text/javascript">
 
-    $(document).ready(function(){
+    initKeycloak(function(){
         loadReportList($('#selReportListYear :selected').val(), displayReportList);
         $(document).on("click", ".delete_report", function () {
             deleteReportFile(this.dataset.filename);

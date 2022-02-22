@@ -1,16 +1,24 @@
 var STORE_ORIGIN = window.location.origin;
 
-var userId = null
+var userId = null;
 var keycloak = new Keycloak();
-console.log('=========> initializing keycloak!!');
-keycloak.init({
-    onLoad: 'login-required'
-}).then(function(authenticated){
-    if(authenticated)
-        userId = keycloak.subject;
-    else
-        console.log("Authentication failed")
-})
+
+function initKeycloak(callback=null) {
+    console.log('=========> initializing keycloak!!');
+    keycloak.init({
+        onLoad: 'login-required'
+    }).then(function(authenticated){
+        if(authenticated) {
+            userId = keycloak.subject;
+            console.log("Authenticated as " + keycloak.idTokenParsed.preferred_username)
+            if (typeof callback == 'function')
+                callback()
+        }
+        else
+            console.log("Authentication failed")
+    })
+}
+
 
 // --- GOOGLE MAPS FUNCTIONS ----------------------------------------- 
 
