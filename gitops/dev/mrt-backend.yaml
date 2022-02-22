@@ -152,7 +152,7 @@ items:
           - mountPath: /reports
             name: mrt-backend-volume
         volumes:
-        - persistenceVolumeClaim:
+        - persistentVolumeClaim:
             claimName: mrt-backend-pvc
           name: mrt-backend-volume
 
