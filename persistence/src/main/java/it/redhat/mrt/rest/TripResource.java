@@ -17,6 +17,7 @@ import org.bson.types.ObjectId;
 
 import io.quarkus.mongodb.panache.PanacheMongoEntityBase;
 import it.redhat.mrt.model.Trip;
+import it.redhat.mrt.model.Associate;
 
 @Path("/trips")
 @Consumes(MediaType.APPLICATION_JSON)
@@ -29,8 +30,9 @@ public class TripResource {
     }
 
     @GET
-    @Path("/{rhid}/{year}/{month}")
-    public List<Trip> get(@PathParam("rhid") String rhid, @PathParam("year") int year, @PathParam("month") int month) {
+    @Path("/{userid}/{year}/{month}")
+    public List<Trip> get(@PathParam("userid") String userid, @PathParam("year") int year, @PathParam("month") int month) {
+        String rhid = Associate.findByUserid(userid).rhid;
         return Trip.getTrips(rhid, year, month);
     }
 

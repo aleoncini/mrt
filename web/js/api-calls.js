@@ -149,3 +149,18 @@ function deleteReportFile(filename) {
         }
     });
 };
+
+function getReport(filename){
+    var theUrl = STORE_ORIGIN + '/api/archive/' + userId + "/" + filename;
+    $.ajax({
+        url: theUrl,
+        type: 'GET',
+        dataType: 'json',
+        beforeSend: function(req) {
+            req.setRequestHeader('Authorization', 'Bearer ' + keycloak.token);
+          },
+        complete: function(response, status, xhr){
+            window.open(response.responseText);
+        }
+    });
+}

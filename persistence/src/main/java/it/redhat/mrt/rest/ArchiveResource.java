@@ -17,6 +17,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import it.redhat.mrt.model.ReportFileInfo;
+import it.redhat.mrt.model.Associate;
 
 @Path("/archive")
 @Consumes(MediaType.APPLICATION_JSON)
@@ -29,18 +30,20 @@ public class ArchiveResource {
     private static final Logger logger = LoggerFactory.getLogger("it.redhat.mrt");
 
     @GET
-    @Path("/pdf/{rhid}/{doc}")
+    @Path("/pdf/{userid}/{doc}")
     @Produces(MediaType.APPLICATION_OCTET_STREAM)
-    public File getPdf(@PathParam("doc") String docName, @PathParam("rhid") String rhid) {
+    public File getPdf(@PathParam("doc") String docName, @PathParam("userid") String userid) {
+        String rhid = Associate.findByUserid(userid).rhid;
         String[] parts = docName.substring(0, docName.length() - 4).split("_");
         File file = new File(dirname + "/" + rhid + "/" + parts[1] + "/" + docName);
         return file;
     }
 
     @GET
-    @Path("/{rhid}/{year}")
-    public List<ReportFileInfo> getFileList(@PathParam("rhid") String rhid, @PathParam("year") int year) {
+    @Path("/{userid}/{year}")
+    public List<ReportFileInfo> getFileList(@PathParam("userid") String userid, @PathParam("year") int year) {
 
+        String rhid = Associate.findByUserid(userid).rhid;
         List<ReportFileInfo> list = new ArrayList<ReportFileInfo>();
         try {
             list = ReportFileInfo.findFiles(dirname + "/" + rhid + "/" + year);
@@ -51,9 +54,11 @@ public class ArchiveResource {
     }
 
     @DELETE
-    @Path("/{rhid}/{doc}")
-    public void delete(@PathParam("rhid") String rhid, @PathParam("doc") String docName) {
+    @Path("/{userid}/{doc}")
+    public void delete(@PathParam("userid") String userid, @PathParam("doc") String docName) {
         logger.info("[ArchiveResource] about to delete: " + docName);
+        String rhid = Associate.findByUserid(userid).rhid;
+
         String[] parts = docName.substring(0, docName.length() - 4).split("_");
         File file = new File(dirname + "/" + rhid + "/" + parts[1], docName);
         if(file.exists()){  // requester is also owner of the file
