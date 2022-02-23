@@ -83,26 +83,22 @@
 <script src="js/trips.js"></script>
 <script type="text/javascript">
 
-    $(document).ready(function(){
+    function initPage() {
 
-        function fillTheForm(user, userAlreadyExists) {
-            $('#kc_id').val(user.userid);
-            if(userAlreadyExists){
-                $('#db_id').val(user.id);
-                $('#inp_fullname').val(user.fullName);
-                $('#inp_rhid').val(user.rhid);
-                $('#inp_carid').val(user.carid);
-                $('#inp_cc').val(user.costCenter);
-                $('#inp_mr').val(user.mileageRate);
-                $("#btn_save").html('Update');
-            }
-            $("#btn_save").attr("disabled", false);
-            $("#btn_save").removeClass('disabled');
-        };
+        params = new URLSearchParams(window.location.search)
 
-        function loadUserData(userid) {
-            loadAssociate(userid, fillTheForm);
+        $('#kc_id').val(associate.userid);
+        if(! params.get('register')){
+            $('#db_id').val(associate.id);
+            $('#inp_fullname').val(associate.fullName);
+            $('#inp_rhid').val(associate.rhid);
+            $('#inp_carid').val(associate.carid);
+            $('#inp_cc').val(associate.costCenter);
+            $('#inp_mr').val(associate.mileageRate);
+            $("#btn_save").html('Update');
         }
+        $("#btn_save").attr("disabled", false);
+        $("#btn_save").removeClass('disabled');
 
         function setAlert(msg, the_field){
             $("#formNotComplete").html(msg);
@@ -127,8 +123,6 @@
             }, 2000);
         }
 
-        initKeycloak(loadUserData);
-
         $('#btn_save').click(function(){
             var user = {};
             user.userid = $('#kc_id').val();
@@ -144,7 +138,9 @@
                 saveAssociate(user, saveOk)
             }
         });
-    });
+    };
+
+    initKeycloak(initPage);
 
 </script>
 </body>

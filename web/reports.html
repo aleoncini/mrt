@@ -9,7 +9,7 @@
 
     <!-- Bootstrap core CSS -->
     <link href="css/bootstrap.css" rel="stylesheet">
-    <script src="https://access-sso.apps.ocp4.rhocplab.com/auth/js/keycloak.js"></script>
+    <script src="https://access-idp.apps.playground.rhocplab.com/auth/js/keycloak.js"></script>
     <script src="js/api-calls.js"></script>
 </head>
 
@@ -76,12 +76,16 @@
 <script src="js/trips.js"></script>
 <script type="text/javascript">
 
-    initKeycloak(function(){
+     function initPage(){
         loadReportList($('#selReportListYear :selected').val(), displayReportList);
         $(document).on("click", ".delete_report", function () {
             deleteReportFile(this.dataset.filename);
             $(this).parent().remove();
         });
+    };
+
+    initKeycloak().then(function (k) { 
+        loadAssociate(k.subject, initPage);
     });
 
 </script>

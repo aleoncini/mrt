@@ -1,20 +1,21 @@
 var STORE_ORIGIN = window.location.origin;
-var keycloak = new Keycloak();
+var associate = {}
+var keycloak = new Keycloak()
 
-function initKeycloak(callback) {
+function initKeycloak(callback=null) {
     console.log('=========> initializing keycloak.');    
-    keycloak.init({
-        onLoad: 'login-required'
-    }).then(function(authenticated){
-        if(authenticated) {
-            console.log("=========> Authenticated as " + keycloak.idTokenParsed.name);
-            if (typeof callback == 'function'){
-                callback(keycloak.subject);
+    return keycloak.init({
+            onLoad: 'login-required'
+        }).then(function(authenticated){
+            if(authenticated) {
+                console.log("=========> Authenticated as " + keycloak.idTokenParsed.name);
+                loadAssociate(keycloak.subject, callback);
+            } else {
+                alert("Authentication failed");
             }
-        } else {
-            alert("Authentication failed");
-        }
-    });
+
+            return keycloak;
+        });
 }
 
 // --- GOOGLE MAPS FUNCTIONS ----------------------------------------- 
@@ -60,13 +61,16 @@ function loadAssociate(id, callbackFunction) {
         complete: function(response, status){
             var userAlreadyExists = false;
             if(status=='nocontent'){
-                var associate = {};
-                associate.userid = id;
+                associate['userid'] = id;
+                params = new URLSearchParams(window.location.search)
+                if (!params.get('register'))
+                    location.href = 'setup.html?register=true'
             } else {
                 userAlreadyExists = true;
-                var associate = jQuery.parseJSON(response.responseText);
+                associate = jQuery.parseJSON(response.responseText);
             }
-            callbackFunction(associate, userAlreadyExists);        
+            if(typeof callbackFunction == 'function') 
+                callbackFunction();        
         }
     });
 };
@@ -134,7 +138,7 @@ function deleteTrip(id) {
 };
 
 function loadTrips(year, month, callbackFunction) {
-    var theUrl = STORE_ORIGIN + '/api/trips/' + userId + "/" + year + "/" + month;
+    var theUrl = STORE_ORIGIN + '/api/trips/' + associate.rhid + "/" + year + "/" + month;
     $.ajax({
         url: theUrl,
         type: 'GET',
@@ -151,7 +155,7 @@ function loadTrips(year, month, callbackFunction) {
 
 function requestReportBuild(month, callbackFunction) {
     var year = new Date().getFullYear();
-    var theUrl = STORE_ORIGIN + '/api/reports/' + userId + "/" + year + '/' + month;
+    var theUrl = STORE_ORIGIN + '/api/reports/' + associate.userid + "/" + year + '/' + month;
     $.ajax({
         url: theUrl,
         type: 'POST',
@@ -169,7 +173,7 @@ function requestReportBuild(month, callbackFunction) {
 // --- PDF ARCHIVE FUNCTIONS ----------------------------------------- 
 
 function loadReportList(year, callbackFunction) {
-    var theUrl = STORE_ORIGIN + '/api/archive/' + userId + "/" + year;
+    var theUrl = STORE_ORIGIN + '/api/archive/' + associate.rhid + "/" + year;
     $.ajax({
         url: theUrl,
         type: 'GET',
@@ -185,7 +189,7 @@ function loadReportList(year, callbackFunction) {
 };
 
 function deleteReportFile(filename) {
-    var theUrl = STORE_ORIGIN + '/api/archive/' + userId + "/" + filename;
+    var theUrl = STORE_ORIGIN + '/api/archive/' + associate.rhid + "/" + filename;
     $.ajax({
         url: theUrl,
         type: 'DELETE',

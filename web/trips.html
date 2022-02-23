@@ -9,7 +9,7 @@
 
     <!-- Bootstrap core CSS -->
     <link href="css/bootstrap.css" rel="stylesheet">
-    <script src="https://access-sso.apps.ocp4.rhocplab.com/auth/js/keycloak.js"></script>
+    <script src="https://access-idp.apps.playground.rhocplab.com/auth/js/keycloak.js"></script>
     <script src="js/api-calls.js"></script>
 </head>
 
@@ -109,7 +109,7 @@
 <script src="js/trips.js"></script>
 <script type="text/javascript">
 
-    initKeycloak(function(){
+    function initPage(){
 
         $("#inputLocationName").change(function(ev){
             locationName = $(this).val();
@@ -123,7 +123,9 @@
             $(this).parent().remove();
         });
 
-    });
+    };
+
+    initKeycloak(initPage);
 
 </script>
 </body>
