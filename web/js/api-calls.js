@@ -1,24 +1,21 @@
 var STORE_ORIGIN = window.location.origin;
-
-var userId = null;
 var keycloak = new Keycloak();
 
-function initKeycloak(callback=null) {
-    console.log('=========> initializing keycloak!!');
+function initKeycloak(callback) {
+    console.log('=========> initializing keycloak.');    
     keycloak.init({
         onLoad: 'login-required'
     }).then(function(authenticated){
         if(authenticated) {
-            userId = keycloak.subject;
-            console.log("Authenticated as " + keycloak.idTokenParsed.preferred_username)
-            if (typeof callback == 'function')
-                callback()
+            console.log("=========> Authenticated as " + keycloak.idTokenParsed.name);
+            if (typeof callback == 'function'){
+                callback(keycloak.subject);
+            }
+        } else {
+            alert("Authentication failed");
         }
-        else
-            console.log("Authentication failed")
-    })
+    });
 }
-
 
 // --- GOOGLE MAPS FUNCTIONS ----------------------------------------- 
 
@@ -50,6 +47,58 @@ function initGoogleScript(theKey) {
 };
 
 // --- STORAGE FUNCTIONS ----------------------------------------- 
+
+function loadAssociate(id, callbackFunction) {
+    var theUrl = STORE_ORIGIN + '/api/associates/' + id;
+    $.ajax({
+        url: theUrl,
+        type: 'GET',
+        dataType: 'json',
+        beforeSend: function(req) {
+            req.setRequestHeader('Authorization', 'Bearer ' + keycloak.token);
+        },
+        complete: function(response, status){
+            var userAlreadyExists = false;
+            if(status=='nocontent'){
+                var associate = {};
+                associate.userid = id;
+            } else {
+                userAlreadyExists = true;
+                var associate = jQuery.parseJSON(response.responseText);
+            }
+            callbackFunction(associate, userAlreadyExists);        
+        }
+    });
+};
+
+function saveAssociate(the_associate, callbackFunction) {
+    var theUrl = STORE_ORIGIN + '/api/associates';
+    $.ajax({
+        type: "POST",
+        url: theUrl,
+        data: JSON.stringify(the_associate),
+        contentType: "application/json; charset=utf-8",
+        dataType: "json",
+        complete: function(response, status){
+            var associate = jQuery.parseJSON(response.responseText);
+            callbackFunction(associate);
+        }
+    });
+};
+
+function updateAssociate(the_associate, callbackFunction) {
+    var theUrl = STORE_ORIGIN + '/api/associates';
+    $.ajax({
+        type: "PUT",
+        url: theUrl,
+        data: JSON.stringify(the_associate),
+        contentType: "application/json; charset=utf-8",
+        dataType: "json",
+        complete: function(response, status){
+            callbackFunction();
+        }
+    });
+};
 
 function saveTrip(the_trip, callbackFunction) {
     var theUrl = STORE_ORIGIN + '/api/trips';
