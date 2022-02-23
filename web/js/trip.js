@@ -1,4 +1,5 @@
 var the_destination = {};
+var the_departure = {};
 
 function initMap() {
     const directionsService = new google.maps.DirectionsService();
@@ -7,10 +8,10 @@ function initMap() {
     const componentForm = [
         'location',
     ];
- 
-    const rome_office_position = {lat: 41.909832599799316, lng: 12.452532095955236};
 
-    const options = {zoom: 13, zoomControl: true, mapTypeControl: false, streetViewControl: false, scaleControl: true, center: rome_office_position};
+    const rome_office_position = { lat: 41.909832599799316, lng: 12.452532095955236 };
+
+    const options = { zoom: 13, zoomControl: true, mapTypeControl: false, streetViewControl: false, scaleControl: true, center: rome_office_position };
     map = new google.maps.Map(document.getElementById('map'), options);
 
     const image = "/images/rh_flag.png";
@@ -21,14 +22,13 @@ function initMap() {
         icon: image,
         draggable: false
     });
-    const marker = new google.maps.Marker({map: map, draggable: false});
+    const marker = new google.maps.Marker({ map: map, draggable: false });
     marker.setVisible(false);
 
-    directionsRenderer.setMap(map);  
-    const onChangeHandler = function () {
-        directionsService.route(
-            {
-                origin: rome_office_position,
+    directionsRenderer.setMap(map);
+    const onChangeHandler = function() {
+        directionsService.route({
+                origin: the_departure,
                 destination: the_destination,
                 travelMode: google.maps.TravelMode.DRIVING
             },
@@ -41,25 +41,38 @@ function initMap() {
     };
     document.getElementById("checkOutButton").addEventListener("click", onChangeHandler);
 
-    const autocompleteInput = document.getElementById('location');
-    const autocomplete = new google.maps.places.Autocomplete(autocompleteInput, {
-      fields: ["address_components", "geometry", "name"],
-      types: ["address"],
+    const departureInput = document.getElementById('departure-location');
+    const autocompleteInput = document.getElementById('arrival-location');
+    const departureInputWorked = new google.maps.places.Autocomplete(departureInput, {
+        fields: ["address_components", "geometry", "name"],
+        types: ["address"],
     });
-    autocomplete.addListener('place_changed', function () {
-        const place = autocomplete.getPlace();
-        if (!place.geometry) {
+    const autocomplete = new google.maps.places.Autocomplete(autocompleteInput, {
+        fields: ["address_components", "geometry", "name"],
+        types: ["address"],
+    });
+    autocomplete.addListener('place_changed', function() {
+        const departurePlace = departureInputWorked.getPlace();
+        const arrivalPlace = autocomplete.getPlace();
+        if (!arrivalPlace.geometry) {
             // User entered the name of a Place that was not suggested and
             // pressed the Enter key, or the Place Details request failed.
-            window.alert('No details available for input: \'' + place.name + '\'');
+            window.alert('No details available for input: \'' + arrivalPlace.name + '\'');
+            return;
+        }
+        if (!departurePlace.geometry) {
+            // User entered the name of a Place that was not suggested and
+            // pressed the Enter key, or the Place Details request failed.
+            window.alert('No details available for input: \'' + departurePlace.name + '\'');
             return;
         }
         $('#distance').html('');
-        renderAddress(place);
-        fillInAddress(place);
+        renderAddress(departurePlace, arrivalPlace);
+        fillInAddress(departurePlace, 'departure-location');
+        fillInAddress(arrivalPlace, 'arrival-location');
     });
 
-    function fillInAddress(place) {  // optional parameter
+    function fillInAddress(place, refPlace) { // optional parameter
         const addressNameFormat = {
             'street_number': 'short_name',
             'route': 'long_name',
@@ -68,7 +81,7 @@ function initMap() {
             'country': 'long_name',
             'postal_code': 'short_name',
         };
-        const getAddressComp = function (type) {
+        const getAddressComp = function(type) {
             for (const component of place.address_components) {
                 if (component.types[0] === type) {
                     return component[addressNameFormat[type]];
@@ -76,22 +89,22 @@ function initMap() {
             }
             return '';
         };
-        document.getElementById('location').value = getAddressComp('street_number') + ' ' + getAddressComp('route');
+        document.getElementById(refPlace).value = getAddressComp('street_number') + ' ' + getAddressComp('route');
     };
 
-    function renderAddress(place) {
-      map.setCenter(place.geometry.location);
-      the_destination = place.geometry.location;
-      marker.setPosition(place.geometry.location);
-      marker.setVisible(true);
+    function renderAddress(departurePlace, arrivalPlace) {
+        map.setCenter(arrivalPlace.geometry.location);
+        the_departure = departurePlace.geometry.location;
+        the_destination = arrivalPlace.geometry.location;
+        marker.setPosition(arrivalPlace.geometry.location);
+        marker.setVisible(true);
     };
 };
 
 function calculateAndDisplayRoute(directionsService, directionsRenderer) {
-    directionsService.route(
-        {
-            origin: {lat: 41.909832599799316, lng: 12.452532095955236},
-            destination: {lat: 41.831200940073444, lng: 12.467770885340915},
+    directionsService.route({
+            origin: { lat: 41.909832599799316, lng: 12.452532095955236 },
+            destination: { lat: 41.831200940073444, lng: 12.467770885340915 },
             travelMode: google.maps.TravelMode.DRIVING
         },
         (response, status) => {

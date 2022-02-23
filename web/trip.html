@@ -1,5 +1,6 @@
 <!doctype html>
 <html lang="en">
+
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -20,7 +21,7 @@
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault" aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
-    
+
         <div class="collapse navbar-collapse" id="navbarsExampleDefault">
             <ul class="navbar-nav mr-auto">
                 <li class="nav-item">
@@ -32,7 +33,7 @@
             </ul>
         </div>
     </nav>
-    
+
     <main role="main">
 
         <div class="container">
@@ -50,17 +51,20 @@
                         <img class="sb-title-icon" src="images/baseline_today_black_24dp.png" alt="">
                         <span class="sb-title">Day of the Trip</span>
                     </div>
-                    <div class="half-input-container">
+                    <input type="date" id="trip-date" min="2018-01-01" max="2099-12-31">
+                    <!-- <div class="half-input-container">
                         <input type="text" class="third-input" placeholder="day" id="day_of_trip"/>
                         <input type="text" class="third-input" placeholder="month" id="month_of_trip"/>
                         <input type="text" class="third-input" placeholder="year" id="year_of_trip"/>
-                    </div>
+                    </div> -->
                     <br>
                     <div>
                         <img class="sb-title-icon" src="images/baseline_location_pin_black_24dp.png" alt="">
                         <span class="sb-title">Address Selection</span>
                     </div>
-                    <input type="text" placeholder="Address" id="location"/>
+                    <input type="text" placeholder="Departure Address" id="departure-location" />
+                    <input type="text" placeholder="Arrival Address" id="arrival-location" />
+
                     <button id="checkOutButton" class="button-cta">Checkout Trip</button>
                     <div class="dst">Estimated route RT distance (Km) <span id="distance" style="font-size: 1.2em; font-weight: bold; text-align: right; color: #102e3b; margin-left: 30px;"></span></div>
                     <br>
@@ -68,123 +72,123 @@
                         <img class="sb-title-icon" src="images/baseline_people_black_24dp.png" alt="">
                         <span class="sb-title">Meeting details</span>
                     </div>
-                    <input type="text" placeholder="Company or Contact" id="contact"/>
-                    <input type="text" placeholder="Purpose" id="purpose"/>
+                    <input type="text" placeholder="Company or Contact" id="contact" />
+                    <input type="text" placeholder="Purpose" id="purpose" />
                     <button id="saveTripButton" class="button-cta">Save Trip</button>
                 </div>
                 <div class="map" id="map"></div>
             </div>
 
-            <div class="alert alert-danger" id="formNotComplete" role="alert" style="display:none;" ></div>
-            <div class="alert alert-success" id="save_ok" role="alert" style="display:none;" >Ok. Trip successfully saved!</div>
+            <div class="alert alert-danger" id="formNotComplete" role="alert" style="display:none;"></div>
+            <div class="alert alert-success" id="save_ok" role="alert" style="display:none;">Ok. Trip successfully saved!</div>
 
         </div>
 
     </main>
 
-<!-- jQuery first, then Bootstrap JS -->
-<script src="js/jquery-3.6.0.min.js"></script>
-<script src="js/bootstrap.bundle.js"></script>
-<script src="js/trip.js"></script>
-<script type="text/javascript">
+    <!-- jQuery first, then Bootstrap JS -->
+    <script src="js/jquery-3.6.0.min.js"></script>
+    <script src="js/bootstrap.bundle.js"></script>
+    <script src="js/trip.js"></script>
+    <script type="text/javascript">
+        function setAlert(msg, the_field) {
+            $("#formNotComplete").html(msg);
+            $("#formNotComplete").fadeIn();
+            $(the_field).focus();
+            window.setTimeout(function() {
+                $("#formNotComplete").fadeOut();
+            }, 2000);
+        }
 
-    function setAlert(msg, the_field){
-        $("#formNotComplete").html(msg);
-        $("#formNotComplete").fadeIn();
-        $(the_field).focus();
-        window.setTimeout(function () { 
-            $("#formNotComplete").fadeOut();
-        }, 2000);
-    }
-    function setSuccess(){
-        $("#save_ok").fadeIn();
-        window.setTimeout(function () { 
-            $("#save_ok").fadeOut();
-        }, 2000);
-    }
-    function setRhid(keycloakId){
-        loadAssociate(keycloakId, function(associate){
-            console.log("===> rhid: " + associate.rhid);
-            $("#rhid").val(associate.rhid);
-        });
-    }
+        function setSuccess() {
+            $("#save_ok").fadeIn();
+            window.setTimeout(function() {
+                $("#save_ok").fadeOut();
+            }, 2000);
+        }
 
-    function initPage(){
+        function setRhid(keycloakId) {
+            loadAssociate(keycloakId, function(associate) {
+                console.log("===> rhid: " + associate.rhid);
+                $("#rhid").val(associate.rhid);
+            });
+        }
 
-        initKey();
+        function initPage() {
 
-        $('#saveTripButton').click(function(){
-            var the_trip = {};
+            initKey();
 
-            the_trip.rhid = $("#rhid").val();
+            $('#saveTripButton').click(function() {
+                var the_trip = {};
 
-            var inp_val = $('#day_of_trip').val();
-            if((inp_val.length == 0) || (isNaN(inp_val))){
-                setAlert('Please insert a valid Day', '#day_of_trip');
-                return;
-            }
+                the_trip.rhid = $("#rhid").val();
 
-            the_trip.day = parseInt(inp_val);
-            if((the_trip.day < 1) || (the_trip.day > 31)){
-                setAlert('Please insert a valid Day', '#day_of_trip');
-                return;
-            }
+                var inp_val = $('#trip-date').val().split('-');
 
-            inp_val = $('#month_of_trip').val();
-            if((inp_val.length == 0) || (isNaN(inp_val))){
-                setAlert('Please insert a valid Month [1...12]', '#month_of_trip');
-                return;
-            }
+                if ((inp_val[2].length == 0) || (isNaN(inp_val[2]))) {
+                    setAlert('Please insert a valid Day', inp_val[2]);
+                    return;
+                }
 
-            the_trip.month = parseInt(inp_val);
-            if((the_trip.month < 1) || (the_trip.month > 12)){
-                setAlert('Please insert a valid Month [1...12]', '#month_of_trip');
-                return;
-            }
+                the_trip.day = parseInt(inp_val[2]);
+                if ((the_trip.day < 1) || (the_trip.day > 31)) {
+                    setAlert('Please insert a valid Day', inp_val[2]);
+                    return;
+                }
 
-            inp_val = $('#year_of_trip').val();
-            if((inp_val.length == 0) || (isNaN(inp_val))){
-                setAlert('Please insert a valid Year [2021 or 2022]', '#year_of_trip');
-                return;
-            }
+                if ((inp_val[1].length == 0) || (isNaN(inp_val[1]))) {
+                    setAlert('Please insert a valid Month [1...12]', inp_val[1]);
+                    return;
+                }
 
-            the_trip.year = parseInt(inp_val);
-            if((the_trip.year < 2021) || (the_trip.year > 2022)){
-                setAlert('Please insert a valid Year [2021 or 2022]', '#year_of_trip');
-                return;
-            }
-            
-            the_trip.destination = $('#contact').val();
-            if(the_trip.destination.length == 0){
-                setAlert('Please insert a valid Contact or Company name', '#contact');
-                return;
-            }
+                the_trip.month = parseInt(inp_val[1]);
+                if ((the_trip.month < 1) || (the_trip.month > 12)) {
+                    setAlert('Please insert a valid Month [1...12]', inp_val[1]);
+                    return;
+                }
 
-            the_trip.purpose = $('#purpose').val();
-            if(the_trip.purpose.length == 0){
-                setAlert('Please insert a valid purpose', '#purpose');
-                return;
-            }
+                if ((inp_val[0].length == 0) || (isNaN(inp_val[0]))) {
+                    setAlert('Please insert a valid Year [2021 or 2022]', inp_val[0]);
+                    return;
+                }
 
-            var dist = $('#distance').html();
-            console.log("=====> " + dist);
-            if((dist.length == 0) || (isNaN(dist))){
-                setAlert('Please enter an address and then check out the trip to calculate the distance', '#location');
-                return;
-            }
+                the_trip.year = parseInt(inp_val[0]);
+                if ((the_trip.year < 2021) || (the_trip.year > 2022)) {
+                    setAlert('Please insert a valid Year [2021 or 2022]', inp_val[0]);
+                    return;
+                }
 
-            the_trip.distance = parseInt(dist);
-            if(the_trip.distance <= 0){
-                setAlert('Distance must be a number greater than 0', '#location');
-                return;
-            }
+                the_trip.destination = $('#contact').val();
+                if (the_trip.destination.length == 0) {
+                    setAlert('Please insert a valid Contact or Company name', '#contact');
+                    return;
+                }
 
-            saveTrip(the_trip, setSuccess);
-        });
-    }
+                the_trip.purpose = $('#purpose').val();
+                if (the_trip.purpose.length == 0) {
+                    setAlert('Please insert a valid purpose', '#purpose');
+                    return;
+                }
 
-    initKeycloak(initPage);
+                var dist = $('#distance').html();
+                console.log("=====> " + dist);
+                if ((dist.length == 0) || (isNaN(dist))) {
+                    setAlert('Please enter an address and then check out the trip to calculate the distance', '#location');
+                    return;
+                }
 
-</script>
+                the_trip.distance = parseInt(dist);
+                if (the_trip.distance <= 0) {
+                    setAlert('Distance must be a number greater than 0', '#location');
+                    return;
+                }
+                console.log(inp_val);
+                saveTrip(the_trip, setSuccess);
+            });
+        }
+
+        initKeycloak(initPage);
+    </script>
 </body>
+
 </html>
