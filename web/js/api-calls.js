@@ -27,7 +27,7 @@ function initKey() {
         dataType: 'json',
         beforeSend: function(req) {
             req.setRequestHeader('Authorization', 'Bearer ' + keycloak.token);
-          },
+        },
         complete: function(response, status, xhr){
             var keyObject = jQuery.parseJSON(response.responseText);
             console.log('Key READY...');

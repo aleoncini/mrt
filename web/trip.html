@@ -10,7 +10,7 @@
     <!-- Bootstrap core CSS -->
     <link href="css/bootstrap.css" rel="stylesheet">
     <link href="css/trip.css" rel="stylesheet">
-    <script src="https://access-sso.apps.ocp4.rhocplab.com/auth/js/keycloak.js"></script>
+    <script src="https://access-idp.apps.playground.rhocplab.com/auth/js/keycloak.js"></script>
     <script src="js/api-calls.js"></script>
 </head>
 
@@ -45,6 +45,7 @@
 
             <div class="card-container">
                 <div class="panel">
+                    <input type="hidden" id="rhid" value="">
                     <div>
                         <img class="sb-title-icon" src="images/baseline_today_black_24dp.png" alt="">
                         <span class="sb-title">Day of the Trip</span>
@@ -101,13 +102,23 @@
             $("#save_ok").fadeOut();
         }, 2000);
     }
+    function setRhid(keycloakId){
+        loadAssociate(keycloakId, function(associate){
+            console.log("===> rhid: " + associate.rhid);
+            $("#rhid").val(associate.rhid);
+        });
+    }
 
-    initKeycloak(function(){
+    $(document).ready(function(){
 
         console.log('Document READY...');
         initKey();
+        initKeycloak(setRhid);
+        
         $('#saveTripButton').click(function(){
             var the_trip = {};
+
+            the_trip.rhid = $("#rhid").val();
 
             var inp_val = $('#day_of_trip').val();
             if((inp_val.length == 0) || (isNaN(inp_val))){
