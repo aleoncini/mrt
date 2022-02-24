@@ -111,16 +111,18 @@
 
     function initPage(){
 
-        $("#inputLocationName").change(function(ev){
-            locationName = $(this).val();
-            var val = ev.target.value
-            distance = $("#tList option[value='" + val + "']").text();
-            $('#inputDistance').val(distance);
-        });
+        $(document).ready(function() {
+            $("#inputLocationName").change(function(ev){
+                locationName = $(this).val();
+                var val = ev.target.value
+                distance = $("#tList option[value='" + val + "']").text();
+                $('#inputDistance').val(distance);
+            });
 
-        $(document).on("click", ".delete_trip", function () {
-            deleteTrip(this.dataset.id);
-            $(this).parent().remove();
+            $(document).on("click", ".delete_trip", function () {
+                deleteTrip(this.dataset.id);
+                $(this).parent().remove();
+            });
         });
 
     };

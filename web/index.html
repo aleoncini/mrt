@@ -136,10 +136,12 @@
     <script type="text/javascript">
 
         function initPage() {
-            $('#btn_createReport').click(function(){
-                var month = parseInt($('#inputPdfMonth :selected').val());
-                requestReportBuild(month, showReportBuildResult);
-            });
+            $(document).ready(function () {
+                $('#btn_createReport').click(function(){
+                    var month = parseInt($('#inputPdfMonth :selected').val());
+                    requestReportBuild(month, showReportBuildResult);
+                });
+            })
         };
 
         initKeycloak(initPage);

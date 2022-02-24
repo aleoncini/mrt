@@ -56,7 +56,7 @@ function addReportInfoToTable(info) {
     rowContent += '<td>' + info.creationTime + '</td>';
     rowContent += '<td>' + info.size + '</td>';
     rowContent += '<td>' + info.version + '</td>';
-    rowContent += '<td><a href="/api/archive/pdf/' + associate.rhid + '/' + info.name + '"><img src="images/file-earmark-arrow-down.svg" alt="download" width="32" height="32"></a></td>';
+    rowContent += '<td style="cursor: pointer;" class="get_report" data-filename="' + info.name + '"><img src="images/file-earmark-arrow-down.svg" alt="download" width="32" height="32"></td>';
     rowContent += '<td style="cursor: pointer;" class="delete_report" data-filename="' + info.name + '"><img src="images/trash.svg" alt="delete" width="32" height="32"></td>';
     rowContent += '</tr>';
     $('#tbl_reports  tbody').append(rowContent);

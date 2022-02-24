@@ -77,16 +77,19 @@
 <script type="text/javascript">
 
      function initPage(){
-        loadReportList($('#selReportListYear :selected').val(), displayReportList);
-        $(document).on("click", ".delete_report", function () {
-            deleteReportFile(this.dataset.filename);
-            $(this).parent().remove();
-        });
+        $(document).ready(function() {
+            loadReportList($('#selReportListYear :selected').val(), displayReportList);
+            $(document).on("click", ".delete_report", function () {
+                deleteReportFile(this.dataset.filename);
+                $(this).parent().remove();
+            });
+            $(document).on("click", ".get_report", function () {
+                getReportFile(this.dataset.filename);
+            });
+        })
     };
 
-    initKeycloak().then(function (k) { 
-        loadAssociate(k.subject, initPage);
-    });
+    initKeycloak(initPage);
 
 </script>
 </body>

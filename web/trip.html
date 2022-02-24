@@ -116,74 +116,77 @@
 
         function initPage() {
 
-            initKey();
+            $(document).ready(function() {
+                initKey();
+                
+                $('#saveTripButton').click(function() {
 
-            $('#saveTripButton').click(function() {
-                var the_trip = {};
+                    var the_trip = {};
 
-                the_trip.rhid = $("#rhid").val();
+                    the_trip.rhid = $("#rhid").val();
 
-                var inp_val = $('#trip-date').val().split('-');
+                    var inp_val = $('#trip-date').val().split('-');
 
-                if ((inp_val[2].length == 0) || (isNaN(inp_val[2]))) {
-                    setAlert('Please insert a valid Day', inp_val[2]);
-                    return;
-                }
+                    if ((inp_val[2].length == 0) || (isNaN(inp_val[2]))) {
+                        setAlert('Please insert a valid Day', inp_val[2]);
+                        return;
+                    }
 
-                the_trip.day = parseInt(inp_val[2]);
-                if ((the_trip.day < 1) || (the_trip.day > 31)) {
-                    setAlert('Please insert a valid Day', inp_val[2]);
-                    return;
-                }
+                    the_trip.day = parseInt(inp_val[2]);
+                    if ((the_trip.day < 1) || (the_trip.day > 31)) {
+                        setAlert('Please insert a valid Day', inp_val[2]);
+                        return;
+                    }
 
-                if ((inp_val[1].length == 0) || (isNaN(inp_val[1]))) {
-                    setAlert('Please insert a valid Month [1...12]', inp_val[1]);
-                    return;
-                }
+                    if ((inp_val[1].length == 0) || (isNaN(inp_val[1]))) {
+                        setAlert('Please insert a valid Month [1...12]', inp_val[1]);
+                        return;
+                    }
 
-                the_trip.month = parseInt(inp_val[1]);
-                if ((the_trip.month < 1) || (the_trip.month > 12)) {
-                    setAlert('Please insert a valid Month [1...12]', inp_val[1]);
-                    return;
-                }
+                    the_trip.month = parseInt(inp_val[1]);
+                    if ((the_trip.month < 1) || (the_trip.month > 12)) {
+                        setAlert('Please insert a valid Month [1...12]', inp_val[1]);
+                        return;
+                    }
 
-                if ((inp_val[0].length == 0) || (isNaN(inp_val[0]))) {
-                    setAlert('Please insert a valid Year [2021 or 2022]', inp_val[0]);
-                    return;
-                }
+                    if ((inp_val[0].length == 0) || (isNaN(inp_val[0]))) {
+                        setAlert('Please insert a valid Year [2021 or 2022]', inp_val[0]);
+                        return;
+                    }
 
-                the_trip.year = parseInt(inp_val[0]);
-                if ((the_trip.year < 2021) || (the_trip.year > 2022)) {
-                    setAlert('Please insert a valid Year [2021 or 2022]', inp_val[0]);
-                    return;
-                }
+                    the_trip.year = parseInt(inp_val[0]);
+                    if ((the_trip.year < 2021) || (the_trip.year > 2022)) {
+                        setAlert('Please insert a valid Year [2021 or 2022]', inp_val[0]);
+                        return;
+                    }
 
-                the_trip.destination = $('#contact').val();
-                if (the_trip.destination.length == 0) {
-                    setAlert('Please insert a valid Contact or Company name', '#contact');
-                    return;
-                }
+                    the_trip.destination = $('#contact').val();
+                    if (the_trip.destination.length == 0) {
+                        setAlert('Please insert a valid Contact or Company name', '#contact');
+                        return;
+                    }
 
-                the_trip.purpose = $('#purpose').val();
-                if (the_trip.purpose.length == 0) {
-                    setAlert('Please insert a valid purpose', '#purpose');
-                    return;
-                }
+                    the_trip.purpose = $('#purpose').val();
+                    if (the_trip.purpose.length == 0) {
+                        setAlert('Please insert a valid purpose', '#purpose');
+                        return;
+                    }
 
-                var dist = $('#distance').html();
-                console.log("=====> " + dist);
-                if ((dist.length == 0) || (isNaN(dist))) {
-                    setAlert('Please enter an address and then check out the trip to calculate the distance', '#location');
-                    return;
-                }
+                    var dist = $('#distance').html();
+                    console.log("=====> " + dist);
+                    if ((dist.length == 0) || (isNaN(dist))) {
+                        setAlert('Please enter an address and then check out the trip to calculate the distance', '#location');
+                        return;
+                    }
 
-                the_trip.distance = parseInt(dist);
-                if (the_trip.distance <= 0) {
-                    setAlert('Distance must be a number greater than 0', '#location');
-                    return;
-                }
-                console.log(inp_val);
-                saveTrip(the_trip, setSuccess);
+                    the_trip.distance = parseInt(dist);
+                    if (the_trip.distance <= 0) {
+                        setAlert('Distance must be a number greater than 0', '#location');
+                        return;
+                    }
+                    console.log(inp_val);
+                    saveTrip(the_trip, setSuccess);
+                });
             });
         }
 

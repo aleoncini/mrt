@@ -84,59 +84,60 @@
 <script type="text/javascript">
 
     function initPage() {
+        $(document).ready(function() {
+            params = new URLSearchParams(window.location.search)
 
-        params = new URLSearchParams(window.location.search)
-
-        $('#kc_id').val(associate.userid);
-        if(! params.get('register')){
-            $('#db_id').val(associate.id);
-            $('#inp_fullname').val(associate.fullName);
-            $('#inp_rhid').val(associate.rhid);
-            $('#inp_carid').val(associate.carid);
-            $('#inp_cc').val(associate.costCenter);
-            $('#inp_mr').val(associate.mileageRate);
-            $("#btn_save").html('Update');
-        }
-        $("#btn_save").attr("disabled", false);
-        $("#btn_save").removeClass('disabled');
-
-        function setAlert(msg, the_field){
-            $("#formNotComplete").html(msg);
-            $("#formNotComplete").fadeIn();
-            $(the_field).focus();
-            window.setTimeout(function () { 
-                $("#formNotComplete").fadeOut();
-            }, 2000);
-        }
-        function saveOk(associate){
-            $('#db_id').val(associate.id);
-            $("#btn_save").html('Update');
-            $("#save_ok").fadeIn();
-            window.setTimeout(function () { 
-                $("#save_ok").fadeOut();
-            }, 2000);
-        }
-        function updateOk(){
-            $("#save_ok").fadeIn();
-            window.setTimeout(function () { 
-                $("#save_ok").fadeOut();
-            }, 2000);
-        }
-
-        $('#btn_save').click(function(){
-            var user = {};
-            user.userid = $('#kc_id').val();
-            user.fullName = $('#inp_fullname').val();
-            user.rhid = $('#inp_rhid').val();
-            user.carid = $('#inp_carid').val();
-            user.costCenter = $('#inp_cc').val();
-            user.mileageRate = $('#inp_mr').val();
-            if($('#btn_save').html() == 'Update'){
-                user.id = $('#db_id').val();
-                updateAssociate(user, updateOk);
-            } else {
-                saveAssociate(user, saveOk)
+            $('#kc_id').val(associate.userid);
+            if(! params.get('register')){
+                $('#db_id').val(associate.id);
+                $('#inp_fullname').val(associate.fullName);
+                $('#inp_rhid').val(associate.rhid);
+                $('#inp_carid').val(associate.carid);
+                $('#inp_cc').val(associate.costCenter);
+                $('#inp_mr').val(associate.mileageRate);
+                $("#btn_save").html('Update');
             }
+            $("#btn_save").attr("disabled", false);
+            $("#btn_save").removeClass('disabled');
+
+            function setAlert(msg, the_field){
+                $("#formNotComplete").html(msg);
+                $("#formNotComplete").fadeIn();
+                $(the_field).focus();
+                window.setTimeout(function () { 
+                    $("#formNotComplete").fadeOut();
+                }, 2000);
+            }
+            function saveOk(associate){
+                $('#db_id').val(associate.id);
+                $("#btn_save").html('Update');
+                $("#save_ok").fadeIn();
+                window.setTimeout(function () { 
+                    $("#save_ok").fadeOut();
+                }, 2000);
+            }
+            function updateOk(){
+                $("#save_ok").fadeIn();
+                window.setTimeout(function () { 
+                    $("#save_ok").fadeOut();
+                }, 2000);
+            }
+
+            $('#btn_save').click(function(){
+                var user = {};
+                user.userid = $('#kc_id').val();
+                user.fullName = $('#inp_fullname').val();
+                user.rhid = $('#inp_rhid').val();
+                user.carid = $('#inp_carid').val();
+                user.costCenter = $('#inp_cc').val();
+                user.mileageRate = $('#inp_mr').val();
+                if($('#btn_save').html() == 'Update'){
+                    user.id = $('#db_id').val();
+                    updateAssociate(user, updateOk);
+                } else {
+                    saveAssociate(user, saveOk)
+                }
+            });
         });
     };
 
