@@ -135,16 +135,17 @@
 
     <script type="text/javascript">
 
-        function initPage() {
-            $(document).ready(function () {
-                $('#btn_createReport').click(function(){
-                    var month = parseInt($('#inputPdfMonth :selected').val());
-                    requestReportBuild(month, showReportBuildResult);
-                });
-            })
-        };
+        $(document).ready(function () {
 
-        initKeycloak(initPage);
+            // non abbiamo bisogno di passare la callback, ci basta controllare il token
+            initKeycloak();
+
+            $('#btn_createReport').click(function(){
+                var month = parseInt($('#inputPdfMonth :selected').val());
+                requestReportBuild(month, showReportBuildResult);
+            });
+
+        });
 
     </script>
 

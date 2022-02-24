@@ -41,17 +41,19 @@
 
             <form>
                 <div class="form-row align-items-center">
+                    <input type="hidden" id="rhid" value="">
                     <div class="col-auto">
                         <label class="sr-only" for="inputYear">Year</label>
                         <select id="inputYear" class="form-control mb-2" data-style="btn-info">
                             <option value="2020"> 2020 </option>
-                            <option value="2021" selected> 2021 </option>
-                            <option value="2022"> 2022 </option>
+                            <option value="2021"> 2021 </option>
+                            <option value="2022" selected> 2022 </option>
+                            <option value="2023"> 2023 </option>
                         </select>
                     </div>
                     <div class="col-auto">
                         <label class="sr-only" for="inputMonth">Month</label>
-                        <select id="inputMonth" class="form-control mb-2" data-style="btn-info" onchange="loadTrips(parseInt($('#inputYear :selected').val()), this.value, displayAllTrips);">
+                        <select id="inputMonth" class="form-control mb-2" data-style="btn-info" onchange="loadTrips($('#rhid').val(), parseInt($('#inputYear :selected').val()), this.value, displayAllTrips);">
                             <option value="0" selected> Choose month... </option>
                             <option value="1">January</option>
                             <option value="2">February</option>
@@ -109,25 +111,28 @@
 <script src="js/trips.js"></script>
 <script type="text/javascript">
 
-    function initPage(){
+    function setRhid(keycloakId) {
+        loadAssociate(keycloakId, function(associate) {
+            console.log("===> rhid: " + associate.rhid);
+            $("#rhid").val(associate.rhid);
+        });
+    }
 
-        $(document).ready(function() {
-            $("#inputLocationName").change(function(ev){
-                locationName = $(this).val();
-                var val = ev.target.value
-                distance = $("#tList option[value='" + val + "']").text();
-                $('#inputDistance').val(distance);
-            });
+    $(document).ready(function() {
+        initKeycloak(setRhid);
 
-            $(document).on("click", ".delete_trip", function () {
-                deleteTrip(this.dataset.id);
-                $(this).parent().remove();
-            });
+        $("#inputLocationName").change(function(ev){
+            locationName = $(this).val();
+            var val = ev.target.value
+            distance = $("#tList option[value='" + val + "']").text();
+            $('#inputDistance').val(distance);
         });
 
-    };
-
-    initKeycloak(initPage);
+        $(document).on("click", ".delete_trip", function () {
+            deleteTrip(this.dataset.id);
+            $(this).parent().remove();
+        });
+    });
 
 </script>
 </body>
