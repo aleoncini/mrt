@@ -4,6 +4,7 @@ import java.util.List;
 
 import io.quarkus.mongodb.panache.PanacheMongoEntity;
 import io.quarkus.mongodb.panache.common.MongoEntity;
+import io.quarkus.panache.common.Sort;
 
 @MongoEntity(collection="trips")
 public class Trip extends PanacheMongoEntity {
@@ -13,13 +14,15 @@ public class Trip extends PanacheMongoEntity {
     public int month;
     public int day;
     public int distance;
+    public String from;
     public String destination;
     public String purpose;
 
     public static List<Trip> getTrips(String rhid, int year, int month){
-        return Trip.find("rhid = ?1 and year = ?2 and month = ?3", rhid, year, month).list();
+        return Trip.find("rhid = ?1 and year = ?2 and month = ?3", rhid, year, month, Sort.by("day")).list();
     }
 
+    /*
     public static int getTotalMileage(String rhid, int year, int month){
         if(month == 1){
             return 0;
@@ -33,4 +36,5 @@ public class Trip extends PanacheMongoEntity {
         }
         return totalDistance;
     }
+    */
 }

@@ -7,42 +7,31 @@ import java.util.Locale;
 
 public class Report {
     public String name;
-    public String email;
-    public String costCenter;
     public String rhid;
-    public String carId;
+    public String carModel;
     public double mileageRate;
     public List<Trip> trips;
     public int year;
     public int month;
+    public int odometer;
 
     public String getPeriod() {
         return Month.of(month).getDisplayName(TextStyle.FULL, Locale.getDefault()) + " " + year;
     }
 
-    public int getTotalDistance(){
-        return Trip.getTotalMileage(rhid, year, month);
-    }
-
-    public int getMonthlyDistance(){
-        int monthlyDistance = 0;
-        for (Trip trip : trips) {
-            monthlyDistance += trip.distance;
-        }
-        return monthlyDistance;
-    }
-
-    public static Report build(String userid) {
+    public static Report build(String userid, int year, int month) {
 
         Associate associate = Associate.findByUserid(userid);
+        Odometer odometer = Odometer.findByMonth(associate.rhid, year, month);
         Report report = new Report();
         
         report.rhid = associate.rhid;
         report.name = associate.fullName;
-        report.email = associate.userid + "@redhat.com";
-        report.costCenter = associate.costCenter;
-        report.carId = associate.carid;
-        report.mileageRate = associate.mileageRate;
+        report.carModel = associate.carModel;
+        report.mileageRate = associate.mileageRate;        
+        report.year = year;
+        report.month = month;
+        report.odometer = odometer.value;
 
         return report;
     }

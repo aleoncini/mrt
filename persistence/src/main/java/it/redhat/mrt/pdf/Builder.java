@@ -11,6 +11,9 @@ import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.text.NumberFormat;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
 import java.util.Locale;
 import java.awt.Color;
 
@@ -44,6 +47,7 @@ public class Builder {
     private float imageY, topY;
     private Color darkBlue= new Color(0, 65, 85);
     private Color darkRed= new Color(175, 0, 0);
+    private int monthlyTotalMileage;
 
     private Report report;
 
@@ -71,12 +75,12 @@ public class Builder {
             this.drawBanner();
             this.drawHeaderLines();
             this.drawHeaderLabels();
+            this.drawHeaderValues();
             this.drawFooterLines();
             this.drawFooterLabels();
-            this.drawHeaderValues();
-            this.drawFooterValues();
             this.prepareTable();
             this.writeTripLogs();
+            this.drawFooterValues();
             this.save();
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -222,7 +226,7 @@ public class Builder {
         contentStream.setFont(PDType1Font.HELVETICA_BOLD, 16);
         contentStream.setNonStrokingColor(Color.white);
         contentStream.newLineAtOffset(65, imageY + 36);
-        contentStream.showText("Business Mileage Form");
+        contentStream.showText("Business Mileage Reimbursement Form");
         contentStream.endText();
 
         contentStream.beginText();
@@ -240,41 +244,43 @@ public class Builder {
         contentStream.moveTo(xLeft, imageY - 1);
         contentStream.lineTo(xRight, imageY - 1);
         contentStream.stroke();
-        contentStream.moveTo(xLeft, imageY - 123);
-        contentStream.lineTo(xRight, imageY - 123);
+        contentStream.moveTo(xLeft, imageY - 43);
+        contentStream.lineTo(xRight, imageY - 43);
         contentStream.stroke();
 
 
         contentStream.setLineWidth(.5f);
         contentStream.setLineDashPattern(new float[]{3,1}, 0);
 
+        /*
         contentStream.moveTo(50, imageY - 42);
         contentStream.lineTo(xRight - 10, imageY - 42);
         contentStream.stroke();
         contentStream.moveTo(50, imageY - 83);
         contentStream.lineTo(xRight - 10, imageY - 83);
         contentStream.stroke();
+        */
 
 
         float cellWidth = (contentWidth - 20) / 3;
-        contentStream.moveTo(50 + cellWidth, imageY - 115);
+        contentStream.moveTo(50 + cellWidth, imageY - 35);
         contentStream.lineTo(50 + cellWidth, imageY - 10);
         contentStream.stroke();
-        contentStream.moveTo(50 + (cellWidth*2), imageY - 115);
+        contentStream.moveTo(50 + (cellWidth*2), imageY - 35);
         contentStream.lineTo(50 + (cellWidth*2), imageY - 10);
         contentStream.stroke();
     }
 
     private void drawHeaderLabels() throws IOException {
-        writeCellLabel(contentStream, 0, 0, "associate");
-        writeCellLabel(contentStream, 0, 1, "cost center");
-        writeCellLabel(contentStream, 0, 2, "employee number");
-        writeCellLabel(contentStream, 1, 0, "period");
-        writeCellLabel(contentStream, 1, 1, "car registry number");
-        writeCellLabel(contentStream, 1, 2, "mileage cost rate (euro/km)");
-        writeCellLabel(contentStream, 2, 0, "this month total (km)");
-        writeCellLabel(contentStream, 2, 1, "total from previous report (Km)");
-        writeCellLabel(contentStream, 2, 2, "this year total including this month (Km)");
+        writeCellLabel(contentStream, 0, 0, "associate name");
+        //writeCellLabel(contentStream, 0, 1, "cost center");
+        //writeCellLabel(contentStream, 0, 2, "employee number");
+        writeCellLabel(contentStream, 1, 0, "vehicle type");
+        //writeCellLabel(contentStream, 1, 1, "car registry number");
+        //writeCellLabel(contentStream, 1, 2, "mileage cost rate (euro/km)");
+        writeCellLabel(contentStream, 2, 0, "mileage rate");
+        //writeCellLabel(contentStream, 2, 1, "total from previous report (Km)");
+        //writeCellLabel(contentStream, 2, 2, "this year total including this month (Km)");
     }
 
     private void drawFooterLines() throws IOException {
@@ -285,8 +291,8 @@ public class Builder {
         contentStream.moveTo(xLeft, 60);
         contentStream.lineTo(xRight, 60);
         contentStream.stroke();
-        contentStream.moveTo(xLeft, 120);
-        contentStream.lineTo(xRight, 120);
+        contentStream.moveTo(xLeft, 100);
+        contentStream.lineTo(xRight, 100);
         contentStream.stroke();
 
         contentStream.setLineWidth(.5f);
@@ -296,10 +302,11 @@ public class Builder {
         contentStream.lineTo(xRight, 80);
         contentStream.stroke();
         
+        /*
         contentStream.moveTo(xMiddle, 100);
         contentStream.lineTo(xRight, 100);
         contentStream.stroke();
-        
+        */
     }
 
     private void drawFooterLabels() throws IOException {
@@ -310,7 +317,7 @@ public class Builder {
         float text_width = (PDType1Font.HELVETICA.getStringWidth(text) / 1000.0f) * 6;
 
         contentStream.beginText();
-        contentStream.newLineAtOffset(xRight - 60 - text_width, 107);
+        contentStream.newLineAtOffset(xRight - 60 - text_width, 87);
         contentStream.showText(text);
         contentStream.endText();
 
@@ -318,10 +325,11 @@ public class Builder {
         text_width = (PDType1Font.HELVETICA.getStringWidth(text) / 1000.0f) * 6;
 
         contentStream.beginText();
-        contentStream.newLineAtOffset(xRight - 60 - text_width, 87);
+        contentStream.newLineAtOffset(xRight - 60 - text_width, 67);
         contentStream.showText(text);
         contentStream.endText();
 
+        /*
         text = "Reimbursement (0,17 Euro/Km)";
         text_width = (PDType1Font.HELVETICA.getStringWidth(text) / 1000.0f) * 6;
 
@@ -329,36 +337,36 @@ public class Builder {
         contentStream.newLineAtOffset(xRight - 60 - text_width, 67);
         contentStream.showText(text);
         contentStream.endText();
+        */
     }
 
     private void drawHeaderValues() throws IOException {
-        int monthlyDistance = report.getMonthlyDistance();
-        int totalDistance = report.getTotalDistance();
+        int monthlyDistance = 101;
+        int totalDistance = 10101;
         int previousTotalDistance = totalDistance - monthlyDistance;
         if(previousTotalDistance < 0){
             previousTotalDistance = 0;
         }
         writeCellValue(0, 0, report.name);
-        writeCellValue(0, 1, report.costCenter);
-        writeCellValue(0, 2, report.rhid);
-        writeCellValue(1, 0, report.getPeriod());
-        writeCellValue(1, 1, report.carId);
-        writeCellValue(1, 2, "" + Double.toString(report.mileageRate));
-        writeCellValue(2, 0, "" + monthlyDistance);
-        writeCellValue(2, 1, "" + previousTotalDistance);
-        writeCellValue(2, 2, "" + totalDistance);
+        //writeCellValue(0, 1, "report.costCenter");
+        //writeCellValue(0, 2, report.rhid);
+        writeCellValue(1, 0, report.carModel);
+        //writeCellValue(1, 1, "report.carId");
+        //writeCellValue(1, 2, "" + Double.toString(report.mileageRate));
+        writeCellValue(2, 0, "" + report.mileageRate);
+        //writeCellValue(2, 1, "" + previousTotalDistance);
+        //writeCellValue(2, 2, "" + totalDistance);
     }
 
     private void drawFooterValues() throws IOException {
-        int distance = report.getMonthlyDistance();
         contentStream.setFont(PDType1Font.HELVETICA_BOLD, 10);
         contentStream.setNonStrokingColor(darkBlue);
 
-        String text = distance + ".0";
+        String text = monthlyTotalMileage + ".0";
         float text_width = (PDType1Font.HELVETICA.getStringWidth(text) / 1000.0f) * 10;
 
         contentStream.beginText();
-        contentStream.newLineAtOffset(xRight - 10 - text_width, 107);
+        contentStream.newLineAtOffset(xRight - 10 - text_width, 87);
         contentStream.showText(text);
         contentStream.endText();
 
@@ -366,19 +374,9 @@ public class Builder {
         Locale.setDefault(italian);
         NumberFormat nf = NumberFormat.getCurrencyInstance();
 
-        double cost = distance * report.mileageRate;
+        double cost = monthlyTotalMileage * report.mileageRate;
         //text = "" + cost;
         text = nf.format(cost);
-        text_width = (PDType1Font.HELVETICA.getStringWidth(text) / 1000.0f) * 10;
-
-        contentStream.beginText();
-        contentStream.newLineAtOffset(xRight - 10 - text_width, 87);
-        contentStream.showText(text);
-        contentStream.endText();
-
-        double rembursement = distance * 0.17;
-        //text = "" + new DecimalFormat("#.##").format(rembursement);
-        text = nf.format(rembursement);
         text_width = (PDType1Font.HELVETICA.getStringWidth(text) / 1000.0f) * 10;
 
         contentStream.setNonStrokingColor(darkRed);
@@ -386,37 +384,44 @@ public class Builder {
         contentStream.newLineAtOffset(xRight - 10 - text_width, 67);
         contentStream.showText(text);
         contentStream.endText();
+
     }
 
     private void prepareTable() throws IOException {
         int rows = report.trips.size();
-        float x1 = 40;
-        float x2 = 100;
-        float W = contentWidth * 0.35f;
-        float H = 10;
-        float startY = imageY - 125 - H;
+        float wdt1 = 50; // date column width
+        float wdt2 = 40; // km column width
+        float wdt3 = 100; // purpose column width
+        float wdt = 0.0f;
+        float H = 20;
+        //float startY = imageY - 125 - H;
+        float startY = imageY - 45 - H;
 
-        contentStream.setNonStrokingColor(Color.DARK_GRAY);
+        // drawing table header cells
+        //contentStream.setNonStrokingColor(Color.DARK_GRAY);
+        contentStream.setNonStrokingColor(darkRed);
 
-        contentStream.addRect(x1, startY -H, 59, H);
+        contentStream.addRect(xLeft, startY -H, wdt1, H);
         contentStream.fill();
 
-        contentStream.addRect(x2, startY -H, W, H);
+        wdt = (xRight - xLeft) - (wdt1 + wdt2 + wdt3 + 3);
+        contentStream.addRect(xLeft + wdt1 + 1, startY -H, wdt, H);
         contentStream.fill();
 
-        contentStream.addRect(x2 + W + 1, startY -H, W, H);
+        contentStream.addRect(xRight - (wdt2 + 1) - wdt3, startY -H, wdt3, H);
         contentStream.fill();
 
-        float x = x2 + 2 * (W + 1);
-        contentStream.addRect(x, startY -H, x1 + contentWidth - x, H);
+        contentStream.addRect(xRight - wdt2, startY -20, wdt2, 20);
         contentStream.fill();
+        // drawing table header cells
+        // end ----------------------------------------------------------
 
         contentStream.setNonStrokingColor(Color.WHITE);
 
-        float middleX1 = x1 + 30;
-        float middleX2 = (x1 + contentWidth) - (((x1 + contentWidth) - (100 + (W * 2))) / 2);
+        float middleX1 = xLeft + (wdt1 / 2);
+        float middleX2 = xRight - (wdt2 / 2);
 
-        String text = "DAY";
+        String text = "Date";
         contentStream.beginText();
         contentStream.setFont(PDType1Font.HELVETICA_BOLD, 8);
         float text_width = (PDType1Font.HELVETICA_BOLD.getStringWidth(text) / 1000.0f) * 8;
@@ -424,6 +429,7 @@ public class Builder {
         contentStream.showText(text);
         contentStream.endText();
 
+        /*
         text = "From office to location";
         contentStream.beginText();
         text_width = (PDType1Font.HELVETICA_BOLD.getStringWidth(text) / 1000.0f) * 8;
@@ -437,28 +443,78 @@ public class Builder {
         contentStream.newLineAtOffset(x2 + (W * 1.5f) - (text_width / 2), startY - 8);
         contentStream.showText(text);
         contentStream.endText();
+        */
 
-        text = "Mileage (km)";
+        text = "FROM";
+        contentStream.beginText();
+        text_width = (PDType1Font.HELVETICA_BOLD.getStringWidth(text) / 1000.0f) * 8;
+        contentStream.newLineAtOffset(xLeft + (wdt1 + 1) + (wdt / 2) - (text_width / 2), startY - 8);
+        contentStream.showText(text);
+        contentStream.endText();
+        text = "TO";
+        contentStream.beginText();
+        text_width = (PDType1Font.HELVETICA_BOLD.getStringWidth(text) / 1000.0f) * 8;
+        contentStream.newLineAtOffset(xLeft + (wdt1 + 1) + (wdt / 2) - (text_width / 2), startY - 18);
+        contentStream.showText(text);
+        contentStream.endText();
+
+
+        text = "Purpose and/or";
+        contentStream.beginText();
+        text_width = (PDType1Font.HELVETICA_BOLD.getStringWidth(text) / 1000.0f) * 8;
+        contentStream.newLineAtOffset(xRight - (wdt2 + 1) - (wdt3 / 2) - (text_width / 2), startY - 8);
+        contentStream.showText(text);
+        contentStream.endText();
+        text = "Customer";
+        contentStream.beginText();
+        text_width = (PDType1Font.HELVETICA_BOLD.getStringWidth(text) / 1000.0f) * 8;
+        contentStream.newLineAtOffset(xRight - (wdt2 + 1) - (wdt3 / 2) - (text_width / 2), startY - 18);
+        contentStream.showText(text);
+        contentStream.endText();
+
+        text = "Mileage";
         contentStream.beginText();
         text_width = (PDType1Font.HELVETICA_BOLD.getStringWidth(text) / 1000.0f) * 8;
         contentStream.newLineAtOffset(middleX2 - (text_width / 2), startY - 8);
         contentStream.showText(text);
         contentStream.endText();
+        text = "(km)";
+        contentStream.beginText();
+        text_width = (PDType1Font.HELVETICA_BOLD.getStringWidth(text) / 1000.0f) * 8;
+        contentStream.newLineAtOffset(middleX2 - (text_width / 2), startY - 18);
+        contentStream.showText(text);
+        contentStream.endText();
 
-        contentStream.setNonStrokingColor(5, 71, 5);
+        contentStream.setNonStrokingColor(darkBlue);
         contentStream.setLineDashPattern(new float[]{3,1}, 0);
 
         for (int i = 0; i < rows; i++){
             float baseY = startY - (H * 2) - (H * i);
-            contentStream.moveTo(x1, baseY);
-            contentStream.lineTo(x1 + contentWidth, baseY);
+            contentStream.moveTo(xLeft, baseY);
+            contentStream.lineTo(xLeft + contentWidth, baseY);
             contentStream.stroke();
 
             if (isOdd(i)){
                 contentStream.setNonStrokingColor(215, 245, 215);
-                contentStream.addRect(x1, baseY, contentWidth, H);
+                contentStream.addRect(xLeft, baseY, contentWidth, H);
                 contentStream.fill();
             }
+
+            contentStream.setNonStrokingColor(darkBlue);
+            contentStream.setFont(PDType1Font.HELVETICA, 6);
+            text = "from:";
+            contentStream.beginText();
+            text_width = (PDType1Font.HELVETICA.getStringWidth(text) / 1000.0f) * 6;
+            contentStream.newLineAtOffset(xLeft + (wdt1 + 1) + 25 - text_width, baseY + H - 8);
+            contentStream.showText(text);
+            contentStream.endText();
+            text = "to:";
+            contentStream.beginText();
+            text_width = (PDType1Font.HELVETICA.getStringWidth(text) / 1000.0f) * 6;
+            contentStream.newLineAtOffset(xLeft + (wdt1 + 1) + 25 - text_width, baseY + H - 18);
+            contentStream.showText(text);
+            contentStream.endText();
+    
         }
     }
 
@@ -467,47 +523,63 @@ public class Builder {
     }
 
     private void writeTripLogs() throws IOException {
-        float H = 10;
-        float baseY = imageY - 125 - (H * 2);
+        Collections.sort(report.trips, new Comparator<Trip>() {
+            @Override
+            public int compare(Trip lhs, Trip rhs) {
+                // -1 - less than, 1 - greater than, 0 - equal, all inversed for descending
+                return lhs.day > rhs.day ? 1 : (lhs.day < rhs.day) ? -1 : 0;
+            }
+        });
+
+        float baseY = imageY - 85;
         for (Trip trip: report.trips) {
-            baseY -= 10;
+            baseY -= 20;
             writeLog(baseY, trip);
         }
     }
 
     private void writeLog(float baseY, Trip trip) throws IOException {
-        contentStream.setNonStrokingColor(0, 65, 83);
+        contentStream.setNonStrokingColor(darkBlue);
         contentStream.setFont(PDType1Font.HELVETICA, 8);
 
-        float x1 = xLeft + 30;
-        float x2 = 110;
-        float x3 = 110 + (contentWidth * 0.35f);
-        float x4 = xLeft + contentWidth - 20;
-        float y = baseY + 2;
+        float xPurpose = xRight - 140;
+        float xMileage = xRight - 10;
+        float x2 = 120;
+        float y = baseY + 8;
 
         contentStream.beginText();
-        String text = "" + trip.day;
+        String text = trip.day + "/" + trip.month + "/" + trip.year;
         float text_width = (PDType1Font.HELVETICA.getStringWidth("" + text) / 1000.0f) * 8;
-        contentStream.newLineAtOffset(x1 - text_width, y);
+        contentStream.newLineAtOffset(xLeft + 25 - (text_width / 2), y);
         contentStream.showText(text);
         contentStream.endText();
 
         contentStream.beginText();
-        contentStream.newLineAtOffset(x2, y);
-        contentStream.showText(trip.destination);
-        contentStream.endText();
-
-        contentStream.beginText();
-        contentStream.newLineAtOffset(x3, y);
+        contentStream.newLineAtOffset(xPurpose, y);
         contentStream.showText(trip.purpose);
         contentStream.endText();
 
         text = "" + trip.distance;
         contentStream.beginText();
         text_width = (PDType1Font.HELVETICA.getStringWidth(text) / 1000.0f) * 8;
-        contentStream.newLineAtOffset(x4 - text_width, y);
+        contentStream.newLineAtOffset(xMileage - text_width, y);
         contentStream.showText(text);
         contentStream.endText();
+
+        monthlyTotalMileage += trip.distance;
+
+        contentStream.setFont(PDType1Font.HELVETICA, 6);
+
+        contentStream.beginText();
+        contentStream.newLineAtOffset(x2, baseY + 12);
+        contentStream.showText(trip.from);
+        contentStream.endText();
+        contentStream.beginText();
+        contentStream.newLineAtOffset(x2, baseY + 2);
+        contentStream.showText(trip.destination);
+        contentStream.endText();
+
+
     }
 
 }

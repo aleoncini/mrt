@@ -29,9 +29,7 @@ public class ReportResource {
     @POST
     @Path("/{userid}/{year}/{month}")
     public String build(@PathParam("userid") String userid,@PathParam("year") int year,@PathParam("month") int month) {
-        Report report = Report.build(userid);
-        report.month = month;
-        report.year = year;
+        Report report = Report.build(userid, year, month);
         CompletableFuture.runAsync(() -> {
             logger.info("[ReportResource] running async, creating PDF Report.");
             new Builder().setBaseDir(dirname).setReport(report).build();

@@ -9,8 +9,7 @@ public class Associate extends PanacheMongoEntity {
     public String userid; 
     public String rhid;
     public String fullName;
-    public String carid;
-    public String costCenter;
+    public String carModel;
     public double mileageRate;
 
     public static Associate findByUserid(String userid){
