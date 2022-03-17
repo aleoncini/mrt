@@ -172,6 +172,7 @@ function requestReportBuild(userid, month, callbackFunction) {
 
 function loadReportList(rhid, year, callbackFunction) {
     var theUrl = STORE_ORIGIN + '/api/archive/' + rhid + "/" + year;
+    console.log("===> URL: " + theUrl);
     $.ajax({
         url: theUrl,
         type: 'GET',

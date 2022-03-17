@@ -87,11 +87,13 @@
 
     $(document).ready(function() {
         function setRhid(associate) {
+            console.log("===> now setting rhid... " + associate.rhid);
             $('#rhid').val(associate.rhid);
             loadReportList(associate.rhid, $('#selReportListYear :selected').val(), displayReportList);
         }
 
         function loadUserData(userid) {
+            console.log("===> now loading user data...");
             loadAssociate(userid, setRhid);
         }
 
