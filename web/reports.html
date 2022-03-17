@@ -11,6 +11,14 @@
     <link href="css/bootstrap.css" rel="stylesheet">
     <script src="https://access-idp.apps.playground.rhocplab.com/auth/js/keycloak.js"></script>
     <script src="js/api-calls.js"></script>
+    <script type="text/javascript">
+    
+            function callLoadReportList(year) {
+                loadReportList($('#rhid').val(), year, displayReportList);
+            }
+    
+    </script>
+    
 </head>
 
 <body style="padding-top: 3.5rem">
@@ -88,10 +96,6 @@
         }
 
         initKeycloak(loadUserData);
-
-        function callLoadReportList(year) {
-            loadReportList($('#rhid').val(), year, displayReportList);
-        }
 
         $(document).on("click", ".delete_report", function () {
             deleteReportFile(this.dataset.filename);
