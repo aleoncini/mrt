@@ -8,6 +8,7 @@ function initKeycloak(callback) {
     }).then(function(authenticated){
         if(authenticated) {
             console.log("=========> Authenticated as " + keycloak.idTokenParsed.name);
+            console.log("=========>          user ID " + keycloak.subject);
             if (typeof callback == 'function'){
                 callback(keycloak.subject);
             }
@@ -150,9 +151,9 @@ function loadTrips(rhid, year, month, callbackFunction) {
     });
 };
 
-function requestReportBuild(month, callbackFunction) {
+function requestReportBuild(userid, month, callbackFunction) {
     var year = new Date().getFullYear();
-    var theUrl = STORE_ORIGIN + '/api/reports/' + associate.userid + "/" + year + '/' + month;
+    var theUrl = STORE_ORIGIN + '/api/reports/' + userid + "/" + year + '/' + month;
     $.ajax({
         url: theUrl,
         type: 'POST',

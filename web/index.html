@@ -62,6 +62,7 @@
 
     <div class="container">
         <div class="row">
+            <input type="hidden" id="user_id" value="">
             <div class="col-md-4">
                 <h2>Enter Trips</h2>
                 <p>Enter trips you do each month with your car. Trips will be then used to compile the Mileage Report.</p>
@@ -137,12 +138,16 @@
 
         $(document).ready(function () {
 
-            // non abbiamo bisogno di passare la callback, ci basta controllare il token
-            initKeycloak();
+            function setUserID(userid) {
+                $('#user_id').val(userid);
+            }
+
+            initKeycloak(setUserID);
 
             $('#btn_createReport').click(function(){
+                var userid = $('#user_id').val();
                 var month = parseInt($('#inputPdfMonth :selected').val());
-                requestReportBuild(month, showReportBuildResult);
+                requestReportBuild(userid, month, showReportBuildResult);
             });
 
         });
