@@ -170,8 +170,8 @@ function requestReportBuild(userid, month, callbackFunction) {
 
 // --- PDF ARCHIVE FUNCTIONS ----------------------------------------- 
 
-function loadReportList(year, callbackFunction) {
-    var theUrl = STORE_ORIGIN + '/api/archive/' + associate.rhid + "/" + year;
+function loadReportList(rhid, year, callbackFunction) {
+    var theUrl = STORE_ORIGIN + '/api/archive/' + rhid + "/" + year;
     $.ajax({
         url: theUrl,
         type: 'GET',
