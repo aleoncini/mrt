@@ -9,7 +9,7 @@ spec:
       mountPath: /workspace/source
   steps:
     - name: cleanup-workspace
-      image: registry.access.redhat.io/ubi8/ubi:8.0
+      image: registry.access.redhat.com/ubi8/ubi:8.0
       script: |
         rm -rf $(workspaces.src.path)/*
         rm -rf $(workspaces.src.path)/.[!.]*
