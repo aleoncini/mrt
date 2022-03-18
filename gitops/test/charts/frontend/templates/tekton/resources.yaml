@@ -1,0 +1,22 @@
+apiVersion: tekton.dev/v1alpha1
+kind: PipelineResource
+metadata:
+  name: {{.Values.name}}-image
+  namespace: {{.Values.global.namespace}}
+spec:
+  type: image
+  params:
+  - name: url
+    value: {{tpl .Values.deployment.image.registry .}}/{{tpl .Values.deployment.image.name .}}
+---
+apiVersion: tekton.dev/v1alpha1
+kind: PipelineResource
+metadata:
+  name: {{.Values.name}}-repository
+spec:
+  type: git
+  params:
+  - name: url
+    value: {{tpl .Values.build.repository.url .}}
+  - name: revision
+    value: {{tpl .Values.build.repository.branch .}}
