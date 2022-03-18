@@ -8,8 +8,6 @@ spec:
   - name: src
 
   resources:
-  - name: source-repository
-    type: git
   - name: image
     type: image
 

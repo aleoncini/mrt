@@ -6,9 +6,6 @@ spec:
   pipelineRef:
     name: mrt-frontend-build-pipeline
   resources:
-  - name: source-repository
-    resourceRef:
-      name: mrt-frontend-repository
   - name: image
     resourceRef:
       name: mrt-frontend-image
