@@ -96,6 +96,9 @@ function updateAssociate(the_associate, callbackFunction) {
         data: JSON.stringify(the_associate),
         contentType: "application/json; charset=utf-8",
         dataType: "json",
+        beforeSend: function(req) {
+            req.setRequestHeader('Authorization', 'Bearer ' + keycloak.token);
+          },
         complete: function(response, status){
             callbackFunction();
         }
@@ -187,7 +190,7 @@ function loadReportList(rhid, year, callbackFunction) {
     });
 };
 
-function deleteReportFile(filename) {
+function deleteReportFile(associate, filename) {
     var theUrl = STORE_ORIGIN + '/api/archive/' + associate.rhid + "/" + filename;
     $.ajax({
         url: theUrl,
@@ -202,7 +205,7 @@ function deleteReportFile(filename) {
     });
 };
 
-function getReportFile(filename) {
+function getReportFile(associate, filename) {
     var theUrl = STORE_ORIGIN + '/api/archive/pdf/' + associate.rhid + "/" + filename;
     var xhr = new XMLHttpRequest();
     xhr.open("GET", theUrl);
