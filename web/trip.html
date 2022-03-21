@@ -118,8 +118,10 @@
         $(document).ready(function(){
 
             console.log('Document READY...');
-            initKey();
-            initKeycloak(setRhid);
+            initKeycloak((keycloakId) => {
+                setRhid(keycloakId);
+                initKey();
+            });
             
             $('#saveTripButton').click(function(){
                 var the_trip = {};
