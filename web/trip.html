@@ -161,13 +161,13 @@
                 }
                 
                 the_trip.from = $('#departure-location').val();
-                if(the_trip.purpose.length == 0){
+                if(the_trip.from.length == 0){
                     setAlert('Please insert a valid purpose', '#departure-location');
                     return;
                 }
 
                 the_trip.destination = $('#arrival-location').val();
-                if(the_trip.purpose.length == 0){
+                if(the_trip.destination.length == 0){
                     setAlert('Please insert a valid purpose', '#arrival-location');
                     return;
                 }
