@@ -58,12 +58,8 @@
                     <input type="text" class="form-control" id="inp_rhid" placeholder="es: 12345">
                 </div>                  
                 <div class="form-group">
-                    <label for="inp_carid">Car ID</label>
-                    <input type="text" class="form-control" id="inp_carid" placeholder="es: AB567FG">
-                </div>                  
-                <div class="form-group">
-                    <label for="inp_cc">Cost Center</label>
-                    <input type="text" class="form-control" id="inp_cc" placeholder="es: 420">
+                    <label for="inp_carmodel">Car Model</label>
+                    <input type="text" class="form-control" id="inp_carmodel" placeholder="es: AB567FG">
                 </div>                  
                 <div class="form-group">
                     <label for="inp_mr">Mileage rate</label>
@@ -91,8 +87,7 @@
                 $('#db_id').val(user.id);
                 $('#inp_fullname').val(user.fullName);
                 $('#inp_rhid').val(user.rhid);
-                $('#inp_carid').val(user.carid);
-                $('#inp_cc').val(user.costCenter);
+                $('#inp_carmodel').val(user.carModel);
                 $('#inp_mr').val(user.mileageRate);
                 $("#btn_save").html('Update');
             }
@@ -134,8 +129,7 @@
             user.userid = $('#kc_id').val();
             user.fullName = $('#inp_fullname').val();
             user.rhid = $('#inp_rhid').val();
-            user.carid = $('#inp_carid').val();
-            user.costCenter = $('#inp_cc').val();
+            user.carModel = $('#inp_carmodel').val();
             user.mileageRate = $('#inp_mr').val();
             if($('#btn_save').html() == 'Update'){
                 user.id = $('#db_id').val();
