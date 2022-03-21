@@ -391,7 +391,7 @@ public class Builder {
         int rows = report.trips.size();
         float wdt1 = 50; // date column width
         float wdt2 = 40; // km column width
-        float wdt3 = 100; // purpose column width
+        float wdt3 = 170; // purpose column width
         float wdt = 0.0f;
         float H = 20;
         //float startY = imageY - 125 - H;
@@ -542,7 +542,7 @@ public class Builder {
         contentStream.setNonStrokingColor(darkBlue);
         contentStream.setFont(PDType1Font.HELVETICA, 8);
 
-        float xPurpose = xRight - 140;
+        float xPurpose = xRight - 210;
         float xMileage = xRight - 10;
         float x2 = 120;
         float y = baseY + 8;
