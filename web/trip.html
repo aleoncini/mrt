@@ -72,8 +72,7 @@
                         <img class="sb-title-icon" src="images/baseline_people_black_24dp.png" alt="">
                         <span class="sb-title">Meeting details</span>
                     </div>
-                    <input type="text" placeholder="Company or Contact" id="contact" />
-                    <input type="text" placeholder="Purpose" id="purpose" />
+                    <input type="text" placeholder="Destination/Purpose" id="purpose" />
                     <button id="saveTripButton" class="button-cta">Save Trip</button>
                 </div>
                 <div class="map" id="map"></div>
@@ -161,9 +160,15 @@
                     return;
                 }
                 
-                the_trip.destination = $('#contact').val();
-                if(the_trip.destination.length == 0){
-                    setAlert('Please insert a valid Contact or Company name', '#contact');
+                the_trip.from = $('#departure-location').val();
+                if(the_trip.purpose.length == 0){
+                    setAlert('Please insert a valid purpose', '#departure-location');
+                    return;
+                }
+
+                the_trip.destination = $('#arrival-location').val();
+                if(the_trip.purpose.length == 0){
+                    setAlert('Please insert a valid purpose', '#arrival-location');
                     return;
                 }
 
