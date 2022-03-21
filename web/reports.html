@@ -100,12 +100,12 @@
         initKeycloak(loadUserData);
 
         $(document).on("click", ".delete_report", function () {
-            deleteReportFile(this.dataset.filename);
+            deleteReportFile($('#rhid').val(), this.dataset.filename);
             $(this).parent().remove();
         });
 
         $(document).on("click", ".get_report", function () {
-            getReportFile(this.dataset.filename);
+            getReportFile($('#rhid').val(), this.dataset.filename);
         });
     })
 

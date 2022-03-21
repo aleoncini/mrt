@@ -187,8 +187,8 @@ function loadReportList(rhid, year, callbackFunction) {
     });
 };
 
-function deleteReportFile(filename) {
-    var theUrl = STORE_ORIGIN + '/api/archive/' + associate.rhid + "/" + filename;
+function deleteReportFile(rhid, filename) {
+    var theUrl = STORE_ORIGIN + '/api/archive/' + rhid + "/" + filename;
     $.ajax({
         url: theUrl,
         type: 'DELETE',
@@ -202,8 +202,8 @@ function deleteReportFile(filename) {
     });
 };
 
-function getReportFile(filename) {
-    var theUrl = STORE_ORIGIN + '/api/archive/pdf/' + associate.rhid + "/" + filename;
+function getReportFile(rhid, filename) {
+    var theUrl = STORE_ORIGIN + '/api/archive/pdf/' + rhid + "/" + filename;
     var xhr = new XMLHttpRequest();
     xhr.open("GET", theUrl);
     xhr.setRequestHeader('Authorization', 'Bearer ' + keycloak.token);
