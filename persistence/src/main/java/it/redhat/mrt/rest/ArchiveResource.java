@@ -4,6 +4,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.inject.Inject;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
@@ -13,15 +14,20 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
 import org.eclipse.microprofile.config.inject.ConfigProperty;
+import org.eclipse.microprofile.jwt.JsonWebToken;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import it.redhat.mrt.model.Associate;
 import it.redhat.mrt.model.ReportFileInfo;
 
 @Path("/archive")
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)
 public class ArchiveResource {
+
+    @Inject
+    JsonWebToken token;
     
     @ConfigProperty(name = "mrt.reports.dirname") 
     String dirname;
@@ -33,13 +39,22 @@ public class ArchiveResource {
     @Produces(MediaType.APPLICATION_OCTET_STREAM)
     public File getPdf(@PathParam("doc") String docName, @PathParam("rhid") String rhid) {
         String[] parts = docName.substring(0, docName.length() - 4).split("_");
-        File file = new File(dirname + "/" + rhid + "/" + parts[1] + "/" + docName);
+
+        String id = token.getClaim("sub");
+        Associate associate = Associate.findByUserid(id);
+        rhid = associate.rhid;
+
+        File file = new File(dirname + "/" + associate.rhid + "/" + parts[1] + "/" + docName);
         return file;
     }
 
     @GET
     @Path("/{rhid}/{year}")
     public List<ReportFileInfo> getFileList(@PathParam("rhid") String rhid, @PathParam("year") int year) {
+
+        String id = token.getClaim("sub");
+        Associate associate = Associate.findByUserid(id);
+        rhid = associate.rhid;
 
         List<ReportFileInfo> list = new ArrayList<ReportFileInfo>();
         try {
@@ -53,6 +68,11 @@ public class ArchiveResource {
     @DELETE
     @Path("/{rhid}/{doc}")
     public void delete(@PathParam("rhid") String rhid, @PathParam("doc") String docName) {
+
+        String id = token.getClaim("sub");
+        Associate associate = Associate.findByUserid(id);
+        rhid = associate.rhid;
+
         logger.info("[ArchiveResource] about to delete: " + docName);
         String[] parts = docName.substring(0, docName.length() - 4).split("_");
         File file = new File(dirname + "/" + rhid + "/" + parts[1], docName);
