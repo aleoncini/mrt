@@ -13,7 +13,6 @@ import java.nio.file.Paths;
 import java.text.NumberFormat;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.List;
 import java.util.Locale;
 import java.awt.Color;
 
@@ -495,7 +494,7 @@ public class Builder {
             contentStream.stroke();
 
             if (isOdd(i)){
-                contentStream.setNonStrokingColor(215, 245, 215);
+                contentStream.setNonStrokingColor(215/255f, 245/255f, 215/255f);
                 contentStream.addRect(xLeft, baseY, contentWidth, H);
                 contentStream.fill();
             }

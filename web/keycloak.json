@@ -1,6 +1,6 @@
 {
     "realm": "rh",
-    "auth-server-url": "https://access-idp.apps.playground.rhocplab.com/auth/",
+    "auth-server-url": "/auth/",
     "ssl-required": "external",
     "resource": "mrt",
     "public-client": true,
