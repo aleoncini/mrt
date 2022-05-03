@@ -18,7 +18,6 @@ import org.bson.types.ObjectId;
 import org.eclipse.microprofile.jwt.JsonWebToken;
 
 import io.quarkus.mongodb.panache.PanacheMongoEntityBase;
-import it.redhat.mrt.model.Associate;
 import it.redhat.mrt.model.Trip;
 
 @Path("/trips")
@@ -35,14 +34,12 @@ public class TripResource {
     }
 
     @GET
-    @Path("/{rhid}/{year}/{month}")
+    @Path("/{year}/{month}")
     public List<Trip> get(@PathParam("rhid") String rhid, @PathParam("year") int year, @PathParam("month") int month) {
         
         String id = token.getClaim("sub");
-        Associate associate = Associate.findByUserid(id);
-        rhid = associate.rhid;
 
-        return Trip.getTrips(rhid, year, month);
+        return Trip.getTrips(id, year, month);
     }
 
     @GET
@@ -53,6 +50,7 @@ public class TripResource {
 
     @POST
     public Trip create(Trip trip) {
+        trip.userid = token.getClaim("sub");
         trip.persist();
         return trip;
     }

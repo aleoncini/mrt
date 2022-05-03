@@ -14,7 +14,7 @@
     <script type="text/javascript">
     
             function callLoadReportList(year) {
-                loadReportList($('#rhid').val(), year, displayReportList);
+                loadReportList(year, displayReportList);
             }
     
     </script>
@@ -52,7 +52,6 @@
             <form>
                 <div class="form-row align-items-center">
                     <div class="col-auto">
-                        <input type="hidden" id="rhid" value="">
                         <label class="sr-only" for="inputYear">Year</label>
                         <select id="selReportListYear" class="form-control mb-2" data-style="btn-info" onchange="callLoadReportList(this.value);">
                             <option value="2021"> 2021 </option>
@@ -86,27 +85,20 @@
 <script type="text/javascript">
 
     $(document).ready(function() {
-        function setRhid(associate) {
-            console.log("===> now setting rhid... " + associate.rhid);
-            $('#rhid').val(associate.rhid);
-            loadReportList(associate.rhid, $('#selReportListYear :selected').val(), displayReportList);
+        function initPage() {
+            loadReportList($('#selReportListYear :selected').val(), displayReportList);
 
             $(document).on("click", ".delete_report", function () {
-                deleteReportFile(associate, this.dataset.filename);
+                deleteReportFile(this.dataset.filename);
                 $(this).parent().remove();
             });
 
             $(document).on("click", ".get_report", function () {
-                getReportFile(associate, this.dataset.filename);
+                getReportFile(this.dataset.filename);
             });
         }
 
-        function loadUserData(userid) {
-            console.log("===> now loading user data...");
-            loadAssociate(userid, setRhid);
-        }
-
-        initKeycloak(loadUserData);
+        initKeycloak(loadAssociate((_, userAlreadyExists) => userAlreadyExists ? initPage() : window.location.assign("/setup.html")));
     })
 
 

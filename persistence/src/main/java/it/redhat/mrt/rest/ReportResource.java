@@ -32,10 +32,10 @@ public class ReportResource {
     String dirname;
 
     @POST
-    @Path("/{userid}/{year}/{month}")
-    public String build(@PathParam("userid") String userid,@PathParam("year") int year,@PathParam("month") int month) {
+    @Path("/{year}/{month}")
+    public String build(@PathParam("year") int year,@PathParam("month") int month) {
 
-        userid = token.getClaim("sub");
+        String userid = token.getClaim("sub");
 
         Report report = Report.build(userid, year, month);
         CompletableFuture.runAsync(() -> {

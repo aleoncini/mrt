@@ -41,7 +41,6 @@
 
             <form>
                 <div class="form-row align-items-center">
-                    <input type="hidden" id="rhid" value="">
                     <div class="col-auto">
                         <label class="sr-only" for="inputYear">Year</label>
                         <select id="inputYear" class="form-control mb-2" data-style="btn-info">
@@ -53,7 +52,7 @@
                     </div>
                     <div class="col-auto">
                         <label class="sr-only" for="inputMonth">Month</label>
-                        <select id="inputMonth" class="form-control mb-2" data-style="btn-info" onchange="loadTrips($('#rhid').val(), parseInt($('#inputYear :selected').val()), this.value, displayAllTrips);">
+                        <select id="inputMonth" class="form-control mb-2" data-style="btn-info" onchange="loadTrips(parseInt($('#inputYear :selected').val()), this.value, displayAllTrips);">
                             <option value="0" selected> Choose month... </option>
                             <option value="1">January</option>
                             <option value="2">February</option>
@@ -111,27 +110,24 @@
 <script src="js/trips.js"></script>
 <script type="text/javascript">
 
-    function setRhid(keycloakId) {
-        loadAssociate(keycloakId, function(associate) {
-            console.log("===> rhid: " + associate.rhid);
-            $("#rhid").val(associate.rhid);
-        });
-    }
-
     $(document).ready(function() {
-        initKeycloak(setRhid);
 
-        $("#inputLocationName").change(function(ev){
-            locationName = $(this).val();
-            var val = ev.target.value
-            distance = $("#tList option[value='" + val + "']").text();
-            $('#inputDistance').val(distance);
-        });
+        function initPage() {
+            $("#inputLocationName").change(function(ev){
+                locationName = $(this).val();
+                var val = ev.target.value
+                distance = $("#tList option[value='" + val + "']").text();
+                $('#inputDistance').val(distance);
+            });
 
-        $(document).on("click", ".delete_trip", function () {
-            deleteTrip(this.dataset.id);
-            $(this).parent().remove();
-        });
+            $(document).on("click", ".delete_trip", function () {
+                deleteTrip(this.dataset.id);
+                $(this).parent().remove();
+            });
+        }
+
+        initKeycloak(loadAssociate((_, userAlreadyExists) => userAlreadyExists ? initPage() : window.location.assign("/setup.html")));
+
     });
 
 </script>

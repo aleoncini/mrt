@@ -46,7 +46,6 @@
 
             <div class="card-container">
                 <div class="panel">
-                    <input type="hidden" id="rhid" value="">
                     <div>
                         <img class="sb-title-icon" src="images/baseline_today_black_24dp.png" alt="">
                         <span class="sb-title">Day of the Trip</span>
@@ -108,25 +107,14 @@
             }, 2000);
         }
 
-        function setRhid(keycloakId) {
-            loadAssociate(keycloakId, function(associate) {
-                console.log("===> rhid: " + associate.rhid);
-                $("#rhid").val(associate.rhid);
-            });
-        }
-
         $(document).ready(function(){
 
-            console.log('Document READY...');
-            initKeycloak((keycloakId) => {
-                setRhid(keycloakId);
-                initKey();
-            });
-            
-            $('#saveTripButton').click(function(){
-                var the_trip = {};
+            function initPage() {
 
-                the_trip.rhid = $("#rhid").val();
+                initKey();
+
+                $('#saveTripButton').click(function(){
+                var the_trip = {};
 
                 var inp_val = $('#trip-date').val().split('-');
 
@@ -189,7 +177,9 @@
                 }
 
                 saveTrip(the_trip, setSuccess);
-            });
+            });};
+
+            initKeycloak(loadAssociate((_, userAlreadyExists) => userAlreadyExists ? initPage() : window.location.assign("/setup.html")));
 
         });
     
