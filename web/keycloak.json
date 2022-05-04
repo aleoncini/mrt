@@ -1,6 +1,6 @@
 {
     "realm": "rh",
-    "auth-server-url": "/auth/",
+    "auth-server-url": "https://keycloak-redhat-sso.apps.playground.rhocplab.com/auth",
     "ssl-required": "external",
     "resource": "mrt",
     "public-client": true,
