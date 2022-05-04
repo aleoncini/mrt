@@ -97,9 +97,11 @@
                 getReportFile(this.dataset.filename);
             });
         }
-
-        initKeycloak(loadAssociate((_, userAlreadyExists) => userAlreadyExists ? initPage() : window.location.assign("/setup.html")));
-    })
+        
+        initKeycloak(() => {
+                loadAssociate((_, userAlreadyExists) => userAlreadyExists ? initPage() : window.location.assign("/setup.html"));
+            });
+        })
 
 
 </script>

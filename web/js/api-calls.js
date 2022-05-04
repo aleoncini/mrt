@@ -51,7 +51,7 @@ function initGoogleScript(theKey) {
 
 function loadAssociate(callbackFunction) {
     console.log('ID: ' + keycloak.subject);
-    var theUrl = STORE_ORIGIN + '/api/associate/';
+    var theUrl = STORE_ORIGIN + '/api/associate';
     $.ajax({
         url: theUrl,
         type: 'GET',
@@ -63,7 +63,7 @@ function loadAssociate(callbackFunction) {
             var userAlreadyExists = false;
             if(status=='nocontent'){
                 var associate = {};
-                associate.userid = id;
+                associate.userid = keycloak.subject;
             } else {
                 userAlreadyExists = true;
                 var associate = jQuery.parseJSON(response.responseText);
@@ -81,6 +81,9 @@ function saveAssociate(the_associate, callbackFunction) {
         data: JSON.stringify(the_associate),
         contentType: "application/json; charset=utf-8",
         dataType: "json",
+        beforeSend: function(req) {
+            req.setRequestHeader('Authorization', 'Bearer ' + keycloak.token);
+          },
         complete: function(response, status){
             var associate = jQuery.parseJSON(response.responseText);
             callbackFunction(associate);
