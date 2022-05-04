@@ -74,7 +74,7 @@ function loadAssociate(callbackFunction) {
 };
 
 function saveAssociate(the_associate, callbackFunction) {
-    var theUrl = STORE_ORIGIN + '/api/associates';
+    var theUrl = STORE_ORIGIN + '/api/associate';
     $.ajax({
         type: "POST",
         url: theUrl,
@@ -92,7 +92,7 @@ function saveAssociate(the_associate, callbackFunction) {
 };
 
 function updateAssociate(the_associate, callbackFunction) {
-    var theUrl = STORE_ORIGIN + '/api/associates';
+    var theUrl = STORE_ORIGIN + '/api/associate';
     $.ajax({
         type: "PUT",
         url: theUrl,
