@@ -63,6 +63,7 @@ function initMap() {
         }
         map.setCenter(departurePlace.geometry.location);
         marker.setPosition(departurePlace.geometry.location);
+        marker.setVisible(true);
     });
 
     autocomplete.addListener('place_changed', function() {
