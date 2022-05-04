@@ -2,6 +2,8 @@ apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: {{.Values.name}}
+  annotations:
+    route.openshift.io/termination: edge
 spec:
   rules:
   - host: {{.Values.route.name}}.{{.Values.global.host.domain}}
