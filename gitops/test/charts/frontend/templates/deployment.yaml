@@ -1,0 +1,28 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    image.openshift.io/triggers: '[{"from":{"kind":"ImageStreamTag","name":"{{tpl .Values.deployment.image.name .}}:{{.Values.deployment.image.tag}}"},"fieldPath":"spec.template.spec.containers[?(@.name==\"{{.Values.name}}\")].image"}]'
+  labels:
+    app: {{.Values.name}}
+  name: {{.Values.name}}
+  namespace: {{.Values.global.namespace}}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      deployment: {{.Values.name}}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        deployment: {{.Values.name}}
+    spec:
+      containers:
+      - image: {{tpl .Values.deployment.image.registry .}}/{{tpl .Values.deployment.image.name .}}:{{.Values.deployment.image.tag}}
+        name: {{.Values.name}}
+        ports:
+        - containerPort: 8080
+          protocol: TCP
+        - containerPort: 8443
+          protocol: TCP

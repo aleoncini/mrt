@@ -7,7 +7,7 @@ import java.util.Locale;
 
 public class Report {
     public String name;
-    public String rhid;
+    public String userid;
     public String carModel;
     public double mileageRate;
     public List<Trip> trips;
@@ -23,7 +23,7 @@ public class Report {
         Associate associate = Associate.findByUserid(userid);
         Report report = new Report();
         
-        report.rhid = associate.rhid;
+        report.userid = userid;
         report.name = associate.fullName;
         report.carModel = associate.carModel;
         report.mileageRate = associate.mileageRate;        

@@ -51,6 +51,21 @@ function initMap() {
         fields: ["address_components", "geometry", "name"],
         types: ["address"],
     });
+
+    departureInputWorked.addListener('place_changed', function() {
+        const departurePlace = departureInputWorked.getPlace();
+        
+        if (!departurePlace.geometry) {
+            // User entered the name of a Place that was not suggested and
+            // pressed the Enter key, or the Place Details request failed.
+            window.alert('No details available for input: \'' + departurePlace.name + '\'');
+            return;
+        }
+        map.setCenter(departurePlace.geometry.location);
+        marker.setPosition(departurePlace.geometry.location);
+        marker.setVisible(true);
+    });
+
     autocomplete.addListener('place_changed', function() {
         const departurePlace = departureInputWorked.getPlace();
         const arrivalPlace = autocomplete.getPlace();
@@ -89,7 +104,10 @@ function initMap() {
             }
             return '';
         };
-        document.getElementById(refPlace).value = getAddressComp('street_number') + ' ' + getAddressComp('route');
+        document.getElementById(refPlace).value = getAddressComp('street_number') + ' ' + 
+                    getAddressComp('route') + ', ' + 
+                    getAddressComp('locality') + ', ' + 
+                    getAddressComp('administrative_area_level_1');
     };
 
     function renderAddress(departurePlace, arrivalPlace) {

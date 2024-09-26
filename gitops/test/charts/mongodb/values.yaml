@@ -1,0 +1,9 @@
+deployment:
+  image:
+    registry: registry.access.redhat.com/rhscl
+    name: mongodb-36-rhel7
+    tag: latest
+  replicas: 1
+
+pvc:
+  storage: 1Gi

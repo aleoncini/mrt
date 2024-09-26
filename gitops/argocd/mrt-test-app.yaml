@@ -1,0 +1,18 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: mrt-test-app
+  namespace: openshift-gitops
+spec:
+  project: mrt
+  source:
+    repoURL: https://github.com/aleoncini/mrt
+    targetRevision: testing
+    path: gitops/test
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: mrt-test
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true

@@ -1,0 +1,60 @@
+apiVersion: tekton.dev/v1beta1
+kind: Pipeline
+metadata:
+  name: {{.Values.name}}-build-pipeline
+  namespace: {{.Values.global.namespace}}
+spec:
+  workspaces:
+  - name: src
+
+  resources:
+  - name: image
+    type: image
+
+  params:
+    - name: dockerTag
+      type: string
+      description: Docker Tag reflecting the image version
+      default: "latest"
+
+  tasks:
+  - name: fetch-repository
+    taskRef:
+      name: git-clone
+      kind: ClusterTask
+    workspaces:
+      - name: output
+        workspace: src
+    params:
+      - name: url
+        value: {{tpl .Values.build.repository.url .}}
+      - name: deleteExisting
+        value: "true"
+      - name: revision
+        value: {{tpl .Values.build.repository.branch .}}
+
+  - name: build-image
+    taskRef:
+      name: {{.Values.name}}-build-task
+    runAfter:
+      - fetch-repository
+    params:
+      - name: TLS_VERIFY
+        value: "false"
+      - name: dockerTag
+        value: "$(params.dockerTag)"
+    resources:
+      outputs:
+      - name: image
+        resource: image
+    workspaces:
+    - name: src
+      workspace: src
+
+  finally:
+  - name: clean-workspace
+    taskRef:
+      name: {{.Values.name}}-cleanup-workspace
+    workspaces:
+    - name: src
+      workspace: src

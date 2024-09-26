@@ -10,7 +10,7 @@ function initKeycloak(callback) {
             console.log("=========> Authenticated as " + keycloak.idTokenParsed.name);
             console.log("=========>          user ID " + keycloak.subject);
             if (typeof callback == 'function'){
-                callback(keycloak.subject);
+                callback();
             }
         } else {
             alert("Authentication failed");
@@ -49,9 +49,9 @@ function initGoogleScript(theKey) {
 
 // --- STORAGE FUNCTIONS ----------------------------------------- 
 
-function loadAssociate(id, callbackFunction) {
-    console.log('ID: ' + id);
-    var theUrl = STORE_ORIGIN + '/api/associates/' + id;
+function loadAssociate(callbackFunction) {
+    console.log('ID: ' + keycloak.subject);
+    var theUrl = STORE_ORIGIN + '/api/associate';
     $.ajax({
         url: theUrl,
         type: 'GET',
@@ -63,7 +63,7 @@ function loadAssociate(id, callbackFunction) {
             var userAlreadyExists = false;
             if(status=='nocontent'){
                 var associate = {};
-                associate.userid = id;
+                associate.userid = keycloak.subject;
             } else {
                 userAlreadyExists = true;
                 var associate = jQuery.parseJSON(response.responseText);
@@ -74,13 +74,16 @@ function loadAssociate(id, callbackFunction) {
 };
 
 function saveAssociate(the_associate, callbackFunction) {
-    var theUrl = STORE_ORIGIN + '/api/associates';
+    var theUrl = STORE_ORIGIN + '/api/associate';
     $.ajax({
         type: "POST",
         url: theUrl,
         data: JSON.stringify(the_associate),
         contentType: "application/json; charset=utf-8",
         dataType: "json",
+        beforeSend: function(req) {
+            req.setRequestHeader('Authorization', 'Bearer ' + keycloak.token);
+          },
         complete: function(response, status){
             var associate = jQuery.parseJSON(response.responseText);
             callbackFunction(associate);
@@ -89,13 +92,16 @@ function saveAssociate(the_associate, callbackFunction) {
 };
 
 function updateAssociate(the_associate, callbackFunction) {
-    var theUrl = STORE_ORIGIN + '/api/associates';
+    var theUrl = STORE_ORIGIN + '/api/associate';
     $.ajax({
         type: "PUT",
         url: theUrl,
         data: JSON.stringify(the_associate),
         contentType: "application/json; charset=utf-8",
         dataType: "json",
+        beforeSend: function(req) {
+            req.setRequestHeader('Authorization', 'Bearer ' + keycloak.token);
+          },
         complete: function(response, status){
             callbackFunction();
         }
@@ -135,8 +141,8 @@ function deleteTrip(id) {
     });
 };
 
-function loadTrips(rhid, year, month, callbackFunction) {
-    var theUrl = STORE_ORIGIN + '/api/trips/' + rhid + "/" + year + "/" + month;
+function loadTrips(year, month, callbackFunction) {
+    var theUrl = STORE_ORIGIN + '/api/trips/' + year + "/" + month;
     $.ajax({
         url: theUrl,
         type: 'GET',
@@ -151,9 +157,9 @@ function loadTrips(rhid, year, month, callbackFunction) {
     });
 };
 
-function requestReportBuild(userid, month, callbackFunction) {
+function requestReportBuild(month, callbackFunction) {
     var year = new Date().getFullYear();
-    var theUrl = STORE_ORIGIN + '/api/reports/' + userid + "/" + year + '/' + month;
+    var theUrl = STORE_ORIGIN + '/api/reports/' + year + '/' + month;
     $.ajax({
         url: theUrl,
         type: 'POST',
@@ -170,8 +176,8 @@ function requestReportBuild(userid, month, callbackFunction) {
 
 // --- PDF ARCHIVE FUNCTIONS ----------------------------------------- 
 
-function loadReportList(rhid, year, callbackFunction) {
-    var theUrl = STORE_ORIGIN + '/api/archive/' + rhid + "/" + year;
+function loadReportList(year, callbackFunction) {
+    var theUrl = STORE_ORIGIN + '/api/archive/' + year;
     console.log("===> URL: " + theUrl);
     $.ajax({
         url: theUrl,
@@ -187,7 +193,7 @@ function loadReportList(rhid, year, callbackFunction) {
     });
 };
 
-function deleteReportFile(rhid, filename) {
+function deleteReportFile(filename) {
     var theUrl = STORE_ORIGIN + '/api/archive/' + rhid + "/" + filename;
     $.ajax({
         url: theUrl,
@@ -202,8 +208,8 @@ function deleteReportFile(rhid, filename) {
     });
 };
 
-function getReportFile(rhid, filename) {
-    var theUrl = STORE_ORIGIN + '/api/archive/pdf/' + rhid + "/" + filename;
+function getReportFile(filename) {
+    var theUrl = STORE_ORIGIN + '/api/archive/pdf/' + filename;
     var xhr = new XMLHttpRequest();
     xhr.open("GET", theUrl);
     xhr.setRequestHeader('Authorization', 'Bearer ' + keycloak.token);

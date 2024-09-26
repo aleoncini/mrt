@@ -9,7 +9,7 @@ import io.quarkus.panache.common.Sort;
 @MongoEntity(collection="trips")
 public class Trip extends PanacheMongoEntity {
     
-    public String rhid;
+    public String userid;
     public int year;
     public int month;
     public int day;
@@ -18,8 +18,8 @@ public class Trip extends PanacheMongoEntity {
     public String destination;
     public String purpose;
 
-    public static List<Trip> getTrips(String rhid, int year, int month){
-        return Trip.find("rhid = ?1 and year = ?2 and month = ?3", rhid, year, month, Sort.by("day")).list();
+    public static List<Trip> getTrips(String userid, int year, int month){
+        return Trip.find("userid = ?1 and year = ?2 and month = ?3", userid, year, month, Sort.by("day")).list();
     }
 
     /*

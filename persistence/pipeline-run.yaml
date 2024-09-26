@@ -1,0 +1,23 @@
+apiVersion: tekton.dev/v1alpha1
+kind: PipelineRun
+metadata:
+  generateName: mrt-backend-build-
+spec:
+  pipelineRef:
+    name: mrt-backend-build-pipeline
+  resources:
+  - name: image
+    resourceRef:
+      name: mrt-backend-image
+
+  params:
+    - name: dockerTag
+      value: "0.1-test"
+
+  workspaces:
+  - name: src
+    persistentVolumeClaim:
+      claimName: mrt-backend-build
+
+  serviceAccountName: pipeline
+

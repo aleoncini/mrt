@@ -1,0 +1,47 @@
+apiVersion: tekton.dev/v1alpha1
+kind: Task
+metadata:
+  name: {{.Values.name}}-build-task
+spec:
+  workspaces:
+    - name: src
+      mountPath: /workspace/source
+  params:
+    - name: TLS_VERIFY
+      description: Verify the TLS on the registry endpoint (for push/pull to a non-TLS registry)
+      default: "false"
+      type: string
+    - name: dockerTag
+      type: string
+      description: Docker Tag reflecting the image version
+      default: "latest"
+  resources:
+    outputs:
+      - name: image
+        type: image
+  steps:
+    - name: buildah-build
+      image: quay.io/buildah/stable
+      {{if .Values.build.repository.directory}}
+      workingdir: /workspace/source/{{.Values.build.repository.directory}}
+      {{else}}
+      workingdir: /workspace/source
+      {{end}}
+      command: ['buildah', 'bud',  '--tls-verify=$(params.TLS_VERIFY)', '--layers', '-t', '$(resources.outputs.image.url):$(params.dockerTag)', '.']
+      volumeMounts:
+        - name: varlibcontainers
+          mountPath: /var/lib/containers
+      securityContext:
+        privileged: true
+
+    - name: buildah-push
+      image: quay.io/buildah/stable
+      command: ['buildah', 'push', '--tls-verify=$(params.TLS_VERIFY)', '$(resources.outputs.image.url):$(params.dockerTag)', 'docker://$(resources.outputs.image.url):$(params.dockerTag)']
+      volumeMounts:
+        - name: varlibcontainers
+          mountPath: /var/lib/containers
+      securityContext:
+        privileged: true
+  volumes:
+    - name: varlibcontainers
+      emptyDir: {}
