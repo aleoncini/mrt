@@ -49,12 +49,14 @@
         </div>
     </div>
 
-    <div class="alert alert-danger" id="formNotComplete" role="alert" style="display:none;"></div>
 
     <div class="container" id="current_report" style="display:none">
+        <div class="alert alert-danger" id="formNotComplete" role="alert" style="display:none;"></div>
+        <br>
+        <p class="text-end">This is your latest report. You can <button type="button" class="btn btn-outline-warning btn-sm" data-bs-toggle="modal" data-bs-target="#confirmStartOverModal">Start Over</button> or you can download it as a <button id="pdfButton" type="button" class="btn btn-outline-secondary btn-sm">PDF</button></p>
         <table class="table table-condensed table-hover" id="tbl_trips">
             <thead>
-                <tr class="tb_header"><th>Date</th><th>Odometer start (km)</th><th>From – location (City/Country)</th><th>To – location [City/Country}</th><th>Purpose and/or customer</th><th>Odometer End (km)</th><th>Mileage (km)</th><th>&nbsp;</th></tr>
+                <tr class="tb_header"><th>Date</th><th>Odometer start (km)</th><th>From – location (City/Country)</th><th>To – location [City/Country}</th><th>2 Way</th><th>Purpose and/or customer</th><th>Odometer End (km)</th><th>Mileage (km)</th><th>&nbsp;</th></tr>
             </thead>
             <tbody id="tripsTableBody">
             </tbody>
@@ -71,7 +73,7 @@
     <p>&copy; Red Hat Italy 2024-2027</p>
 </footer>
 
-<!-- Modal form to redirect to associate info settings page-->
+<!-- Modal form to collect data about a single Trip -->
 <div class="modal fade" id="tripForm" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
@@ -84,7 +86,7 @@
                 <p>The odometer start is calculated starting from the latest odometer end, anyway you can overwrite it.</p>
                 <div class="mb-3">
                     <label for="dateInput" class="form-label">Date of the Trip</label>
-                    <input type="date" class="form-control" id="dateInput">
+                    <input type="date" class="form-control" id="dateInput" onfocusout="setOdometerStart()">
                 </div>
                 <div class="mb-3">
                     <label for="fromLocationInput" class="form-label">From – location (City or Country)</label>
@@ -123,6 +125,26 @@
     </div>
 </div>
 
+<!-- Modal form to confirm the reset of all trips a start a new report -->
+<div id="confirmStartOverModal" class="modal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Start a NEW Report</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p>WARNING!</p>
+                <p>If you start a new Report all the trips currently saved will be lost.</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button id="startOverButton" type="button" class="btn btn-primary">Start New Report</button>
+            </div>
+        </div>
+    </div>
+</div>
+
     <!-- JavaScript libraries-->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
     <script src="js/jquery-3.7.1.min.js"></script>
@@ -133,6 +155,11 @@
         $(document).ready(function () {
 
             displayAllTrips();
+
+            $('#startOverButton').click(function(){
+                $("#confirmStartOverModal").modal('hide');
+                resetReport();
+            });
 
             $('#saveTripButton').click(function(){
                 $("#tripForm").modal('hide');
