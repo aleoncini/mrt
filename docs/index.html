@@ -294,6 +294,9 @@
             });
 
             $(document).on("click", ".delete_trip", function () {
+                var trips = JSON.parse(localStorage.getItem("mrtTrips"));
+                trips.splice(this.dataset.id, 1);
+                localStorage.setItem('mrtTrips', JSON.stringify(trips));
                 $(this).parent().remove();
             });
 

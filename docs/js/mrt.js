@@ -39,13 +39,13 @@ function displayAllTrips() {
     var trips = JSON.parse(localStorage.getItem("mrtTrips") || "[]");
 
     $.each(trips, function (index, trip) {
-        addTripToTable(trip)
+        addTripToTable(trip, index)
     });
 
     $('#current_report').show(500);
 };
 
-function addTripToTable(trip) {
+function addTripToTable(trip, ndx) {
     var rowContent = '<tr>';
     rowContent += '<td>' + trip.date + '</td>';
     rowContent += '<td>' + trip.odometerStart + '</td>';
@@ -59,7 +59,7 @@ function addTripToTable(trip) {
     rowContent += '<td>' + trip.purpose + '</td>';
     rowContent += '<td>' + trip.odometerEnd + '</td>';
     rowContent += '<td>' + trip.distance + '</td>';
-    rowContent += '<td style="cursor: pointer;" class="delete_trip"><img src="img/trash.svg" alt="delete" width="24" height="24"></td>';
+    rowContent += '<td style="cursor: pointer;" class="delete_trip" data-id="' + ndx + '"><img src="img/trash.svg" alt="delete" width="24" height="24"></td>';
     rowContent += '</tr>';
     $('#tbl_trips  tbody').append(rowContent);
 };
@@ -166,7 +166,7 @@ function saveAsPdf() {
     var trips = JSON.parse(localStorage.getItem("mrtTrips") || "[]");
 
     $.each(trips, function (index, trip) {
-        var Y = 64 + (6 * index);
+        var Y = 62 + (6 * index);
         if(isOdd(index)){
             doc.setFillColor('#eeeeee');
             doc.rect(5, (Y-4), 200, 6, 'F');
@@ -240,9 +240,9 @@ function saveAsPdf() {
     doc.setFont('helvetica', 'normal');
     doc.text('Ford Mustang 2016', 40, 222);
 
-    doc.setDrawColor('#dddddd');
+    doc.setDrawColor('#eeeeee');
     doc.line(120, 222, 205, 222);
-    doc.setFillColor('#dddddd');
+    doc.setFillColor('#eeeeee');
     doc.rect(175, 222, 30, 12, 'F');
 
     doc.setFontSize(8);
