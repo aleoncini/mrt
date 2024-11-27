@@ -11,7 +11,7 @@
     <!-- Bootstrap core CSS -->
     <link href="css/bootstrap.css" rel="stylesheet">
     <link href="css/trip.css" rel="stylesheet">
-    <script src="https://access-idp.apps.playground.rhocplab.com/auth/js/keycloak.js"></script>
+    <script src="/auth/js/keycloak.js"></script>
     <script src="js/api-calls.js"></script>
 </head>
 
@@ -46,7 +46,6 @@
 
             <div class="card-container">
                 <div class="panel">
-                    <input type="hidden" id="rhid" value="">
                     <div>
                         <img class="sb-title-icon" src="images/baseline_today_black_24dp.png" alt="">
                         <span class="sb-title">Day of the Trip</span>
@@ -107,23 +106,14 @@
             }, 2000);
         }
 
-        function setRhid(keycloakId) {
-            loadAssociate(keycloakId, function(associate) {
-                console.log("===> rhid: " + associate.rhid);
-                $("#rhid").val(associate.rhid);
-            });
-        }
-
         $(document).ready(function(){
 
-            console.log('Document READY...');
-            initKey();
-            initKeycloak(setRhid);
-            
-            $('#saveTripButton').click(function(){
-                var the_trip = {};
+            function initPage() {
 
-                the_trip.rhid = $("#rhid").val();
+                initKey();
+
+                $('#saveTripButton').click(function(){
+                var the_trip = {};
 
                 var inp_val = $('#trip-date').val().split('-');
 
@@ -158,17 +148,17 @@
                 if ((the_trip.year < 2021) || (the_trip.year > 2022)) {
                     setAlert('Please insert a valid Year [2021 or 2022]', inp_val[0]);
                     return;
-                }
-                
+                }                
+
                 the_trip.from = $('#departure-location').val();
                 if(the_trip.from.length == 0){
-                    setAlert('Please insert a valid purpose', '#departure-location');
+                    setAlert('Please insert a valid address', '#departure-location');
                     return;
                 }
 
                 the_trip.destination = $('#arrival-location').val();
                 if(the_trip.destination.length == 0){
-                    setAlert('Please insert a valid purpose', '#arrival-location');
+                    setAlert('Please insert a valid address', '#arrival-location');
                     return;
                 }
 
@@ -192,8 +182,11 @@
                 }
 
                 saveTrip(the_trip, setSuccess);
-            });
+            });};
 
+            initKeycloak(() => {
+                loadAssociate((_, userAlreadyExists) => userAlreadyExists ? initPage() : window.location.assign("/setup.html"));
+            });
         });
     
     </script>

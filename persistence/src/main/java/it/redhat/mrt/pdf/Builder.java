@@ -66,7 +66,7 @@ public class Builder {
         if((report.trips == null) || (report.trips.size() == 0)){
             // may be trips haven't been loaded
             // let's try now to load them
-            report.trips = Trip.getTrips(report.rhid, report.year, report.month);
+            report.trips = Trip.getTrips(report.userid, report.year, report.month);
         }
         logger.info("[PdfBuilder] building pdf report for user: " + this.report.name);
         try {
@@ -169,7 +169,7 @@ public class Builder {
         });
 
         int version = 1;
-        String rootName = this.report.rhid + "_" + this.report.year + "_" + this.report.month;
+        String rootName = this.report.userid + "_" + this.report.year + "_" + this.report.month;
         for (int i = 0; i < files.length; i++) {
             String docName = files[i].getName();
             if(docName.startsWith(rootName)){
@@ -180,11 +180,11 @@ public class Builder {
                 }
             }
         }
-        return this.report.rhid + "_" + this.report.year + "_" + this.report.month + "_" + version + ".pdf";
+        return this.report.userid + "_" + this.report.year + "_" + this.report.month + "_" + version + ".pdf";
     }
 
     private String getReportDirectoryName(){
-        return dirname + "/" + this.report.rhid + "/" + this.report.year;
+        return dirname + "/" + this.report.userid + "/" + this.report.year;
     }
 
     private void writeCellLabel(PDPageContentStream contentStream, int col, int row, String header) throws IOException {
@@ -494,7 +494,7 @@ public class Builder {
             contentStream.stroke();
 
             if (isOdd(i)){
-                contentStream.setNonStrokingColor(215, 245, 215);
+                contentStream.setNonStrokingColor(215/255f, 245/255f, 215/255f);
                 contentStream.addRect(xLeft, baseY, contentWidth, H);
                 contentStream.fill();
             }

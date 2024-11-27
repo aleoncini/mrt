@@ -1,0 +1,15 @@
+apiVersion: tekton.dev/v1beta1
+kind: Task
+metadata:
+  name: {{.Values.name}}-cleanup-workspace
+  namespace: {{.Values.global.namespace}}
+spec:
+  workspaces:
+    - name: src
+      mountPath: /workspace/source
+  steps:
+    - name: cleanup-workspace
+      image: registry.access.redhat.com/ubi8/ubi:8.0
+      script: |
+        rm -rf $(workspaces.src.path)/*
+        rm -rf $(workspaces.src.path)/.[!.]*

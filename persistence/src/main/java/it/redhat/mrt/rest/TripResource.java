@@ -2,6 +2,7 @@ package it.redhat.mrt.rest;
 
 import java.util.List;
 
+import javax.inject.Inject;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
@@ -14,6 +15,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.NotFoundException;
 
 import org.bson.types.ObjectId;
+import org.eclipse.microprofile.jwt.JsonWebToken;
 
 import io.quarkus.mongodb.panache.PanacheMongoEntityBase;
 import it.redhat.mrt.model.Trip;
@@ -22,6 +24,9 @@ import it.redhat.mrt.model.Trip;
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)
 public class TripResource {
+
+    @Inject
+    JsonWebToken token;
     
     @GET
     public List<PanacheMongoEntityBase> list() {
@@ -29,9 +34,12 @@ public class TripResource {
     }
 
     @GET
-    @Path("/{rhid}/{year}/{month}")
+    @Path("/{year}/{month}")
     public List<Trip> get(@PathParam("rhid") String rhid, @PathParam("year") int year, @PathParam("month") int month) {
-        return Trip.getTrips(rhid, year, month);
+        
+        String id = token.getClaim("sub");
+
+        return Trip.getTrips(id, year, month);
     }
 
     @GET
@@ -42,6 +50,7 @@ public class TripResource {
 
     @POST
     public Trip create(Trip trip) {
+        trip.userid = token.getClaim("sub");
         trip.persist();
         return trip;
     }
