@@ -31,6 +31,25 @@ function resetReport() {
     displayAllTrips();
 };
 
+function setOdometerStart() {
+    if ($('#dateInput').val().length == 0) {
+        return;
+    }
+    var t_date = Date.parse($('#dateInput').val());
+    var trips = JSON.parse(localStorage.getItem("mrtTrips") || "[]");
+    if(trips.length == 0){
+        return;
+    }
+    var lastTrip = trips[trips.length - 1];
+    var l_date = Date.parse(lastTrip.date.substr(lastTrip.date.indexOf(" ") + 1));
+    const diffTime = Math.abs(t_date - l_date);
+    const diffDays = (Math.floor(diffTime / (1000 * 60 * 60 * 24))) -1;
+    const latestOdometer = localStorage.getItem("latestOdometer") || 0;
+    var odometerStart = 0;
+    odometerStart = +latestOdometer + (diffDays * Math.floor(Math.random() * 30));
+    $('#odoStartInput').val(odometerStart);
+}
+
 function displayAllTrips() {
     $('#current_report').hide();
     $("#tripsTableBody").empty();
@@ -59,6 +78,7 @@ function addTripToTable(trip, ndx) {
     rowContent += '<td>' + trip.purpose + '</td>';
     rowContent += '<td>' + trip.odometerEnd + '</td>';
     rowContent += '<td>' + trip.distance + '</td>';
+    console.log("=====> " + trip.date + " ===== " + ndx);
     rowContent += '<td style="cursor: pointer;" class="delete_trip" data-id="' + ndx + '"><img src="img/trash.svg" alt="delete" width="24" height="24"></td>';
     rowContent += '</tr>';
     $('#tbl_trips  tbody').append(rowContent);
@@ -75,8 +95,8 @@ function loadBanner(url) {
 
 function saveAsPdf() {
     var name = localStorage.getItem('associateName');
-    var rate = localStorage.getItem('mileageRate');
-    var type = localStorage.getItem('vehicleType');
+    var rate = localStorage.getItem("mileageRate") || -1;
+    var type = localStorage.getItem('vehicleType') || "Unknown";
     var now = new Date();
     var filename = 'mileage-report-' + now.getDate() + '-' + months[now.getMonth()] + '-' + now.getFullYear() + '.pdf';
     var doc = new jsPDF();
@@ -162,7 +182,6 @@ function saveAsPdf() {
     doc.text(text, X, 54);
 
     var totalMileage = 0;
-    var rate = localStorage.getItem("mileageRate") || -1;
     var trips = JSON.parse(localStorage.getItem("mrtTrips") || "[]");
 
     $.each(trips, function (index, trip) {
@@ -235,10 +254,10 @@ function saveAsPdf() {
     doc.setFont('helvetica', 'bold');
     doc.setTextColor('#004099');
     doc.setFontSize(10);
-    doc.text('0.8325', 40, 218);
+    doc.text(rate.toString(), 40, 218);
 
     doc.setFont('helvetica', 'normal');
-    doc.text('Ford Mustang 2016', 40, 222);
+    doc.text(type, 40, 222);
 
     doc.setDrawColor('#eeeeee');
     doc.line(120, 222, 205, 222);

@@ -220,48 +220,39 @@
                     return;
                 }
                 trip.from = $('#fromLocationInput').val();
-                console.log("======> " + trip.from);
 
                 if ($('#toLocationInput').val().length == 0) {
                     setAlert('Please insert a location of destination');
                     return;
                 }
                 trip.destination = $('#toLocationInput').val();
-                console.log("======> " + trip.destination);
 
                 if ($('#purposeInput').val().length == 0) {
                     setAlert('Please insert customer name or purpose of the visit');
                     return;
                 }
                 trip.purpose = $('#purposeInput').val();
-                console.log("======> " + trip.purpose);
 
                 if (($('#odoStartInput').val().length == 0) || (isNaN($('#odoStartInput').val()))) {
                     setAlert('Please insert a numeric value in the Odometer Start Field');
                     return;
                 }
                 trip.odometerStart = parseInt($('#odoStartInput').val());
-                console.log("======> " + trip.odometerStart);
 
                 if (($('#distanceInput').val().length == 0) || (isNaN($('#distanceInput').val()))) {
                     setAlert('Please insert a numeric value in the Distance Field');
                     return;
                 }
                 trip.distance = parseInt($('#distanceInput').val());
-                console.log("======> " + trip.distance);
+                trip.odometerEnd = (trip.odometerStart + trip.distance);
 
                 trip.twoWays = $('#twoWayCheck').is(":checked");
-                if(trip.twoWays){
-                    console.log("======> check is true  " + trip.twoWays);
-                }
-
-                trip.odometerEnd = (trip.odometerStart + trip.distance);
-                trip.latestOdometer = trip.odometerEnd;
 
                 addTripToTable(trip);
                 var trips = JSON.parse(localStorage.getItem("mrtTrips") || "[]");
                 trips.push(trip);
                 localStorage.setItem('mrtTrips', JSON.stringify(trips));
+                localStorage.setItem('latestOdometer', trip.odometerEnd);
             });
 
             $('#saveAssociateInfoButton').click(function(){
@@ -290,6 +281,7 @@
                 localStorage.setItem('associateName', $('#associateNameInput').val());
                 localStorage.setItem('vehicleType', $('#vehicleTypeInput').val());
                 localStorage.setItem('mileageRate', rate);
+                localStorage.setItem('latestMileage', 0);
                 $("#enterAssociateInfoModal").modal('hide');
             });
 
