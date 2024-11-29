@@ -206,7 +206,7 @@ function saveAsPdf() {
         doc.setFont('helvetica', 'normal');
         doc.setTextColor('#000000');
         doc.setFontSize(8);
-        var original = trip.date.toLocaleDateString('it-IT', options);
+        var original = new Date(trip.date).toLocaleDateString('it-IT', options);
         text = original.substr(original.indexOf(" ") + 1);
         textWidth = doc.getTextWidth(text);
         X = 17 - (textWidth/2);
