@@ -41,14 +41,16 @@ function setOdometerStart() {
         return;
     }
     var lastTrip = trips[trips.length - 1];
-    var l_date = Date.parse(lastTrip.date.substr(lastTrip.date.indexOf(" ") + 1));
-    const diffTime = Math.abs(t_date - l_date);
+    var lastDate = new Date(lastTrip.date);
+    //const localeFormat = moment.localeData('it').longDateFormat('L');
+    const diffTime = Math.abs(t_date - lastDate);
     const diffDays = (Math.floor(diffTime / (1000 * 60 * 60 * 24))) -1;
-    const latestOdometer = localStorage.getItem("latestOdometer") || 0;
+    var latestOdometer = Number(localStorage.getItem("latestOdometer") || 0);
     var odometerStart = 0;
-    odometerStart = +latestOdometer + (diffDays * Math.floor(Math.random() * 30));
+    var randomDistance = diffDays * Math.floor(Math.random() * 30);
+    odometerStart = latestOdometer + randomDistance;
     $('#odoStartInput').val(odometerStart);
-}
+};
 
 function displayAllTrips() {
     $('#current_report').hide();
@@ -65,8 +67,9 @@ function displayAllTrips() {
 };
 
 function addTripToTable(trip, ndx) {
+    var tripDate = new Date(trip.date).toLocaleDateString('it-IT', options);
     var rowContent = '<tr>';
-    rowContent += '<td>' + trip.date + '</td>';
+    rowContent += '<td>' + tripDate + '</td>';
     rowContent += '<td>' + trip.odometerStart + '</td>';
     rowContent += '<td>' + trip.from + '</td>';
     rowContent += '<td>' + trip.destination + '</td>';
@@ -78,7 +81,6 @@ function addTripToTable(trip, ndx) {
     rowContent += '<td>' + trip.purpose + '</td>';
     rowContent += '<td>' + trip.odometerEnd + '</td>';
     rowContent += '<td>' + trip.distance + '</td>';
-    console.log("=====> " + trip.date + " ===== " + ndx);
     rowContent += '<td style="cursor: pointer;" class="delete_trip" data-id="' + ndx + '"><img src="img/trash.svg" alt="delete" width="24" height="24"></td>';
     rowContent += '</tr>';
     $('#tbl_trips  tbody').append(rowContent);
@@ -202,7 +204,7 @@ function saveAsPdf() {
         doc.setFont('helvetica', 'normal');
         doc.setTextColor('#000000');
         doc.setFontSize(8);
-        var original = trip.date;
+        var original = trip.date.toLocaleDateString('it-IT', options);
         text = original.substr(original.indexOf(" ") + 1);
         textWidth = doc.getTextWidth(text);
         X = 17 - (textWidth/2);

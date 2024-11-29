@@ -212,8 +212,8 @@
                     setAlert('Please insert a valid Date for Trip');
                     return;
                 }
-                var t_date = new Date($('#dateInput').val());
-                trip.date = t_date.toLocaleDateString('it-IT', options);
+                trip.date = new Date($('#dateInput').val());
+                //trip.date = t_date.toLocaleDateString('it-IT', options);
 
                 if ($('#fromLocationInput').val().length == 0) {
                     setAlert('Please insert a location where the trip started from');
@@ -248,8 +248,8 @@
 
                 trip.twoWays = $('#twoWayCheck').is(":checked");
 
-                addTripToTable(trip);
                 var trips = JSON.parse(localStorage.getItem("mrtTrips") || "[]");
+                addTripToTable(trip, trips.length);
                 trips.push(trip);
                 localStorage.setItem('mrtTrips', JSON.stringify(trips));
                 localStorage.setItem('latestOdometer', trip.odometerEnd);
