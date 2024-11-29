@@ -45,6 +45,8 @@ function setOdometerStart() {
     var lastTrip = trips[trips.length - 1];
     var lastDate = new Date(lastTrip.date);
     //const localeFormat = moment.localeData('it').longDateFormat('L');
+    console.log("==========> DATA: " + t_date);
+    console.log("==========> DATA: " + lastDate);
     const diffTime = Math.abs(t_date - lastDate);
     const diffDays = (Math.floor(diffTime / (1000 * 60 * 60 * 24))) -1;
     console.log("==========> difference days: " + diffDays);
