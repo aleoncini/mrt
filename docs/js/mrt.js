@@ -33,11 +33,13 @@ function resetReport() {
 
 function setOdometerStart() {
     if ($('#dateInput').val().length == 0) {
+        console.log("==========> dateInput size = 0");
         return;
     }
     var t_date = Date.parse($('#dateInput').val());
     var trips = JSON.parse(localStorage.getItem("mrtTrips") || "[]");
     if(trips.length == 0){
+        console.log("==========> trips array size = 0");
         return;
     }
     var lastTrip = trips[trips.length - 1];
@@ -45,12 +47,25 @@ function setOdometerStart() {
     //const localeFormat = moment.localeData('it').longDateFormat('L');
     const diffTime = Math.abs(t_date - lastDate);
     const diffDays = (Math.floor(diffTime / (1000 * 60 * 60 * 24))) -1;
+    console.log("==========> difference days: " + diffDays);
     var latestOdometer = Number(localStorage.getItem("latestOdometer") || 0);
+    console.log("==========> Latest Odometer: " + latestOdometer);
     var odometerStart = 0;
     var randomDistance = diffDays * Math.floor(Math.random() * 30);
+    console.log("==========> random km   : " + randomDistance);
+    console.log("==========> random type : " + typeof randomDistance);
     odometerStart = latestOdometer + randomDistance;
+    console.log("==========> odo Start : " + odometerStart);
+    console.log("==========> odo  type : " + typeof odometerStart);
     $('#odoStartInput').val(odometerStart);
 };
+
+function convertDateFromIt(date) {
+    const tokens = date.split(" ");
+    const newString = tokens[3] + " " + tokens[2] + " " + tokens[1];
+    console.log("==========> data CONV: " + newString);
+    return new Date();
+}
 
 function displayAllTrips() {
     $('#current_report').hide();
@@ -81,6 +96,7 @@ function addTripToTable(trip, ndx) {
     rowContent += '<td>' + trip.purpose + '</td>';
     rowContent += '<td>' + trip.odometerEnd + '</td>';
     rowContent += '<td>' + trip.distance + '</td>';
+    console.log("=====> " + trip.date + " ===== " + ndx);
     rowContent += '<td style="cursor: pointer;" class="delete_trip" data-id="' + ndx + '"><img src="img/trash.svg" alt="delete" width="24" height="24"></td>';
     rowContent += '</tr>';
     $('#tbl_trips  tbody').append(rowContent);
