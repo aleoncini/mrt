@@ -107,7 +107,7 @@
                     <input type="text" class="form-control" id="odoStartInput">
                 </div>
                 <div class="mb-3">
-                    <label for="distanceInput" class="form-label">Trip distance (km)</label>
+                    <label for="distanceInput" class="form-label">Single Trip distance (km)</label>
                     <input type="text" class="form-control" id="distanceInput">
                 </div>
                 <div class="form-check">
@@ -244,9 +244,13 @@
                     return;
                 }
                 trip.distance = parseInt($('#distanceInput').val());
-                trip.odometerEnd = (trip.odometerStart + trip.distance);
 
                 trip.twoWays = $('#twoWayCheck').is(":checked");
+                
+                if(trip.twoWays){
+                    trip.distance = trip.distance * 2;
+                }
+                trip.odometerEnd = (trip.odometerStart + trip.distance);
 
                 var trips = JSON.parse(localStorage.getItem("mrtTrips") || "[]");
                 addTripToTable(trip, trips.length);
@@ -271,7 +275,7 @@
                     $("#associateInfoFormNotCorrect").fadeIn();
                     return;
                 }
-                var rate = $('#mileageRateInput').val();
+                var rate = $('#mileageRateInput').val().trim().replace(",", ".");
                 var regEx = /^\d{1}\.\d{4}$/;
                 if(! rate.match(regEx)){
                     $("#associateInfoFormNotCorrect").html('Please use the format <b>#.####</b> for the Rate Field');
