@@ -1,0 +1,18 @@
+deployment:
+  image:
+    registry: "{{tpl .Values.global.image.registry .}}"
+    name: mrt-backend
+    tag: 0.1-test
+  replicas: 1
+
+pvc:
+  storage: 1Gi
+
+name: mrt-backend
+
+build:
+  storage: 1Gi
+  repository:
+    url: "{{.Values.global.build.repository.url}}"
+    branch: "{{.Values.global.build.repository.branch}}"
+    directory: persistence

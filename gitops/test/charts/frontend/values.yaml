@@ -1,0 +1,21 @@
+deployment:
+  image:
+    registry: "{{tpl .Values.global.image.registry .}}"
+    name: "{{.Values.name}}"
+    tag: 0.1-test
+  replicas: 1
+
+pvc:
+  storage: 1Gi
+
+route:
+  name: mrt-test
+
+name: mrt-frontend
+
+build:
+  storage: 1Gi
+  repository:
+    url: "{{.Values.global.build.repository.url}}"
+    branch: "{{.Values.global.build.repository.branch}}"
+    directory: web

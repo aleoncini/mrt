@@ -1,0 +1,10 @@
+global:
+  namespace: mrt-test
+  image:
+    registry: "image-registry.openshift-image-registry.svc:5000/{{.Values.global.namespace}}"
+  host:
+    domain: apps.playground.rhocplab.com
+  build:
+    repository:
+      url: https://github.com/aleoncini/mrt
+      branch: testing

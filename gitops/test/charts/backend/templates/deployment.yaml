@@ -1,0 +1,67 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  namespace: {{.Values.global.namespace}}
+  annotations:
+    image.openshift.io/triggers: '[{"from":{"kind":"ImageStreamTag","name":"{{tpl .Values.deployment.image.name .}}:{{.Values.deployment.image.tag}}"},"fieldPath":"spec.template.spec.containers[?(@.name==\"{{.Values.name}}\")].image"}]'
+  labels:
+    app: {{.Values.name}}
+  name: {{.Values.name}}
+spec:
+  replicas: {{.Values.deployment.replicas}}
+  selector:
+    matchLabels:
+      deployment: {{.Values.name}}
+  template:
+    metadata:
+      labels:
+        deployment: {{.Values.name}}
+    spec:
+      containers:
+      - image: {{tpl .Values.deployment.image.registry .}}/{{tpl .Values.deployment.image.name .}}:{{.Values.deployment.image.tag}}
+        name: {{.Values.name}}
+        ports:
+        - containerPort: 8080
+          protocol: TCP
+        - containerPort: 8443
+          protocol: TCP
+        - containerPort: 8778
+          protocol: TCP
+        env:
+        - name: AUTH_SERVER_URL
+          valueFrom:
+            configMapKeyRef:
+              key: server-url
+              name: auth-server
+        - name: MONGODB_USER
+          valueFrom:
+            configMapKeyRef:
+              key: user
+              name: mongodb-credentials
+        - name: MONGODB_ADMIN_PASSWORD
+          valueFrom:
+            configMapKeyRef:
+              key: admin-password
+              name: mongodb-credentials
+        - name: MONGODB_DATABASE
+          valueFrom:
+            configMapKeyRef:
+              key: database
+              name: mongodb-credentials
+        - name: MONGODB_PASSWORD
+          valueFrom:
+            configMapKeyRef:
+              key: password
+              name: mongodb-credentials
+        - name: GOOGLE_KEY
+          valueFrom:
+            secretKeyRef:
+              key: google-key
+              name: google-key
+        volumeMounts:
+        - mountPath: /reports
+          name: {{.Values.name}}-volume
+      volumes:
+      - persistentVolumeClaim:
+          claimName: {{.Values.name}}
+        name: {{.Values.name}}-volume

@@ -9,12 +9,12 @@
 
     <!-- Bootstrap core CSS -->
     <link href="css/bootstrap.css" rel="stylesheet">
-    <script src="https://access-idp.apps.playground.rhocplab.com/auth/js/keycloak.js"></script>
+    <script src="/auth/js/keycloak.js"></script>
     <script src="js/api-calls.js"></script>
     <script type="text/javascript">
     
             function callLoadReportList(year) {
-                loadReportList($('#rhid').val(), year, displayReportList);
+                loadReportList(year, displayReportList);
             }
     
     </script>
@@ -52,7 +52,6 @@
             <form>
                 <div class="form-row align-items-center">
                     <div class="col-auto">
-                        <input type="hidden" id="rhid" value="">
                         <label class="sr-only" for="inputYear">Year</label>
                         <select id="selReportListYear" class="form-control mb-2" data-style="btn-info" onchange="callLoadReportList(this.value);">
                             <option value="2021"> 2021 </option>
@@ -86,28 +85,23 @@
 <script type="text/javascript">
 
     $(document).ready(function() {
-        function setRhid(associate) {
-            console.log("===> now setting rhid... " + associate.rhid);
-            $('#rhid').val(associate.rhid);
-            loadReportList(associate.rhid, $('#selReportListYear :selected').val(), displayReportList);
+        function initPage() {
+            loadReportList($('#selReportListYear :selected').val(), displayReportList);
+
+            $(document).on("click", ".delete_report", function () {
+                deleteReportFile(this.dataset.filename);
+                $(this).parent().remove();
+            });
+
+            $(document).on("click", ".get_report", function () {
+                getReportFile(this.dataset.filename);
+            });
         }
-
-        function loadUserData(userid) {
-            console.log("===> now loading user data...");
-            loadAssociate(userid, setRhid);
-        }
-
-        initKeycloak(loadUserData);
-
-        $(document).on("click", ".delete_report", function () {
-            deleteReportFile($('#rhid').val(), this.dataset.filename);
-            $(this).parent().remove();
-        });
-
-        $(document).on("click", ".get_report", function () {
-            getReportFile($('#rhid').val(), this.dataset.filename);
-        });
-    })
+        
+        initKeycloak(() => {
+                loadAssociate((_, userAlreadyExists) => userAlreadyExists ? initPage() : window.location.assign("/setup.html"));
+            });
+        })
 
 
 </script>

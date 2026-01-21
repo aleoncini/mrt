@@ -2,6 +2,7 @@ package it.redhat.mrt.rest;
 
 import java.util.List;
 
+import javax.inject.Inject;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
@@ -14,17 +15,27 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
 import org.bson.types.ObjectId;
+import org.eclipse.microprofile.jwt.JsonWebToken;
 
 import it.redhat.mrt.model.Associate;
 
-@Path("/associates")
+@Path("/associate")
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)
 public class AssociateResource {
+
+    @Inject
+    JsonWebToken token;
  
     @GET
+    @Path("/all")
     public List<Associate> list() {
         return Associate.listAll();
+    }
+
+    @GET
+    public Associate get() {
+        return Associate.findByUserid(token.getClaim("sub"));
     }
 
     @GET

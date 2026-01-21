@@ -1,0 +1,15 @@
+apiVersion: image.openshift.io/v1
+kind: ImageStream
+metadata:
+  labels:
+    app: {{.Values.name}}
+  name: {{.Values.name}}
+  namespace: {{.Values.global.namespace}}
+spec:
+  tags:
+  - annotations:
+      openshift.io/imported-from: {{tpl .Values.deployment.image.registry .}}/{{tpl .Values.deployment.image.name .}}:{{.Values.deployment.image.tag}}
+    from:
+      kind: DockerImage
+      name: {{tpl .Values.deployment.image.registry .}}/{{tpl .Values.deployment.image.name .}}:{{.Values.deployment.image.tag}}
+    name: {{.Values.deployment.image.tag}}

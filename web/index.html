@@ -27,7 +27,7 @@
         }
     </style>
 
-    <script src="https://access-idp.apps.playground.rhocplab.com/auth/js/keycloak.js"></script>
+    <script src="/auth/js/keycloak.js"></script>
     <script src="js/api-calls.js"></script>
 </head>
 <body style="padding-top: 3.5rem">
@@ -62,7 +62,6 @@
 
     <div class="container">
         <div class="row">
-            <input type="hidden" id="user_id" value="">
             <div class="col-md-4">
                 <h2>Enter Trips</h2>
                 <p>Enter trips you do each month with your car. Trips will be then used to compile the Mileage Report.</p>
@@ -138,16 +137,16 @@
 
         $(document).ready(function () {
 
-            function setUserID(userid) {
-                $('#user_id').val(userid);
+            function initPage() {
+                $('#btn_createReport').click(function(){
+                    var userid = $('#user_id').val();
+                    var month = parseInt($('#inputPdfMonth :selected').val());
+                    requestReportBuild(month, showReportBuildResult);
+                });
             }
 
-            initKeycloak(setUserID);
-
-            $('#btn_createReport').click(function(){
-                var userid = $('#user_id').val();
-                var month = parseInt($('#inputPdfMonth :selected').val());
-                requestReportBuild(userid, month, showReportBuildResult);
+            initKeycloak(() => {
+                loadAssociate((_, userAlreadyExists) => userAlreadyExists ? initPage() : window.location.assign("/setup.html"));
             });
 
         });

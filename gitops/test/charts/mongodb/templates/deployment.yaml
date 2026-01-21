@@ -1,0 +1,51 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: mongodb
+  name: mongodb
+  namespace: {{.Values.global.namespace}}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      deployment: mongodb
+  template:
+    metadata:
+      labels:
+        deployment: mongodb
+    spec:
+      containers:
+      - env:
+        - name: MONGODB_ADMIN_PASSWORD
+          valueFrom:
+            configMapKeyRef:
+              key: admin-password
+              name: mongodb-credentials
+        - name: MONGODB_DATABASE
+          valueFrom:
+            configMapKeyRef:
+              key: database
+              name: mongodb-credentials
+        - name: MONGODB_PASSWORD
+          valueFrom:
+            configMapKeyRef:
+              key: password
+              name: mongodb-credentials
+        - name: MONGODB_USER
+          valueFrom:
+            configMapKeyRef:
+              key: user
+              name: mongodb-credentials
+        image: {{.Values.deployment.image.registry}}/{{.Values.deployment.image.name}}:{{.Values.deployment.image.tag}}
+        name: mongodb
+        ports:
+        - containerPort: 27017
+          protocol: TCP
+        volumeMounts:
+        - mountPath: /var/lib/mongodb/data
+          name: mongodb-volume
+      volumes:
+      - persistentVolumeClaim:
+          claimName: mongodb
+        name: mongodb-volume
